@@ -7,7 +7,7 @@
 {% for c in contacts %}
 <li class="card"><h3>{{ c.role }}</h3>{% if c.name %}<p>{{ c.name }}</p>{% endif %}
 <p>{% if c.phone %}<a class="tel" href="tel:{{ c.phone|tel }}">{{ c.phone }}</a>{% endif %}{% if c.email %}<br><a href="mailto:{{ c.email }}">{{ c.email }}</a>{% endif %}</p>
-{% if c.address %}<p>{{ c.address }}</p>{% endif %}{% if c.hours %}<p class="small">{{ c.hours }}</p>{% endif %}</li>
+{% if c.address %}<p>{{ c.address|addr }}</p>{% endif %}{% if c.hours %}<p class="small">{{ c.hours }}</p>{% endif %}</li>
 {% endfor %}
 {% if not contacts %}<li class="card"><h3>{{ petition.contacts.election_board.name }}</h3><p><a class="tel" href="tel:{{ petition.contacts.election_board.phone|tel }}">{{ petition.contacts.election_board.phone }}</a><br>{{ petition.contacts.election_board.address }}</p></li>{% endif %}
 </ul>

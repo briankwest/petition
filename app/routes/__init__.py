@@ -71,6 +71,20 @@ def linkcites(text) -> Markup:
 templates.env.filters["linkcites"] = linkcites
 
 
+def addr(v) -> Markup:
+    """Street on one line; 'City, ST ZIP' kept together on the next."""
+    if not v:
+        return Markup("")
+    parts = [p.strip() for p in str(v).split(",") if p.strip()]
+    if len(parts) >= 3:
+        head, tail = ", ".join(parts[:-2]), ", ".join(parts[-2:])
+        return Markup(f'{_escape(head)},<br><span class="nowrap">{_escape(tail)}</span>')
+    return Markup(f'<span class="nowrap">{_escape(str(v))}</span>') if len(parts) == 1 else _escape(str(v))
+
+
+templates.env.filters["addr"] = addr
+
+
 def render(request: Request, name: str, status_code: int = 200, **ctx):
     petition = getattr(request.app.state, "petition", None)
     if petition is None:

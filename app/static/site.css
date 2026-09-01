@@ -199,3 +199,5 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
 .cite{text-decoration-style:dotted;text-underline-offset:3px;white-space:nowrap}
 
 .share-btn.share-volunteer{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.share-btn.share-volunteer svg{fill:var(--gold)}.share-btn.share-volunteer:hover{background:var(--accent-deep)}
+
+.nowrap{white-space:nowrap}

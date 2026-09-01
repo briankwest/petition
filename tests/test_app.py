@@ -622,3 +622,9 @@ def test_petition_attachment_admin_flow(client, db, monkeypatch):
     assert "Removed" in _loc(r)
     db.expire_all()
     assert db.query(m.PetitionAttachment).count() == 1
+
+
+def test_address_wrapping(client, db):
+    db.add(m.Contact(role="Petition Captain", name="Brian", address="714 E Osage Ave, McAlester, OK 74501-6638", public=True)); db.commit()
+    html = client.get("/contact").text
+    assert '714 E Osage Ave,<br><span class="nowrap">McAlester, OK 74501-6638</span>' in html
