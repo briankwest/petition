@@ -6,7 +6,7 @@
 | `polling_places.csv` | Pittsburg County Election Board, https://pittsburg.okcounties.org/departments/election-board/precincts | 38 precincts; numbers match the GIS layer exactly. Re-verify before printing anything. |
 | (fallback) | U.S. Census TIGER/Line 2020 VTDs, https://www2.census.gov/geo/tiger/TIGER2020PL/STATE/40_OKLAHOMA/40/tl_2020_40_vtd20.zip | Filter `COUNTYFP20 = 121`. Use only if the CSA service is unavailable. |
 
-Pittsburg County Election Board: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501 · 918-423-3877 · fax 918-423-7088 · pittsburgcounty@elections.ok.gov · Secretary Tonya Barnes · Mon–Fri 8:00 a.m.–4:00 p.m. (https://pittsburg.okcounties.org/offices/election-board)
+Pittsburg County Election Board: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501-3881 · 918-423-3877 · fax 918-423-7088 · pittsburgcounty@elections.ok.gov · Secretary Tonya Barnes · Mon–Fri 8:00 a.m.–4:00 p.m. (https://pittsburg.okcounties.org/offices/election-board)
 
 OK Voter Portal (registration lookup; requires name + date of birth): https://okvoterportal.okelections.gov/
 

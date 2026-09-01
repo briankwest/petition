@@ -226,7 +226,7 @@ layout:
   margins_in: 0.75
   duplex: long-edge                    # verify on the actual printer (Q6)
 contacts:
-  election_board: {name: Pittsburg County Election Board, secretary: Tonya Barnes, address: "1609 N. Strong Blvd. STE 200, McAlester, OK 74501", phone: "918-423-3877", email: pittsburgcounty@elections.ok.gov, hours: "Mon–Fri 8:00–4:00"}
+  election_board: {name: Pittsburg County Election Board, secretary: Tonya Barnes, address: "1609 N. Strong Blvd. STE 200, McAlester, OK 74501-3881", phone: "918-423-3877", email: pittsburgcounty@elections.ok.gov, hours: "Mon–Fri 8:00–4:00"}
   petition_captain: {name: "", phone: ""}
   attorney: {name: "", phone: ""}
 links:
@@ -451,5 +451,5 @@ Full verbatim text, source URL and retrieval date for each: `reference/statutes/
 
 From `data/polling_places.csv` (Election Board) and `data/precincts/pittsburg_pct2020.geojson` (OU CSA / State Election Board GIS). Precinct numbers: 1, 3, 4, 5, 6, 7, 8, 11, 14, 19, 20, 21, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 51, 52, 54, 55. 2020 Census: 43,773 residents, 34,104 of voting age (context only — not the registered-voter count).
 
-Election Board: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501 · 918-423-3877 · pittsburgcounty@elections.ok.gov · Secretary Tonya Barnes · Mon–Fri 8:00–4:00.
+Election Board: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501-3881 · 918-423-3877 · pittsburgcounty@elections.ok.gov · Secretary Tonya Barnes · Mon–Fri 8:00–4:00.
 OK Voter Portal: https://okvoterportal.okelections.gov/
