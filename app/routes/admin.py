@@ -1018,6 +1018,19 @@ async def document_build_freeze(request: Request, bid: int, db: Session = Depend
     return go(f"/admin/documents/build/{bid}", msg="Petition FROZEN — the filed instrument is locked. Pamphlets can now be printed one at a time.")
 
 
+@router.post("/documents/build/{bid}/delete", dependencies=[Depends(require_admin)])
+async def documents_delete(request: Request, bid: int, db: Session = Depends(get_db)):
+    await F.parse(request)
+    b = db.get(m.DocumentBuild, bid) or _404()
+    if b.filed:
+        return go("/admin/documents", err=f"Build #{bid} is the FILED instrument — it cannot be deleted. Unfreeze does not delete it either; the filing record stays.")
+    if b.status == "running":
+        return go("/admin/documents", err=f"Build #{bid} is still running.")
+    db.query(m.DocumentFile).filter(m.DocumentFile.build_id == b.id).delete(synchronize_session=False)
+    db.delete(b); db.commit()
+    return go("/admin/documents", msg=f"Build #{bid} deleted.")
+
+
 @router.post("/documents/unfreeze", dependencies=[Depends(require_admin)])
 async def documents_unfreeze(request: Request, db: Session = Depends(get_db)):
     form = await F.parse(request)

@@ -517,3 +517,21 @@ def test_prune_keeps_filed_builds(db):
     left = db.query(m.DocumentBuild).count()
     assert removed == 19 and left == 6                       # 5 newest + the filed one
     assert db.query(m.DocumentBuild).filter_by(filed=True).count() == 1
+
+
+def test_delete_build(client, db, monkeypatch):
+    from app import docbuilder
+    tok = login(client, db)
+    b1 = m.DocumentBuild(kind="draft", status="ok", built_by="captain"); b2 = m.DocumentBuild(kind="final", status="ok", built_by="captain", filed=True)
+    b3 = m.DocumentBuild(kind="draft", status="running", built_by="captain")
+    db.add_all([b1, b2, b3]); db.flush()
+    db.add(m.DocumentFile(build_id=b1.id, name="x.pdf", pages=1, bytes_len=3, sha256="0"*64, content=b"pdf")); db.commit()
+    page = client.get("/admin/documents").text
+    assert f"/admin/documents/build/{b1.id}/delete" in page and f"/admin/documents/build/{b2.id}/delete" not in page and f"/admin/documents/build/{b3.id}/delete" not in page
+    r = client.post(f"/admin/documents/build/{b1.id}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert r.status_code == 303 and "deleted" in r.headers["location"]
+    assert db.get(m.DocumentBuild, b1.id) is None and db.query(m.DocumentFile).filter_by(build_id=b1.id).count() == 0
+    r = client.post(f"/admin/documents/build/{b2.id}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert "FILED" in r.headers["location"] and db.get(m.DocumentBuild, b2.id) is not None
+    r = client.post(f"/admin/documents/build/{b3.id}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert "running" in r.headers["location"]
