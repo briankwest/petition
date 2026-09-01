@@ -28,10 +28,18 @@ ul, ol { margin: 0; padding-left: 15pt; } li { margin: 0 0 3pt; }
 .cut { font-size: 10pt; color: #333; }
 .fill { display: inline-block; min-width: 1.6in; border-bottom: 1pt solid #000; }
 .pb { break-before: page; }
+/* dense: heavy cards (7+ rules) tightened so they fit one page even with wide fallback fonts (CI/DejaVu) */
+.dense { font-size: 11pt; line-height: 1.25; }
+.dense .summary { font-size: 12pt; margin-bottom: 6pt; }
+.dense .bar { margin-bottom: 6pt; }
+.dense .cols td { padding: 5pt 8pt; }
+.dense .rules li { margin-bottom: 3pt; }
+.dense .never { padding: 5pt 8pt; }
+.dense .call td { font-size: 11pt; padding: 2pt 7pt; }
 {% endblock %}
 {% block content %}
 {% for r in cards %}
-<div class="card {% if not loop.first %}pb{% endif %}">
+<div class="card {% if not loop.first %}pb{% endif %}{% if r.rules|length >= 7 %} dense{% endif %}">
   <div class="bar"><div class="k">Training card · {{ p.county }} County Referendum on the {{ f.abatement }} Data Center Tax Abatement</div><h1>{{ r.title }}</h1></div>
   <p class="summary">{{ r.summary }}</p>
   <table class="cols"><tr>
