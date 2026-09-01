@@ -24,7 +24,7 @@ def test_settings_defaults_and_math(db):
     s.set("adoption_date", date(2026, 10, 5)); s.set("registered_voters", 27590); db.commit()
     s = Settings(db)                                                      # DB row overrides config
     assert s.filing_deadline == date(2026, 11, 4)
-    assert s.legal_minimum == 2759 and s.target_signatures == 3587   # overcollect default = 13%/10% - 1 = 0.3
+    assert s.legal_minimum == 2759 and s.target_signatures == 4415   # overcollect default = 16%/10% - 1 = 0.6
 
 
 def test_stats_roll_up(db):

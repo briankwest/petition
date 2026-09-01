@@ -191,11 +191,26 @@ def main(argv=None):
     ap.add_argument("--sheets", type=int, help="sheets per pamphlet (default = Settings sheets_per_pamphlet)")
     ap.add_argument("--polling-places", action="store_true", help="load polling places as hidden candidate signing locations")
     ap.add_argument("--status", action="store_true", help="print row counts and exit (no changes)")
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="set a Settings value (repeatable), e.g. --set overcollect_fraction=0.6")
     a = ap.parse_args(argv)
     dbmod.init_db()
+    if a.set:
+        with dbmod.SessionLocal() as db:
+            st = Settings(db)
+            for kv in a.set:
+                k, _, v = kv.partition("=")
+                if k not in DEFAULTS:
+                    raise SystemExit(f"unknown setting: {k} (known: {', '.join(sorted(DEFAULTS))})")
+                st.set(k, v)
+                print(f"set {k} = {v!r}")
+            db.commit()
+            st = Settings(db)
+            print("now: registered_voters", st.registered_voters, "| legal_minimum", st.legal_minimum, "| target", st.target_signatures)
+        return
     if a.status:
         with dbmod.SessionLocal() as db:
-            print("status:", status(db))
+            st = Settings(db)
+            print("status:", {**status(db), "legal_minimum": st.legal_minimum, "target": st.target_signatures})
         return
     with dbmod.SessionLocal() as db:
         out = seed(db, a.admin_user, a.admin_password)

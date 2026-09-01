@@ -7,7 +7,7 @@ def test_load_placeholders_present():
     p = config.load()
     assert p.county == "Pittsburg"
     assert p.measure.adoption_date is None and p.filing_deadline is None
-    assert p.threshold.registered_voters == 27727 and p.legal_minimum == 2773 and p.target_signatures == 3605
+    assert p.threshold.registered_voters == 27727 and p.legal_minimum == 2773 and p.target_signatures == 4437
     assert p.threshold.registered_voters_active + p.threshold.registered_voters_inactive == p.threshold.registered_voters
     assert "threshold.registered_voters" not in p.placeholders
     assert "measure.adoption_date (tabled — no date yet)" in p.placeholders
@@ -25,7 +25,7 @@ def test_derived_math(tmp_path):
     p = config.load(f)
     assert p.filing_deadline == date(2026, 11, 4)          # +30 days, § 868(B)(3)
     assert p.legal_minimum == 2759                          # ceil(10%), § 868(B)(2)
-    assert p.target_signatures == 3587                      # ceil(13%)
+    assert p.target_signatures == 4415                      # ceil(16%)
     assert p.fmt.filing_deadline == "November 4, 2026"
 
 
