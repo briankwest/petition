@@ -1,39 +1,39 @@
-precinct,polling_place,address,city
-1,J.I. Stipe Center,801 North 9th,McAlester
-3,First Baptist Church,100 East Washington,McAlester
-4,Church of Christ,1700 S. Main,McAlester
-5,American Legion,400 South 2nd,McAlester
-6,Central Christian Church,920 Central Avenue,McAlester
-7,Assembly of God Church,1800 Hardy Spring Road,McAlester
-8,Dream City Church,124 V Hubert Smith Dr.,McAlester
-11,Living Word Church,103 W. Taylor,McAlester
-14,North Town Church of Christ Fellowship Hall,2400 N. Main,McAlester
-19,Alderson Town Hall,125 Washington St.,Alderson
-20,Barbara Barcheers Residence,2771 Crawley Road,McAlester
-21,Lighthouse of Prayer Church,20 Double Springs Road,McAlester
-26,Blocker Baptist Church,13319 E State Highway 31,McAlester
-27,Number 9 Community Center,131 Bower Rd,Longtown
-28,Canadian United Methodist Church,208 Creadle Dr.,Canadian
-29,High Hill Baptist Church,33 Church Rd,McAlester
-30,Crowder Senior Citizens Center,110 N. B Street,Crowder
-32,Frink Community Center,454 Frink Rd,McAlester
-33,Haileyville Civic Center,200 N. Craig Ave,Haileyville
-34,Hartshorne Catholic Hall,912 E. Cherokee,Hartshorne
-35,Taylor Gym - Hartshorne,413 S. 5th St.,Hartshorne
-36,Blue Fire Dept.,162 Verner Rd.,McAlester
-37,Shady Grove Church,106 Shady Grove Road,McAlester
-38,Ti Valley Baptist Church,5608 Pine Top Rd,Pittsburg
-39,Kiowa City Hall,813 S. Harrison,Kiowa
-40,Assembly of God Church,1800 Hardy Springs Rd,McAlester
-41,Krebs City Hall,5 NE Washington,Krebs
-42,Church on Flowery Mound (Bug Tussle),2180 Flowery Mound Rd,McAlester
-43,Pittsburg School Safe Room,305 2nd St.,Pittsburg
-44,Quinton City Hall,1020 N Main,Quinton
-46,New Hope Church,10735 State Highway 113,McAlester
-47,Savanna City Hall,105 H Street,Savanna
-48,Scipio Community Center,1520 N. 4 Corners Rd,McAlester
-49,Tannehill Fire Department,10771 Tannehill Rd,McAlester
-51,Richville Baptist Church,2268 Richville Rd.,McAlester
-52,Quinton City Hall,1020 N Main,Quinton
-54,Dream City Church,124 V Hubert Smith Dr.,McAlester
-55,J.I. Stipe Center,801 N. 9th St.,McAlester
+precinct,polling_place,address,city,lat,lon,geocode_source,in_precinct
+1,J.I. Stipe Center,801 North 9th,McAlester,34.934457,-95.755816,nominatim,1
+3,First Baptist Church,100 East Washington,McAlester,34.934451,-95.769436,census,8
+4,Church of Christ,1700 S. Main,McAlester,34.931601,-95.769592,census,54
+5,American Legion,400 South 2nd,McAlester,34.927494,-95.768963,census,54
+6,Central Christian Church,920 Central Avenue,McAlester,34.908399,-95.762449,census,6
+7,Assembly of God Church,1800 Hardy Spring Road,McAlester,,,unresolved,
+8,Dream City Church,124 V Hubert Smith Dr.,McAlester,,,unresolved,
+11,Living Word Church,103 W. Taylor,McAlester,34.945281,-95.768647,census,11
+14,North Town Church of Christ Fellowship Hall,2400 N. Main,McAlester,34.953828,-95.761916,census,14
+19,Alderson Town Hall,125 Washington St.,Alderson,34.900519,-95.691850,census,19
+20,Barbara Barcheers Residence,2771 Crawley Road,McAlester,,,unresolved,
+21,Lighthouse of Prayer Church,20 Double Springs Road,McAlester,34.941438,-96.018628,census,21
+26,Blocker Baptist Church,13319 E State Highway 31,McAlester,,,unresolved,
+27,Number 9 Community Center,131 Bower Rd,Longtown,35.234679,-95.517302,nominatim,27
+28,Canadian United Methodist Church,208 Creadle Dr.,Canadian,35.175203,-95.655841,census,28
+29,High Hill Baptist Church,33 Church Rd,McAlester,34.869266,-95.661733,census,29
+30,Crowder Senior Citizens Center,110 N. B Street,Crowder,35.124613,-95.674752,census,30
+32,Frink Community Center,454 Frink Rd,McAlester,34.877634,-95.789425,census,32
+33,Haileyville Civic Center,200 N. Craig Ave,Haileyville,34.858877,-95.577194,nominatim,33
+34,Hartshorne Catholic Hall,912 E. Cherokee,Hartshorne,34.850883,-95.555397,census,34
+35,Taylor Gym - Hartshorne,413 S. 5th St.,Hartshorne,34.853399,-95.563528,census,34
+36,Blue Fire Dept.,162 Verner Rd.,McAlester,34.948430,-95.881952,census,36
+37,Shady Grove Church,106 Shady Grove Road,McAlester,34.903986,-95.776637,census,40
+38,Ti Valley Baptist Church,5608 Pine Top Rd,Pittsburg,34.678860,-95.716853,nominatim,43
+39,Kiowa City Hall,813 S. Harrison,Kiowa,34.721276,-95.905256,census,43
+40,Assembly of God Church,1800 Hardy Springs Rd,McAlester,34.876120,-95.762997,nominatim,32
+41,Krebs City Hall,5 NE Washington,Krebs,34.927769,-95.714715,census,41
+42,Church on Flowery Mound (Bug Tussle),2180 Flowery Mound Rd,McAlester,35.014409,-95.698471,census,42
+43,Pittsburg School Safe Room,305 2nd St.,Pittsburg,34.852782,-95.583485,nominatim,33
+44,Quinton City Hall,1020 N Main,Quinton,35.124352,-95.361778,nominatim,52
+46,New Hope Church,10735 State Highway 113,McAlester,35.141047,-95.771881,census,37
+47,Savanna City Hall,105 H Street,Savanna,34.832085,-95.838623,census,47
+48,Scipio Community Center,1520 N. 4 Corners Rd,McAlester,34.811248,-95.770705,census,47
+49,Tannehill Fire Department,10771 Tannehill Rd,McAlester,35.000049,-95.888716,census,49
+51,Richville Baptist Church,2268 Richville Rd.,McAlester,,,unresolved,
+52,Quinton City Hall,1020 N Main,Quinton,35.124352,-95.361778,nominatim,52
+54,Dream City Church,124 V Hubert Smith Dr.,McAlester,,,unresolved,
+55,J.I. Stipe Center,801 N. 9th St.,McAlester,34.934457,-95.755816,nominatim,1

@@ -252,3 +252,19 @@ def test_volunteer_link_in_nav_and_home(client):
     html = client.get("/").text
     assert 'href="/volunteer"' in html and "Want to help?" in html
     assert 'href="/volunteer"' in client.get("/faq").text
+
+
+def test_seed_pamphlets_and_polling_places(db):
+    from app.seed import seed, seed_pamphlets, seed_polling_places
+    seed(db)
+    assert all(not c.public for c in db.query(m.Contact).all() if c.name and "[" in c.name)   # placeholders hidden
+    out = seed_pamphlets(db, 12, 5)
+    assert out == {"pamphlets": 12, "sheets": 60}
+    assert seed_pamphlets(db, 12, 5) == {"pamphlets": 0, "sheets": 0}                          # idempotent
+    p = db.query(m.Pamphlet).filter_by(number="P-012").one()
+    assert p.status == "Ready to Print" and [sh.sheet_no for sh in p.sheets] == [1, 2, 3, 4, 5]
+    assert seed_polling_places(db)["locations"] == 34 and seed_polling_places(db)["locations"] == 0   # 38 precincts, 4 shared venues
+    loc = db.query(m.Location).filter_by(slug="polling-41").one()
+    assert loc.name == "Krebs City Hall" and loc.public is False and loc.precinct == "41"
+    stipe = db.query(m.Location).filter_by(slug="polling-01").one()
+    assert "precincts 1, 55" in stipe.notes and db.query(m.Location).filter_by(slug="polling-55").count() == 0

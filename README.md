@@ -42,6 +42,7 @@ make xlsx-import     # one-time import of "Petition Captain Master Tracker.xlsx"
 make map             # standalone interactive map + legal-size wall map -> output/map
 make app-dev         # run the site locally on :8000 (SQLite unless DATABASE_URL is set)
 make seed            # seed settings/contacts/locations/QA tasks (+ admin user from ADMIN_USER/ADMIN_PASSWORD)
+.venv/bin/python -m app.seed --pamphlets --polling-places   # pre-create the print run + candidate venues
 make check           # everything
 make final           # filing build — refuses while any placeholder remains
 make freeze          # hash + tag the filed pamphlet

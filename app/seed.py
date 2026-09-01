@@ -34,6 +34,61 @@ QA_TASKS = [
 ]
 
 
+def _placeholder(*vals) -> bool:
+    return any("[" in str(v) for v in vals if v)
+
+
+def seed_pamphlets(db, count: int, sheets: int) -> dict:
+    """Pre-create the print run P-001..P-<count> with <sheets> blank sheets each. Idempotent:
+    existing numbers are left untouched (their sheets are topped up if short)."""
+    out = {"pamphlets": 0, "sheets": 0}
+    have = {p.number: p for p in db.scalars(select(m.Pamphlet)).all()}
+    for n in range(1, count + 1):
+        num = f"P-{n:03d}"
+        p = have.get(num)
+        if p is None:
+            p = m.Pamphlet(number=num, status="Ready to Print"); db.add(p); out["pamphlets"] += 1
+        existing = {sh.sheet_no for sh in p.sheets}
+        for k in range(1, sheets + 1):
+            if k not in existing:
+                p.sheets.append(m.Sheet(sheet_no=k, status="Blank")); out["sheets"] += 1
+    db.commit()
+    return out
+
+
+def seed_polling_places(db) -> dict:
+    """Load the county's polling places (data/polling_places.csv) as HIDDEN candidate signing
+    locations: one per venue (some venues serve two precincts), public=False, status=planned.
+    Flip one to public in admin once the venue agrees and hours are set."""
+    import csv
+    from collections import OrderedDict
+    out = {"locations": 0}
+    path = ROOT / "data" / "polling_places.csv"
+    if not path.exists():
+        return out
+    venues: "OrderedDict[tuple, dict]" = OrderedDict()
+    for r in csv.DictReader(path.open()):
+        key = re.sub(r"[^a-z0-9]", "", r["polling_place"].lower())   # same venue, addresses spelled differently
+        v = venues.setdefault(key, {"row": r, "precincts": []})
+        v["precincts"].append(int(r["precinct"]))
+    for v in venues.values():
+        r, pcts = v["row"], v["precincts"]
+        slug = f"polling-{pcts[0]:02d}"
+        if db.scalar(select(m.Location).where(m.Location.slug == slug)):
+            continue
+        lat = float(r["lat"]) if r.get("lat") else None
+        lon = float(r["lon"]) if r.get("lon") else None
+        served = ", ".join(str(p) for p in pcts)
+        db.add(m.Location(slug=slug, name=r["polling_place"], address=r["address"], city=r["city"], lat=lat, lon=lon,
+                          precinct=str(pcts[0]), status="planned", public=False,
+                          notes=f"Election Board polling place for precinct{'s' if len(pcts) > 1 else ''} {served}. "
+                                f"Candidate signing site — get the venue's permission, set hours, then mark public."
+                                + ("" if lat else " Address did not geocode; use the Geocode button or enter coordinates.")))
+        out["locations"] += 1
+    db.commit()
+    return out
+
+
 def _slug(v: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", (v or "").lower()).strip("-")[:60] or "location"
 
@@ -60,8 +115,13 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
                 continue
             db.add(m.Contact(role=c["role"], name=c.get("name"), phone=str(c.get("phone")) if c.get("phone") else None,
                              email=c.get("email"), address=c.get("address"), hours=c.get("hours"),
-                             public=bool(c.get("public", True)), sort_order=(i + 1) * 10))
+                             public=bool(c.get("public", True)) and not _placeholder(c.get("name"), c.get("phone")),
+                             sort_order=(i + 1) * 10))
             out["contacts"] += 1
+    # never show bracketed placeholders ("[NAME]", "[PHONE]") on the public site
+    for c in db.scalars(select(m.Contact).where(m.Contact.public.is_(True))).all():
+        if _placeholder(c.name, c.phone):
+            c.public = False
 
     # locations + events
     lpath, epath = ROOT / "data" / "signing_locations.yaml", ROOT / "data" / "events.yaml"
@@ -116,10 +176,20 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--admin-user"); ap.add_argument("--admin-password")
+    ap.add_argument("--pamphlets", nargs="?", const=-1, type=int, metavar="N",
+                    help="pre-create the print run P-001..P-N (default N = Settings print_run)")
+    ap.add_argument("--sheets", type=int, help="sheets per pamphlet (default = Settings sheets_per_pamphlet)")
+    ap.add_argument("--polling-places", action="store_true", help="load polling places as hidden candidate signing locations")
     a = ap.parse_args(argv)
     dbmod.init_db()
     with dbmod.SessionLocal() as db:
         out = seed(db, a.admin_user, a.admin_password)
+        if a.pamphlets is not None:
+            st = Settings(db)
+            n = a.pamphlets if a.pamphlets > 0 else st.print_run
+            out.update(seed_pamphlets(db, n, a.sheets or st.sheets_per_pamphlet))
+        if a.polling_places:
+            out["polling_places"] = seed_polling_places(db)["locations"]
     print("seeded:", out)
 
 

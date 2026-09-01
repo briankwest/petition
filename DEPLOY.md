@@ -83,3 +83,19 @@ dokku logs petition -t
 dokku run petition python -m app.seed --admin-user captain --admin-password '…'   # add a first admin later
 dokku config:set petition FORCE_HTTPS=0     # only if TLS terminates somewhere odd
 ```
+
+## Pre-populating the database
+
+After the first deploy (the postdeploy hook seeds settings, contacts, QA tasks and the admin user):
+
+```sh
+dokku run petition python -m app.seed --pamphlets --polling-places
+```
+
+- `--pamphlets [N]` creates the print run `P-001..P-N` (default N = Settings → print run, 200) with
+  Settings → sheets per pamphlet blank sheets each. Idempotent — re-running never touches existing pamphlets.
+- `--polling-places` loads the county's 38 polling places (34 venues) as **hidden** candidate signing
+  locations with coordinates where the address geocoded. In admin → Locations, set hours and mark one public
+  once the venue has agreed.
+- Contacts whose name/phone are still bracketed placeholders (`[NAME]`, `[PHONE]`) are kept off the public
+  site automatically; fill them in under admin → Contacts.
