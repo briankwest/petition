@@ -219,8 +219,9 @@ def run_checks(out_dir: str | Path, final: bool = False, petition: cfg.Petition 
                         f"{len(docs['03-circulator-quick-card'])} pages"))
     if "04-notary-checklist" in docs:
         pgs = docs["04-notary-checklist"]
-        ok = len(pgs) >= 2 and pgs[0].width < pgs[0].height and all(pg.width > pg.height for pg in pgs[1:])
-        R.append(Result("04-notary-checklist", "portrait checklist + landscape session-log pages", ok,
+        ok = (len(pgs) == 4 and pgs[0].width < pgs[0].height and all(pg.width > pg.height for pg in pgs[1:])
+              and all(pg.has("NOTARY SESSION LOG") for pg in pgs[1:]))
+        R.append(Result("04-notary-checklist", "4 pages (2 duplex sheets): portrait checklist + 3 landscape log pages, each with the header", ok,
                         f"{len(pgs)} pages: " + ", ".join("landscape" if pg.width > pg.height else "portrait" for pg in pgs)))
     for key in ("03-circulator-quick-card", "04-notary-checklist", "05-action-plan", "06-fallback-plan"):
         if key in docs:

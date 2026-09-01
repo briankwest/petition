@@ -636,3 +636,16 @@ def test_abatement_percent_editable(client, db):
     assert from_db(db).measure.abatement_percent == 85
     r = client.post("/admin/petition", data={"csrf": tok, "abatement_percent": "80"}, follow_redirects=False)
     assert r.status_code == 303 and from_db(db).measure.abatement_percent == 80
+
+
+def test_assign_propagates_and_master_row(client, db):
+    tok = login(client, db)
+    c = m.Circulator(name="Solo Circ", role="Circulator", registered_voter_verified=True, trained_on=date(2026, 9, 1)); db.add(c)
+    p = m.Pamphlet(number="P-777"); p.sheets = [m.Sheet(sheet_no=i) for i in range(1, 6)]; db.add(p); db.commit()
+    r = client.post("/admin/pamphlets/P-777/assign", data={"csrf": tok, "circulator_id": c.id}, follow_redirects=False)
+    from urllib.parse import unquote
+    assert r.status_code == 303 and "all 5 sheets" in unquote(r.headers["location"])
+    db.expire_all()
+    assert all(sh.circulator_id == c.id for sh in db.query(m.Sheet).filter_by(pamphlet_id=p.id))
+    page = client.get("/admin/pamphlets/P-777").text
+    assert 'id="master-row"' in page and 'id="apply-all"' in page and 'data-m="notary_commission"' in page

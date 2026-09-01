@@ -251,8 +251,10 @@ async def pamphlet_assign(request: Request, number: str, db: Session = Depends(g
     if p.status not in ("Ready to Print",):
         return go(f"/admin/pamphlets/{number}", err=f"{p.number} is {p.status} — assignment happens before printing. Void the print first if you need to reassign.")
     p.issued_to_id = c.id
+    for sh in p.sheets:
+        sh.circulator_id = c.id          # one circulator per pamphlet is the working rule; per-sheet field stays for exceptions
     db.commit()
-    return go(f"/admin/pamphlets/{number}", msg=f"Assigned to {c.name}. Next: Print (enabled once the petition is frozen).")
+    return go(f"/admin/pamphlets/{number}", msg=f"Assigned to {c.name} (all {len(p.sheets)} sheets). Next: Print (enabled once the petition is frozen).")
 
 
 @router.post("/pamphlets/{number}/print", dependencies=AUTH)
