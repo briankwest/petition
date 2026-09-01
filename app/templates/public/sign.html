@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Where to sign · {{ site_title }}{% endblock %}
-{% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="/static/map.css">{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="/static/map.css?v={{ asset_v }}">{% endblock %}
 {% block content %}
 <h1>Where to sign</h1>
 <p class="lede">Bring nothing but yourself. A trained circulator with an official, filed pamphlet will be at each location during the hours shown.</p>
@@ -38,7 +38,7 @@
 {% endblock %}
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/map.js"></script>
+<script src="/static/map.js?v={{ asset_v }}"></script>
 <script>
 (function(){
   var el=document.getElementById('map');

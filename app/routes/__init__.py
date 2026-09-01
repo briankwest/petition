@@ -10,6 +10,11 @@ from ..auth import csrf_token
 from ..settings import DEFAULTS
 
 templates = Jinja2Templates(directory=str(ROOT / "app" / "templates"))
+# cache-busting query for /static links: newest mtime under app/static at process start
+try:
+    ASSET_V = str(int(max(os.path.getmtime(p) for p in __import__("glob").glob(str(ROOT / "app" / "static" / "**" / "*"), recursive=True) if os.path.isfile(p))))
+except ValueError:
+    ASSET_V = "1"
 
 
 def fmt_date(v, placeholder="—"):
@@ -58,6 +63,7 @@ def render(request: Request, name: str, status_code: int = 200, **ctx):
         "err": request.query_params.get("err"),
         "today": date.today(),
         "ga_id": os.environ.get("GA_MEASUREMENT_ID", "G-3ECCW6ESQR"),
+        "asset_v": ASSET_V,
     }
     s = ctx.get("s")
     base["site_title"] = (s.raw("site_title") if s is not None else None) or DEFAULTS["site_title"]
