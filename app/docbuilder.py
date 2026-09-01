@@ -10,7 +10,7 @@ from pathlib import Path
 from sqlalchemy import select
 from . import models as m
 from .db import SessionLocal
-from .petition import from_db
+from .petition import from_db, load_attachments
 
 _lock = threading.Lock()
 
@@ -33,8 +33,9 @@ def _run(build_id: int, kind: str, session_factory) -> None:
         p = from_db(db)
         b.duplex = p.layout.duplex
         b.petition_snapshot = _snapshot(p)
+        attachments = load_attachments(db)
         with tempfile.TemporaryDirectory() as td:
-            paths = build_all(td, final=(kind == "final"), duplex=p.layout.duplex, petition=p)
+            paths = build_all(td, final=(kind == "final"), duplex=p.layout.duplex, petition=p, attachments=attachments)
             write_manifest(td, paths, final=(kind == "final"), duplex=p.layout.duplex, petition=p)
             results = run_checks(td, final=(kind == "final"), petition=p)
             b.manifest = (Path(td) / "manifest.json").read_text()

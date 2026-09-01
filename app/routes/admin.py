@@ -278,7 +278,8 @@ async def pamphlet_print(request: Request, number: str, db: Session = Depends(ge
         raise HTTPException(503, "Document rendering is not available on this server.")
     petition = petition_from_db(db)
     stamp = {"number": p.number, "issued_to": p.issued_to.name, "training_id": f"V-{p.issued_to.id:04d}"}
-    pdf = render_pamphlet(petition, stamp=stamp)
+    from ..petition import load_attachments as _la
+    pdf = render_pamphlet(petition, stamp=stamp, attachments=_la(db))
     import tempfile as _tf
     from pathlib import Path as _P
     with _tf.NamedTemporaryFile(suffix=".pdf", delete=False) as fh:
@@ -418,9 +419,70 @@ def petition_page(request: Request, db: Session = Depends(get_db)):
     s = Settings(db)
     p = petition_from_db(db)
     props = proponents_from_settings(s) + [{}] * 3
-    return render(request, "admin/petition.html", s=s, p=p, props=props[:3], frozen=_frozen(s),
+    attachments = list(db.scalars(select(m.PetitionAttachment).order_by(m.PetitionAttachment.position, m.PetitionAttachment.id)))
+    return render(request, "admin/petition.html", s=s, p=p, props=props[:3], frozen=_frozen(s), attachments=attachments,
+                  attachment_pages_total=sum(a.pages or 0 for a in attachments),
                   placeholders=p.placeholders, wc=p.ballot_title_word_count,
                   measure_text=s.raw("measure_text") or "", gist=p.gist, ballot_title=p.ballot_title)
+
+
+ATTACH_MAX = 25 * 1024 * 1024
+
+
+@router.post("/petition/attachments", dependencies=[Depends(require_admin)])
+async def petition_attachment_upload(request: Request, db: Session = Depends(get_db)):
+    form = await request.form()
+    from ..auth import check_csrf
+    check_csrf(request, form)
+    if _frozen(Settings(db)):
+        return go("/admin/petition", err="The petition is frozen (filed) — attachments cannot change.")
+    up = form.get("file")
+    if up is None or not getattr(up, "filename", ""):
+        return go("/admin/petition", err="Choose a PDF file to upload.")
+    data = await up.read()
+    name = (up.filename or "attachment.pdf").rsplit("/", 1)[-1][:120]
+    if not name.lower().endswith(".pdf") or not data.startswith(b"%PDF"):
+        return go("/admin/petition", err=f"{name}: only PDF files can be attached to the pamphlet.")
+    if len(data) > ATTACH_MAX:
+        return go("/admin/petition", err=f"{name} is {len(data) // (1024*1024)} MB — the limit is {ATTACH_MAX // (1024*1024)} MB. Split it or downsample the scan.")
+    import hashlib as _h, io as _io
+    try:
+        from pypdf import PdfReader as _PR
+        pages = len(_PR(_io.BytesIO(data)).pages)
+    except Exception:
+        return go("/admin/petition", err=f"{name} could not be read as a PDF.")
+    last = db.scalar(select(func.max(m.PetitionAttachment.position))) or 0
+    db.add(m.PetitionAttachment(position=last + 10, name=name, content=data, pages=pages, bytes_len=len(data),
+                                sha256=_h.sha256(data).hexdigest(), uploaded_by=request.state.user.username))
+    db.commit()
+    return go("/admin/petition", msg=f"Attached {name} ({pages} page{'s' if pages != 1 else ''}). It will be reproduced inside every pamphlet build from now on.")
+
+
+@router.post("/petition/attachments/{aid}/delete", dependencies=[Depends(require_admin)])
+async def petition_attachment_delete(request: Request, aid: int, db: Session = Depends(get_db)):
+    await F.parse(request)
+    if _frozen(Settings(db)):
+        return go("/admin/petition", err="The petition is frozen (filed) — attachments cannot change.")
+    a = db.get(m.PetitionAttachment, aid) or _404()
+    db.delete(a); db.commit()
+    return go("/admin/petition", msg=f"Removed {a.name}.")
+
+
+@router.post("/petition/attachments/{aid}/move", dependencies=[Depends(require_admin)])
+async def petition_attachment_move(request: Request, aid: int, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    if _frozen(Settings(db)):
+        return go("/admin/petition", err="The petition is frozen (filed) — attachments cannot change.")
+    a = db.get(m.PetitionAttachment, aid) or _404()
+    rows = list(db.scalars(select(m.PetitionAttachment).order_by(m.PetitionAttachment.position, m.PetitionAttachment.id)))
+    i = rows.index(a)
+    j = i - 1 if F.s(form, "dir") == "up" else i + 1
+    if 0 <= j < len(rows):
+        rows[i], rows[j] = rows[j], rows[i]
+        for pos, row in enumerate(rows, 1):
+            row.position = pos * 10
+        db.commit()
+    return go("/admin/petition", msg=f"Order updated.")
 
 
 @router.post("/petition", dependencies=[Depends(require_admin)])

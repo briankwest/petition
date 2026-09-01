@@ -17,6 +17,7 @@ quoted statutes; `reference/statutes/` holds the verbatim text.
 | --- | --- |
 | `config/petition.yaml` | Single source of truth for documents (county, measure, dates, gist, ballot title, layout). `null` = placeholder. |
 | `measure/adopted-resolution.md` | Exact adopted text of the measure (placeholder until adopted). |
+| `measure/attachments/*.pdf` | Offline builds only: exhibit PDFs reproduced inside the pamphlet (sorted by filename). Online builds use the PDFs uploaded on admin → Petition. |
 | `reference/statutes/` | Verbatim Oklahoma statutes with source URLs and retrieval dates. |
 | `reference/source-docs/` | The original five Google-Docs exports (unchanged). |
 | `toolkit/` | Python package: `config`, `statutes`, `docs` (WeasyPrint PDFs + checks), `xlsx` (export/import), `geo` (precincts, map, lookup), `freeze`. |

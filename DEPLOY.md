@@ -114,3 +114,12 @@ dokku run petition python -m app.seed --pamphlets --polling-places
   (stamped with the pamphlet number + circulator; refused unless frozen and matching the filed
   fingerprint) → Mark issued. Void & reprint (logged) covers reassignment — destroy voided paper.
 - Locally: `make docs-db` renders from a database (`DATABASE_URL=…`), `make docs` from the YAML seed.
+
+## Resolution attachments
+
+Scanned exhibits (maps, district descriptions, agreements adopted as part of the resolution) are
+uploaded on admin → Petition → "Adopted resolution attachments". Each page is rasterized
+(poppler `pdftoppm`, in the image) and reproduced inside the pamphlet after the typed measure
+text — scaled to legal size, centered, counted by the page footers, with duplex parity kept.
+Attachments are part of the filed instrument: they are locked while the petition is frozen, and a
+build with different attachments will show as DIFFERING from the filed fingerprint.

@@ -455,6 +455,8 @@ def test_online_builds_freeze_and_single_pamphlet_print(client, db):
     # --- fill the petition, final build passes ---
     r = client.post("/admin/petition", data={"csrf": tok, **PETITION_DATA}, follow_redirects=False)
     assert "No placeholders remain" in _loc(r)
+    r = client.post("/admin/petition/attachments", data={"csrf": tok}, files={"file": ("exhibit-a.pdf", _pdf_bytes(2), "application/pdf")}, follow_redirects=False)
+    assert "Attached exhibit-a.pdf" in _loc(r)
     client.post("/admin/documents/generate", data={"csrf": tok, "kind": "final"}, follow_redirects=False)
     fb = _wait_build(db, _last_build_id(db))
     assert fb.kind == "final" and fb.status == "ok" and fb.checks_failed == 0, fb.error or fb.check_report
@@ -484,6 +486,7 @@ def test_online_builds_freeze_and_single_pamphlet_print(client, db):
     import io
     text = "".join(pg.extract_text() for pg in PdfReader(io.BytesIO(r.content)).pages)
     assert "P-001" in text and "Alex Rivera" in text and f"V-{good.id:04d}" in text
+    assert "Exhibit — exhibit-a.pdf (page 2 of 2)" in text                  # uploaded resolution pages ride along in the print
     db.expire_all()
     p1 = db.query(m.Pamphlet).filter_by(number="P-001").one()
     assert p1.status == "Printed" and p1.version_hash == fb.pamphlet_fingerprint and p1.print_batch == f"build-{fb.id}"
@@ -574,3 +577,48 @@ def test_districts_editable_and_three_by_default(client, db):
 def test_faq_links_county_resolutions(client):
     html = client.get("/faq").text
     assert 'href="https://pittsburg.okcounties.org/resolutions"' in html and "County Election Board</strong> before any signature" in html
+
+
+def _pdf_bytes(pages=1, w=612, h=792) -> bytes:
+    import io
+    from pypdf import PdfWriter
+    wr = PdfWriter()
+    for _ in range(pages):
+        wr.add_blank_page(width=w, height=h)
+    buf = io.BytesIO(); wr.write(buf)
+    return buf.getvalue()
+
+
+def test_petition_attachment_admin_flow(client, db, monkeypatch):
+    tok = login(client, db)
+    # non-PDF rejected
+    r = client.post("/admin/petition/attachments", data={"csrf": tok}, files={"file": ("notes.txt", b"hello", "text/plain")}, follow_redirects=False)
+    assert "only PDF" in _loc(r)
+    # oversize rejected
+    import app.routes.admin as A
+    monkeypatch.setattr(A, "ATTACH_MAX", 10)
+    r = client.post("/admin/petition/attachments", data={"csrf": tok}, files={"file": ("big.pdf", _pdf_bytes(1), "application/pdf")}, follow_redirects=False)
+    assert "limit is" in _loc(r)
+    monkeypatch.setattr(A, "ATTACH_MAX", 25 * 1024 * 1024)
+    # two uploads, reorder, page shows totals
+    for name in ("resolution.pdf", "map-exhibit.pdf"):
+        r = client.post("/admin/petition/attachments", data={"csrf": tok}, files={"file": (name, _pdf_bytes(2), "application/pdf")}, follow_redirects=False)
+        assert "Attached " + name in _loc(r)
+    page = client.get("/admin/petition").text
+    assert "resolution.pdf" in page and "map-exhibit.pdf" in page and "4 exhibit pages" in page
+    rows = db.query(m.PetitionAttachment).order_by(m.PetitionAttachment.position).all()
+    assert [a.name for a in rows] == ["resolution.pdf", "map-exhibit.pdf"] and all(a.pages == 2 for a in rows)
+    client.post(f"/admin/petition/attachments/{rows[1].id}/move", data={"csrf": tok, "dir": "up"}, follow_redirects=False)
+    db.expire_all()
+    assert [a.name for a in db.query(m.PetitionAttachment).order_by(m.PetitionAttachment.position).all()] == ["map-exhibit.pdf", "resolution.pdf"]
+    from app.petition import load_attachments
+    assert [n for n, _ in load_attachments(db)] == ["map-exhibit.pdf", "resolution.pdf"]
+    # frozen locks everything
+    Settings(db).set("petition_frozen", True); db.commit()
+    assert "frozen" in _loc(client.post("/admin/petition/attachments", data={"csrf": tok}, files={"file": ("z.pdf", _pdf_bytes(), "application/pdf")}, follow_redirects=False))
+    assert "frozen" in _loc(client.post(f"/admin/petition/attachments/{rows[0].id}/delete", data={"csrf": tok}, follow_redirects=False))
+    Settings(db).set("petition_frozen", False); db.commit()
+    r = client.post(f"/admin/petition/attachments/{rows[0].id}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert "Removed" in _loc(r)
+    db.expire_all()
+    assert db.query(m.PetitionAttachment).count() == 1

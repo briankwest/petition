@@ -67,7 +67,38 @@ def base_context(p: cfg.Petition, final: bool, duplex: str) -> dict:
     }
 
 
-def render_pamphlet(petition: cfg.Petition, stamp: dict | None = None, duplex: str | None = None) -> bytes:
+def attachment_pages_from_pdfs(attachments: list[tuple[str, bytes]] | None, dpi: int = 150,
+                               margins_in: float = 0.75, header_in: float = 0.30) -> list[dict]:
+    """Rasterize attachment PDFs (pdftoppm/poppler) into per-page PNG data URIs for the pamphlet.
+    Each page gets explicit inch dimensions and a computed top margin so it is scaled to fit the
+    legal printable area and centered both ways — no reliance on flex/table layout engines."""
+    if not attachments:
+        return []
+    import base64, subprocess, tempfile
+    from PIL import Image
+    avail_w = 8.5 - 2 * margins_in
+    avail_h = 14.0 - 2 * margins_in - header_in
+    out: list[dict] = []
+    for name, data in attachments:
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "a.pdf"
+            src.write_bytes(data)
+            subprocess.run(["pdftoppm", "-r", str(dpi), "-png", str(src), str(Path(td) / "pg")],
+                           check=True, capture_output=True, timeout=300)
+            pngs = sorted(Path(td).glob("pg*.png"))
+            for i, png in enumerate(pngs, 1):
+                with Image.open(png) as im:
+                    nat_w, nat_h = im.width / dpi, im.height / dpi          # natural print size in inches
+                scale = min(avail_w / nat_w, avail_h / nat_h, 1.0)          # never upscale past 100%
+                w, h = nat_w * scale, nat_h * scale
+                out.append({"name": name, "page_no": i, "total": len(pngs),
+                            "w_in": round(w, 3), "h_in": round(h, 3), "mt_in": round((avail_h - h) / 2, 3),
+                            "data_uri": "data:image/png;base64," + base64.b64encode(png.read_bytes()).decode()})
+    return out
+
+
+def render_pamphlet(petition: cfg.Petition, stamp: dict | None = None, duplex: str | None = None,
+                    attachments: list[tuple[str, bytes]] | None = None) -> bytes:
     """The pamphlet alone, optionally stamped per copy: {"number": "P-017", "issued_to": "Alex
     Rivera", "training_id": "V-0007"}. Stamps fill blanks only (pamphlet number, cover
     assignment line, affidavit printed name); the petition content is unchanged, so the
@@ -75,6 +106,7 @@ def render_pamphlet(petition: cfg.Petition, stamp: dict | None = None, duplex: s
     duplex = duplex or (petition.layout.duplex if petition.layout.duplex in DUPLEX_MODES else "long-edge")
     ctx = base_context(petition, final=True, duplex=duplex)
     ctx["stamp"] = stamp
+    ctx["attachment_pages"] = attachment_pages_from_pdfs(attachments, margins_in=petition.layout.margins_in)
     html = env().get_template(DOCS["01-petition-pamphlet"][0]).render(doc_key="01-petition-pamphlet", doc_title="Petition Pamphlet", **ctx)
     return HTML(string=html, base_url=str(TEMPLATES)).write_pdf()
 
@@ -96,7 +128,7 @@ def render_html(key: str, ctx: dict) -> str:
 
 
 def build_all(out: str | Path, final: bool = False, duplex: str = "long-edge", petition: cfg.Petition | None = None,
-              only: list[str] | None = None) -> list[Path]:
+              only: list[str] | None = None, attachments: list[tuple[str, bytes]] | None = None) -> list[Path]:
     if duplex not in DUPLEX_MODES:
         raise ValueError(f"duplex must be one of {DUPLEX_MODES}")
     p = petition or cfg.load()
@@ -104,6 +136,7 @@ def build_all(out: str | Path, final: bool = False, duplex: str = "long-edge", p
         raise PlaceholderError(p.placeholders)
     out = Path(out); out.mkdir(parents=True, exist_ok=True)
     ctx = base_context(p, final, duplex)
+    ctx["attachment_pages"] = attachment_pages_from_pdfs(attachments, margins_in=p.layout.margins_in)
     ctx["action_plan_html"] = source_doc_html("action-plan", p)
     ctx["fallback_plan_html"] = source_doc_html("fallback-plan", p)
     written = []
@@ -182,11 +215,14 @@ def main(argv=None) -> int:
         eng = make_engine(database_url()); init_db(eng)
         with sessionmaker(bind=eng)() as session:
             p = from_db(session)
+            from app.petition import load_attachments
+            attachments = load_attachments(session)
     else:
         p = cfg.load()
+        attachments = [(f.name, f.read_bytes()) for f in sorted((ROOT / "measure" / "attachments").glob("*.pdf"))]
     duplex = a.duplex or (p.layout.duplex if p.layout.duplex in DUPLEX_MODES else "long-edge")
     try:
-        paths = build_all(a.out, final=a.final, duplex=duplex, petition=p, only=a.only)
+        paths = build_all(a.out, final=a.final, duplex=duplex, petition=p, only=a.only, attachments=attachments)
     except PlaceholderError as e:
         print(e, file=sys.stderr); return 2
     for path in paths:

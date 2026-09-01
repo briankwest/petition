@@ -56,6 +56,27 @@
   </div>
   {% if not frozen %}<div class="actions sticky"><button class="btn primary">Save petition data</button></div>{% endif %}
 </form>
+<h2 id="attachments">Adopted resolution attachments (PDF)</h2>
+<p class="small">These pages are reproduced inside the pamphlet after the typed measure text, scaled to legal size and centered. The adopted resolution's text plus these exhibits together must be the complete measure (<a class="cite" href="{{ cite_url('34-1') }}" rel="noopener" target="_blank">34 O.S. § 1</a>; <a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868(B)(1)</a>). Use them for scanned exhibits — maps, district descriptions, agreements adopted as part of the resolution.</p>
+{% if attachments %}
+<div class="tbl"><table>
+<thead><tr><th>Order</th><th>File</th><th class="num">Pages</th><th class="num">Size</th><th>Uploaded</th><th></th></tr></thead>
+<tbody>{% for a in attachments %}<tr>
+<td class="num">{{ loop.index }}{% if not frozen %} <form class="inline-form" method="post" action="/admin/petition/attachments/{{ a.id }}/move"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="dir" value="up"><button class="linklike" {% if loop.first %}disabled{% endif %}>↑</button></form><form class="inline-form" method="post" action="/admin/petition/attachments/{{ a.id }}/move"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="dir" value="down"><button class="linklike" {% if loop.last %}disabled{% endif %}>↓</button></form>{% endif %}</td>
+<td>{{ a.name }} <span class="mono small muted">{{ (a.sha256 or '')[:10] }}</span></td>
+<td class="num">{{ a.pages }}</td><td class="num">{{ (a.bytes_len/1024)|round|int }} KB</td>
+<td class="small">{{ a.uploaded_at|date }} · {{ a.uploaded_by }}</td>
+<td class="actions-cell">{% if not frozen %}<form class="inline-form" method="post" action="/admin/petition/attachments/{{ a.id }}/delete" onsubmit="return confirm('Remove {{ a.name }} from the pamphlet?')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn danger">Remove</button></form>{% endif %}</td>
+</tr>{% endfor %}</tbody></table></div>
+<p class="small">{{ attachment_pages_total }} exhibit page{{ '' if attachment_pages_total == 1 else 's' }} will be added to every pamphlet.</p>
+{% else %}<p class="small muted">No attachments yet.</p>{% endif %}
+{% if not frozen %}
+<form method="post" action="/admin/petition/attachments" enctype="multipart/form-data" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div class="field"><label for="att">Add a PDF (max 25 MB)</label><input id="att" type="file" name="file" accept="application/pdf,.pdf" required></div>
+  <div class="actions"><button class="btn primary">Upload attachment</button></div>
+</form>
+{% endif %}
 <script>
 (function(){var bt=document.getElementById('bt'),wc=document.getElementById('wc');if(!bt)return;
 bt.addEventListener('input',function(){var n=bt.value.trim()?bt.value.trim().split(/\s+/).length:0;wc.textContent=n;wc.style.color=n>150?'#C2352B':'';});})();

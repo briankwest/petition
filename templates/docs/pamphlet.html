@@ -14,6 +14,9 @@
 .measure h1 { text-align: center; font-size: 16pt; letter-spacing: 1pt; }
 .measure .body { border: 1pt solid #000; padding: 10pt 12pt; min-height: 3in; }
 .proponents h1 { text-align: center; font-size: 16pt; }
+.exhibit { break-before: page; }
+.exhibit .ex-head { font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "DejaVu Sans", sans-serif; font-size: 10pt; color: #333; text-align: center; margin: 0 0 4pt; }
+.exhibit img { display: block; margin: 0 auto; }
 .proponent { border: 1pt solid #000; padding: 10pt 12pt; margin: 0 0 12pt; break-inside: avoid; }
 .proponent .line { margin: 0 0 10pt; }
 .proponent .line .blank { min-width: 3.4in; }
@@ -104,7 +107,15 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
   <h1>Exact Copy of the Referred Measure</h1>
   <p class="sans small center">Resolution No. {{ f.resolution_number }} · adopted {{ f.adoption_date }} · {{ p.measure.short_description }}</p>
   <div class="body">{{ measure_html|safe }}</div>
+  {% if attachment_pages %}<p class="sans small center" style="margin-top:8pt">The following {{ attachment_pages|length }} page{{ '' if attachment_pages|length == 1 else 's' }} reproduce the adopted measure's attachments and exhibits and are part of this exact copy.</p>{% endif %}
 </section>
+
+{% for ex in attachment_pages %}
+<section class="exhibit">
+  <p class="ex-head">Exhibit — {{ ex.name }} (page {{ ex.page_no }} of {{ ex.total }}) · part of the exact copy of the referred measure</p>
+  <img src="{{ ex.data_uri }}" alt="Exhibit {{ ex.name }} page {{ ex.page_no }}" style="width: {{ ex.w_in }}in; height: {{ ex.h_in }}in; margin-top: {{ ex.mt_in }}in;">
+</section>
+{% endfor %}
 
 {# ------------------------------------------------------------ 4. PROPONENTS OF RECORD #}
 <section class="proponents pb">

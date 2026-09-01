@@ -5,7 +5,7 @@
 FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 MPLBACKEND=Agg XDG_CACHE_HOME=/tmp/cache
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libharfbuzz-subset0 libffi8 shared-mime-info \
+      libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libharfbuzz-subset0 libffi8 shared-mime-info poppler-utils \
       fonts-liberation fonts-dejavu-core fontconfig \
     && fc-cache -f && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv

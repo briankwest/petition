@@ -86,3 +86,47 @@ def test_stamped_pamphlet_matches_filed_fingerprint(tmp_path):
     p.gist = p.gist + " Changed."
     c = tmp_path / "changed.pdf"; c.write_bytes(render_pamphlet(p, stamp=stamp))
     assert content_fingerprint(pa) != content_fingerprint(load(c), ignore=ig)
+
+
+def _letter_pdf(pages=2) -> bytes:
+    import io
+    from pypdf import PdfWriter
+    w = PdfWriter()
+    for _ in range(pages):
+        w.add_blank_page(width=612, height=792)          # LETTER, not legal
+    buf = io.BytesIO(); w.write(buf)
+    return buf.getvalue()
+
+
+def test_pamphlet_includes_attachments_normalized_to_legal(tmp_path):
+    from pypdf import PdfReader
+    pdf = build.build_all(tmp_path, only=["01-petition-pamphlet"], attachments=[("adopted-resolution.pdf", _letter_pdf(2))])[0]
+    r = PdfReader(str(pdf))
+    assert {(round(float(p.mediabox.width)), round(float(p.mediabox.height))) for p in r.pages} == {(612, 1008), (1008, 612)}
+    tx = texts(pdf)
+    ex = [i for i, t in enumerate(tx, 1) if "Exhibit — adopted-resolution.pdf" in t]
+    prop = next(i for i, t in enumerate(tx, 1) if "Proponents of Record" in t)
+    sheet1 = next(i for i, t in enumerate(tx, 1) if "SIGNATURE SHEET 1 OF" in t)
+    assert ex == [4, 5] and prop == 6                     # between measure (3) and proponents
+    assert sheet1 % 2 == 1                                # duplex parity: sheet on a front page
+    # odd page count attachment: break-before:right pads so the sheet still lands on a front
+    pdf2 = build.build_all(tmp_path / "b", only=["01-petition-pamphlet"], attachments=[("x.pdf", _letter_pdf(1))])[0]
+    tx2 = texts(pdf2)
+    s2 = next(i for i, t in enumerate(tx2, 1) if "SIGNATURE SHEET 1 OF" in t)
+    assert s2 % 2 == 1
+
+
+def test_stamped_pamphlet_with_attachments_matches_fingerprint(tmp_path):
+    from toolkit.docs.check import load, content_fingerprint
+    att = [("res.pdf", _letter_pdf(2))]
+    p = cfg.load()
+    plain = build.render_pamphlet(p, attachments=att)
+    stamp = {"number": "P-017", "issued_to": "Alex Rivera", "training_id": "V-0007"}
+    stamped = build.render_pamphlet(p, stamp=stamp, attachments=att)
+    a = tmp_path / "a.pdf"; a.write_bytes(plain)
+    b = tmp_path / "b.pdf"; b.write_bytes(stamped)
+    ig = [stamp["number"], stamp["issued_to"], stamp["training_id"], "Issued to:"]
+    assert content_fingerprint(load(a)) == content_fingerprint(load(b), ignore=ig)
+    # different attachments -> different instrument
+    c = tmp_path / "c.pdf"; c.write_bytes(build.render_pamphlet(p, attachments=[("res.pdf", _letter_pdf(3))]))
+    assert content_fingerprint(load(a)) != content_fingerprint(load(c))

@@ -298,3 +298,19 @@ class DocumentFile(Base):
     sha256: Mapped[str | None] = mapped_column(String(64))
     content: Mapped[bytes] = mapped_column(LargeBinary)
     build: Mapped[DocumentBuild] = relationship(back_populates="files")
+
+
+class PetitionAttachment(Base):
+    """Adopted-resolution / exhibit PDFs uploaded on /admin/petition. Reproduced page-by-page
+    inside the pamphlet after the typed measure text (each page scaled to legal and centered),
+    so text + exhibits together form the exact copy of the measure (34 O.S. § 1)."""
+    __tablename__ = "petition_attachments"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    position: Mapped[int] = mapped_column(Integer, default=100)
+    name: Mapped[str] = mapped_column(String(120))
+    content: Mapped[bytes] = mapped_column(LargeBinary)
+    pages: Mapped[int | None] = mapped_column(Integer)
+    bytes_len: Mapped[int] = mapped_column(Integer, default=0)
+    sha256: Mapped[str | None] = mapped_column(String(64))
+    uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    uploaded_by: Mapped[str | None] = mapped_column(String(64))

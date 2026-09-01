@@ -22,6 +22,14 @@ def proponents_from_settings(s: Settings) -> list[dict]:
     return [r for r in rows if isinstance(r, dict) and (r.get("name") or "").strip()][:3]
 
 
+def load_attachments(db: Session) -> list[tuple[str, bytes]]:
+    """Uploaded resolution/exhibit PDFs, in display order, for the pamphlet render."""
+    from . import models as m
+    from sqlalchemy import select
+    rows = db.scalars(select(m.PetitionAttachment).order_by(m.PetitionAttachment.position, m.PetitionAttachment.id)).all()
+    return [(r.name, r.content) for r in rows]
+
+
 def from_db(db: Session, base: cfg.Petition | None = None) -> cfg.Petition:
     p = base or cfg.load()
     s = Settings(db, p)
