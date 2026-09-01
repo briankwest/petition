@@ -17,7 +17,7 @@
 <p>You can register or update your address through the portal or at the County Election Board. New registrations take effect after processing — ask the Election Board when yours will be active.</p>
 <div class="card">
   <h3>{{ petition.contacts.election_board.name }}</h3>
-  <p>{{ petition.contacts.election_board.address }}<br>
+  <p>{{ petition.contacts.election_board.address|addr }}<br>
   <a href="tel:{{ petition.contacts.election_board.phone|tel }}">{{ petition.contacts.election_board.phone }}</a> · <a href="mailto:{{ petition.contacts.election_board.email }}">{{ petition.contacts.election_board.email }}</a><br>
   {{ petition.contacts.election_board.hours }} · Secretary: {{ petition.contacts.election_board.secretary }}</p>
 </div>
