@@ -649,3 +649,5 @@ def test_assign_propagates_and_master_row(client, db):
     assert all(sh.circulator_id == c.id for sh in db.query(m.Sheet).filter_by(pamphlet_id=p.id))
     page = client.get("/admin/pamphlets/P-777").text
     assert 'id="master-row"' in page and 'id="apply-all"' in page and 'data-m="notary_commission"' in page
+    title = page.split("<title>")[1].split("</title>")[0]
+    assert "script" not in title and "getElementById('apply-all')" in page.split("</title>")[1]   # script executes in the body, not the title

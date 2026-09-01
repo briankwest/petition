@@ -1,15 +1,5 @@
 {% extends "admin/base.html" %}
-{% block atitle %}{{ p.number }}<script>
-(function(){var b=document.getElementById('apply-all');if(!b)return;
-b.addEventListener('click',function(){
-  document.querySelectorAll('#master-row [data-m]').forEach(function(src){
-    if(!src.value)return;
-    document.querySelectorAll('.sheets [name$="_'+src.dataset.m+'"]').forEach(function(dst){dst.value=src.value;});
-  });
-  b.textContent='Applied — review below, then Save';setTimeout(function(){b.textContent='Apply to all sheets ↓';},2500);
-});})();
-</script>
-{% endblock %}
+{% block atitle %}{{ p.number }}{% endblock %}
 {% block content %}
 <p class="small"><a href="/admin/pamphlets">← Pamphlets</a></p>
 <h1>{{ p.number }} <span class="pill">{{ p.status }}</span></h1>
@@ -92,4 +82,14 @@ b.addEventListener('click',function(){
 </form>
 {% if issues %}<h2>Issues on this pamphlet</h2><ul class="plain">{% for i in issues %}<li><a href="/admin/issues/{{ i.id }}">{{ i.number }}</a> {{ i.issue_type or '' }} — {{ i.status }}</li>{% endfor %}</ul>{% endif %}
 <details class="help-block"><summary>Defect codes (<a class="cite" href="{{ cite_url('34-6.1') }}" rel="noopener" target="_blank">34 O.S. § 6.1</a>)</summary><dl>{% for code in defect_codes %}<dt>{{ code }}</dt><dd>{{ defect_text[code] }}.</dd>{% endfor %}</dl></details>
+<script>
+(function(){var b=document.getElementById('apply-all');if(!b)return;
+b.addEventListener('click',function(){
+  document.querySelectorAll('#master-row [data-m]').forEach(function(src){
+    if(!src.value)return;
+    document.querySelectorAll('.sheets [name$="_'+src.dataset.m+'"]').forEach(function(dst){dst.value=src.value;});
+  });
+  b.textContent='Applied — review below, then Save';setTimeout(function(){b.textContent='Apply to all sheets ↓';},2500);
+});})();
+</script>
 {% endblock %}
