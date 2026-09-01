@@ -84,7 +84,7 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
     <tr><td>Signature sheets</td><td>{{ L.sheets_per_pamphlet }} sheets × {{ L.rows_per_sheet }} lines = {{ p.signatures_per_pamphlet }} signatures per pamphlet. Each sheet's circulator affidavit is printed on its back.</td></tr>
   </table>
   <div class="rule-box center">Use only the final filed version — do not detach sheets.</div>
-  <p class="sans small">This pamphlet is laid out for legal-size (8.5 × 14 in) duplex printing. The petition, the exact copy of the measure and the proponents of record are portrait pages; each signature sheet is a landscape page with its circulator affidavit on the reverse. A copy of this petition and all signatures on it are public records subject to the Oklahoma Open Records Act.</p>
+  <p class="sans small">This pamphlet is laid out for duplex printing. The petition, the exact copy of the measure and the proponents of record are portrait pages; each signature sheet is a landscape page with its circulator affidavit on the reverse. A copy of this petition and all signatures on it are public records subject to the Oklahoma Open Records Act.</p>
   <div class="pamphlet-no">Pamphlet No. {% if stamp %}{{ stamp.number }}{% else %}____________{% endif %}</div>
   {% if stamp and stamp.issued_to %}<div class="pamphlet-no" style="border-width:1pt;font-weight:normal">Issued to: <strong>{{ stamp.issued_to }}</strong>{% if stamp.training_id %} ({{ stamp.training_id }}){% endif %}</div>{% endif %}
   {% if draft %}

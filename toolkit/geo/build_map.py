@@ -169,7 +169,7 @@ def build_wall_map(out: Path) -> Path:
     ax.add_patch(Rectangle((x0 - 0.01, y0 - 0.01), (x1 - x0) + 0.02, (y1 - y0) + 0.02, fill=False, edgecolor="#1c1a19", linewidth=1.0, zorder=9))
 
     fig.text(0.059, 0.952, "Pittsburg County, Oklahoma — Voting Precincts", fontsize=16, fontweight="bold", color="#1c1a19")
-    fig.text(0.059, 0.937, "County referendum — Emerald ProjectCo data center tax abatement · Petition Captain wall map (legal 8.5 × 14 in)",
+    fig.text(0.059, 0.937, "County referendum — Emerald ProjectCo data center tax abatement · Petition Captain wall map",
              fontsize=9, color="#6b625f")
     fig.text(0.059, 0.049, "Precinct boundaries: OU Center for Spatial Analysis (Oklahoma State Election Board mapping contractor), 2020 precincts.",
              fontsize=7, color="#6b625f")
