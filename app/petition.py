@@ -39,8 +39,13 @@ def from_db(db: Session, base: cfg.Petition | None = None) -> cfg.Petition:
     props = proponents_from_settings(s)
     if props:
         p.proponents = props
-    if s.raw("captain_name") or s.raw("captain_phone"):
-        p.contacts["petition_captain"] = {"name": s.raw("captain_name"), "phone": s.raw("captain_phone")}
+    cap = dict(p.contacts.get("petition_captain") or {})
+    for src, dst in (("captain_name", "name"), ("captain_phone", "phone"),
+                     ("return_location", "return_location"), ("daily_return_deadline", "return_deadline")):
+        if s.raw(src):
+            cap[dst] = s.raw(src)
+    if cap:
+        p.contacts["petition_captain"] = cap
     rv = s.registered_voters
     if rv:
         p.threshold.registered_voters = rv

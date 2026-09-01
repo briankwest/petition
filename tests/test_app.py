@@ -545,3 +545,17 @@ def test_build_page_inline_preview(client, db):
     db.add(m.DocumentFile(build_id=b.id, name="01-petition-pamphlet.pdf", pages=1, bytes_len=3, sha256="0"*64, content=b"pdf")); db.commit()
     page = client.get(f"/admin/documents/build/{b.id}").text
     assert 'id="bpv"' in page and 'class="pdf-frame"' in page and f'data-src="/admin/documents/build/{b.id}/01-petition-pamphlet.pdf"' in page
+
+
+def test_return_location_prefills_quick_card(client, db):
+    tok = login(client, db)
+    r = client.post("/admin/petition", data={"csrf": tok, "captain_name": "Casey", "captain_phone": "918-555-0100",
+        "return_location": "Campaign office, 123 Main St", "daily_return_deadline": "8:00 p.m. every day"}, follow_redirects=False)
+    assert r.status_code == 303
+    from app.petition import from_db
+    cap = from_db(db).contacts["petition_captain"]
+    assert cap["return_location"] == "Campaign office, 123 Main St" and cap["return_deadline"] == "8:00 p.m. every day"
+    from toolkit.docs import build as B
+    ctx = B.base_context(from_db(db), final=False, duplex="long-edge")
+    html = B.render_html("03-circulator-quick-card", ctx)
+    assert "Campaign office, 123 Main St" in html and "8:00 p.m. every day" in html

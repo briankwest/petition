@@ -19,6 +19,7 @@ DEFAULTS = {
     "public_show_counts": "false", "public_show_progress": "false",
     "captain_name": None, "captain_phone": None, "site_status": "pre-adoption",
     "resolution_number": None, "resolution_title": None, "measure_text": None,
+    "return_location": None, "daily_return_deadline": None,
     "gist": None, "ballot_title": None, "proponents": None,          # proponents: JSON list of {name,address,city,zip}
     "duplex": None,
     "petition_frozen": "false", "frozen_build_id": None, "filed_at": None, "filed_office": None,

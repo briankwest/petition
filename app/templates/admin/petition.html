@@ -39,6 +39,9 @@
   <div class="grid-2 tight">
     <div class="field"><label for="cn">Name</label><input id="cn" name="captain_name" value="{{ s.raw('captain_name') or '' }}" {{ d }}></div>
     <div class="field"><label for="cp">Phone</label><input id="cp" name="captain_phone" value="{{ s.raw('captain_phone') or '' }}" {{ d }}></div>
+    <div class="field"><label for="rl">Pamphlet return location</label><input id="rl" name="return_location" value="{{ s.raw('return_location') or '' }}" placeholder="e.g. Campaign office, 123 Main St, McAlester" {{ d }}>
+      <p class="help">Printed on the Circulator Quick Card. Blank = circulators write it in by hand.</p></div>
+    <div class="field"><label for="rd">Daily return deadline</label><input id="rd" name="daily_return_deadline" value="{{ s.raw('daily_return_deadline') or '' }}" placeholder="e.g. 8:00 p.m. every day" {{ d }}></div>
   </div>
   <h2>Layout</h2>
   <div class="grid-2 tight">

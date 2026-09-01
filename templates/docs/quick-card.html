@@ -78,8 +78,8 @@ ul { margin: 0; padding-left: 14pt; } li { margin: 0 0 2pt; }
 <table class="contact">
  <tr><td>Petition Captain</td><td>{{ captain.name or '[NAME — TBD]' }}</td></tr>
  <tr><td>Phone</td><td>{{ captain.phone or '[PHONE — TBD]' }}</td></tr>
- <tr><td>Return location</td><td>&nbsp;</td></tr>
- <tr><td>Daily return deadline</td><td>&nbsp;</td></tr>
+ <tr><td>Return location</td><td>{{ captain.return_location or ' ' }}</td></tr>
+ <tr><td>Daily return deadline</td><td>{{ captain.return_deadline or ' ' }}</td></tr>
  <tr><td>Final submission deadline</td><td>{{ f.filing_deadline }}</td></tr>
 </table>
 <p class="src">Return completed or partial packets quickly. Do not hold originals at home unless the Petition Captain approves it.{% if draft %} DRAFT — the resolution has been tabled; no dates are set.{% endif %}</p>
