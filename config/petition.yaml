@@ -46,18 +46,18 @@ threshold:
 
 gist: >-
   This referendum asks Pittsburg County voters whether to approve or reject the resolution adopted
-  by the Board of County Commissioners approving the Emerald ProjectCo Data Center Economic
-  Development Project Plan and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County,
-  which would provide an 85 percent ad valorem (property) tax abatement for the
-  data center project under the Oklahoma Local Development Act.
+  by the Board of County Commissioners approving the Emerald ProjectCo Data Center Project Economic Development Project Plan
+  and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County,
+  which would provide a partial abatement of ad valorem (property) taxes for the data center
+  project under the Oklahoma Local Development Act.
 
 ballot_title: >-
   This measure refers to the voters the resolution adopted by the Board of County Commissioners
-  of Pittsburg County, Oklahoma, approving the Emerald ProjectCo Data Center Economic Development
-  Project Plan and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County
-  under the Oklahoma Local Development Act. The resolution provides an 85 percent ad valorem
-  (property) tax abatement for the data center project within the districts. A YES vote approves
-  the resolution. A NO vote rejects the resolution. Shall the resolution be approved?
+  of Pittsburg County, Oklahoma, approving the Emerald ProjectCo Data Center Project Economic Development Project Plan
+  and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County
+  under the Oklahoma Local Development Act. The resolution provides a partial abatement of
+  ad valorem (property) taxes for the data center project within the districts. A YES vote
+  approves the resolution. A NO vote rejects the resolution. Shall the resolution be approved?
 
 proponents: []                            # up to 3: {name, address, city, zip}
 
