@@ -329,6 +329,58 @@ def circulators(request: Request, q: str = "", show: str = "active", db: Session
     return render(request, "admin/circulators.html", rows=rows, q=q, show=show, signups_new=signups_new)
 
 
+# ---------- petition data (drives every generated document) ----------
+from ..petition import from_db as petition_from_db, proponents_from_settings
+
+
+def _frozen(s: Settings) -> bool:
+    return s.bool("petition_frozen")
+
+
+@router.get("/petition", dependencies=[Depends(require_admin)])
+def petition_page(request: Request, db: Session = Depends(get_db)):
+    s = Settings(db)
+    p = petition_from_db(db)
+    props = proponents_from_settings(s) + [{}] * 3
+    return render(request, "admin/petition.html", s=s, p=p, props=props[:3], frozen=_frozen(s),
+                  placeholders=p.placeholders, wc=p.ballot_title_word_count,
+                  measure_text=s.raw("measure_text") or "", gist=p.gist, ballot_title=p.ballot_title)
+
+
+@router.post("/petition", dependencies=[Depends(require_admin)])
+async def petition_save(request: Request, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    s = Settings(db)
+    if _frozen(s):
+        return go("/admin/petition", err="The petition is frozen (filed). Unfreeze it first — every change after filing must be deliberate and logged.")
+    for key in ("resolution_number", "resolution_title", "election_date", "captain_name", "captain_phone", "duplex"):
+        s.set(key, F.s(form, key))
+    for key in ("adoption_date",):
+        v = F.s(form, key)
+        if v and F.d(form, key) is None:
+            return go("/admin/petition", err="Adoption date: use YYYY-MM-DD.")
+        s.set(key, v)
+    for key in ("measure_text", "gist", "ballot_title"):
+        s.set(key, (form.get(key) or "").strip() or None)      # preserve newlines; F.s strips only edges anyway
+    bt = s.raw("ballot_title") or ""
+    if bt and len(bt.split()) > 150:
+        return go("/admin/petition", err=f"Ballot title is {len(bt.split())} words — 62 O.S. § 868(D)(1) allows at most 150.")
+    props = []
+    for i in (1, 2, 3):
+        row = {k: F.s(form, f"prop{i}_{k}") for k in ("name", "address", "city", "zip")}
+        if row["name"]:
+            props.append(row)
+    import json as _j
+    s.set("proponents", _j.dumps(props) if props else None)
+    for key in ("rows_per_sheet", "sheets_per_pamphlet"):
+        v = F.i(form, key)
+        if v:
+            s.set(key, v)
+    db.commit()
+    left = petition_from_db(db).placeholders
+    return go("/admin/petition", msg="Saved." + (f" {len(left)} placeholder(s) remain." if left else " No placeholders remain — a final build is possible."))
+
+
 # ---------- volunteer sign-ups (from the public form) ----------
 @router.get("/signups", dependencies=AUTH)
 def signups(request: Request, status: str = "New", db: Session = Depends(get_db)):
@@ -419,7 +471,8 @@ def circulator_training_card(cid: int, db: Session = Depends(get_db)):
     key = ROLE_KEY.get(c.role) or "helper"
     try:
         from toolkit.docs.build import render_training_card
-        pdf = render_training_card(key, {"id": c.id, "name": c.name, "phone": c.phone or ""})
+        from ..petition import from_db as _fdb
+        pdf = render_training_card(key, {"id": c.id, "name": c.name, "phone": c.phone or ""}, petition=_fdb(db))
     except ImportError:
         raise HTTPException(503, "Document rendering is not available on this server.")
     fname = f"training-card-{key}-V{c.id:04d}.pdf"

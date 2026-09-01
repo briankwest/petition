@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Petition{% endblock %}
+{% block content %}
+<h1>Petition data</h1>
+<p class="small">This is the single source for every generated document. <code>config/petition.yaml</code> only seeds constants. {% if frozen %}<strong>The petition is FROZEN (filed{% if s.raw('filed_at') %} {{ s.raw('filed_at') }}{% endif %}) — fields are locked.</strong>{% endif %}</p>
+{% if placeholders %}<div class="flash warn"><strong>{{ placeholders|length }} placeholder(s) before a final build:</strong> {{ placeholders|join('; ') }}</div>
+{% else %}<div class="flash ok">No placeholders remain — a final (filing) build is possible from the Documents page.</div>{% endif %}
+<form method="post" action="/admin/petition" class="form" {% if frozen %}aria-disabled="true"{% endif %}>
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% set d = 'disabled' if frozen else '' %}
+  <h2>Measure (exactly as adopted)</h2>
+  <div class="grid-2 tight">
+    <div class="field"><label for="rn">Resolution number</label><input id="rn" name="resolution_number" value="{{ s.raw('resolution_number') or '' }}" {{ d }}></div>
+    <div class="field"><label for="ad">Adoption date</label><input id="ad" type="date" name="adoption_date" value="{{ s.raw('adoption_date') or '' }}" {{ d }}>
+      <p class="help">Sets the 30-day filing clock ({{ cite_url('62-868') and '' }}62 O.S. § 868(B)(3)).</p></div>
+  </div>
+  <div class="field"><label for="rt">Resolution title (exact)</label><input id="rt" name="resolution_title" value="{{ s.raw('resolution_title') or '' }}" {{ d }}></div>
+  <div class="field"><label for="mt">Exact adopted text — word for word, with exhibits (Markdown)</label>
+    <textarea id="mt" name="measure_text" rows="16" {{ d }}>{{ measure_text }}</textarea>
+    <p class="help">Use the file-stamped/certified adopted version, never the agenda draft. Do not summarize (34 O.S. § 1: “an exact copy of the text of the measure”).</p></div>
+  <h2>Election</h2>
+  <div class="field"><label for="ed">Election date</label><input id="ed" type="date" name="election_date" value="{{ s.raw('election_date') or '' }}" {{ d }}>
+    <p class="help">Next general county election after filing (62 O.S. § 868(H)) — confirm with the Election Board.</p></div>
+  <h2>Gist and ballot title</h2>
+  <div class="field"><label for="g">Gist (top of every signature sheet — neutral)</label><textarea id="g" name="gist" rows="4" {{ d }}>{{ gist }}</textarea></div>
+  <div class="field"><label for="bt">Proposed ballot title — <span id="wc">{{ wc }}</span>/150 words (62 O.S. § 868(D)(1))</label>
+    <textarea id="bt" name="ballot_title" rows="5" {{ d }}>{{ ballot_title }}</textarea>
+    <p class="help">Neutral, no argument for or against; must say a YES vote approves and a NO vote rejects.</p></div>
+  <h2>Proponents of record (up to three — identical on every pamphlet)</h2>
+  {% for pr in props %}
+  <div class="grid-2 tight">
+    <div class="field"><label>Proponent {{ loop.index }} — name</label><input name="prop{{ loop.index }}_name" value="{{ pr.name or '' }}" {{ d }}></div>
+    <div class="field"><label>Registration address</label><input name="prop{{ loop.index }}_address" value="{{ pr.address or '' }}" {{ d }}></div>
+    <div class="field"><label>City</label><input name="prop{{ loop.index }}_city" value="{{ pr.city or '' }}" {{ d }}></div>
+    <div class="field"><label>ZIP</label><input name="prop{{ loop.index }}_zip" value="{{ pr.zip or '' }}" {{ d }}></div>
+  </div>
+  {% endfor %}
+  <h2>Petition Captain (printed on cards and plans)</h2>
+  <div class="grid-2 tight">
+    <div class="field"><label for="cn">Name</label><input id="cn" name="captain_name" value="{{ s.raw('captain_name') or '' }}" {{ d }}></div>
+    <div class="field"><label for="cp">Phone</label><input id="cp" name="captain_phone" value="{{ s.raw('captain_phone') or '' }}" {{ d }}></div>
+  </div>
+  <h2>Layout</h2>
+  <div class="grid-2 tight">
+    <div class="field"><label for="rps">Signature lines per sheet</label><input id="rps" type="number" name="rows_per_sheet" value="{{ p.layout.rows_per_sheet }}" {{ d }}></div>
+    <div class="field"><label for="spp">Sheets per pamphlet</label><input id="spp" type="number" name="sheets_per_pamphlet" value="{{ p.layout.sheets_per_pamphlet }}" {{ d }}></div>
+    <div class="field"><label for="dx">Duplex</label><select id="dx" name="duplex" {{ d }}>{% for o in ('long-edge','short-edge') %}<option value="{{ o }}" {% if p.layout.duplex == o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select>
+      <p class="help">Verify on the actual printer with a proof before any real print.</p></div>
+  </div>
+  {% if not frozen %}<div class="actions sticky"><button class="btn primary">Save petition data</button></div>{% endif %}
+</form>
+<script>
+(function(){var bt=document.getElementById('bt'),wc=document.getElementById('wc');if(!bt)return;
+bt.addEventListener('input',function(){var n=bt.value.trim()?bt.value.trim().split(/\s+/).length:0;wc.textContent=n;wc.style.color=n>150?'#C2352B':'';});})();
+</script>
+{% endblock %}

@@ -47,9 +47,12 @@ class Measure:
     districts: str
     abatement_percent: int
     exact_text_file: str
+    exact_text_override: str | None = None      # set when the adopted text lives in the database
 
     @property
     def exact_text(self) -> str:
+        if self.exact_text_override:
+            return self.exact_text_override.strip()
         p = ROOT / self.exact_text_file
         return p.read_text(encoding="utf-8").strip() if p.exists() else "[PLACEHOLDER — EXACT ADOPTED MEASURE]"
 

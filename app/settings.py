@@ -18,6 +18,11 @@ DEFAULTS = {
               "No signatures can be collected until the resolution is adopted and a true copy of the petition is filed.",
     "public_show_counts": "false", "public_show_progress": "false",
     "captain_name": None, "captain_phone": None, "site_status": "pre-adoption",
+    "resolution_number": None, "resolution_title": None, "measure_text": None,
+    "gist": None, "ballot_title": None, "proponents": None,          # proponents: JSON list of {name,address,city,zip}
+    "duplex": None,
+    "petition_frozen": "false", "frozen_build_id": None, "filed_at": None, "filed_office": None,
+    "filed_receiver": None, "filed_sha256": None, "filed_fingerprint": None, "filed_note": None,
     "site_title": "Referendum Petition", "site_eyebrow": None, "volunteer_form_url": None,
     "site_description": "Where to sign, whether you are registered, and who to call — the Pittsburg County referendum petition on the proposed data center tax abatement. Volunteers of all kinds are needed.",
 }

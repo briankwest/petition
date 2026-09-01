@@ -364,3 +364,40 @@ def test_training_card_for_volunteer(client, db):
     reader = PdfReader(io.BytesIO(r.content)); assert len(reader.pages) == 2
     text = "".join(p.extract_text() for p in reader.pages)
     assert "Notary" in text and "Pat Card" in text and f"V-{c.id:04d}" in text
+
+
+def test_petition_from_db_and_admin_page(client, db):
+    from app.petition import from_db
+    tok = login(client, db)
+    page = client.get("/admin/petition"); assert page.status_code == 200 and "placeholder(s) before a final build" in page.text
+    r = client.post("/admin/petition", data={"csrf": tok, "resolution_number": "2026-42", "resolution_title": "A Resolution Approving the Plan",
+        "adoption_date": "2026-10-05", "election_date": "2026-11-10", "measure_text": "BE IT RESOLVED by the Board...",
+        "gist": "Neutral gist.", "ballot_title": "Short title. A YES vote approves the resolution. A NO vote rejects the resolution. Shall the resolution be approved?",
+        "prop1_name": "Brian West", "prop1_address": "714 E Osage Ave", "prop1_city": "McAlester", "prop1_zip": "74501",
+        "captain_name": "Brian West", "captain_phone": "918-555-0100", "rows_per_sheet": "10", "sheets_per_pamphlet": "5", "duplex": "long-edge"}, follow_redirects=False)
+    assert r.status_code == 303
+    p = from_db(db)
+    assert p.measure.resolution_number == "2026-42" and str(p.measure.adoption_date) == "2026-10-05"
+    assert p.measure.exact_text == "BE IT RESOLVED by the Board..." and not p.measure.exact_text_is_placeholder
+    assert p.proponents[0]["name"] == "Brian West" and p.contacts["petition_captain"]["phone"] == "918-555-0100"
+    assert p.placeholders == []                                   # everything supplied
+    assert "No placeholders remain" in client.get("/admin/petition").text
+    # ballot title word limit enforced
+    long_bt = "word " * 151
+    r = client.post("/admin/petition", data={"csrf": tok, "ballot_title": long_bt}, follow_redirects=False)
+    assert "150" in r.headers["location"]
+    # frozen locks the form
+    Settings(db).set("petition_frozen", True); db.commit()
+    r = client.post("/admin/petition", data={"csrf": tok, "resolution_number": "X"}, follow_redirects=False)
+    assert "frozen" in r.headers["location"]
+    assert from_db(db).measure.resolution_number == "2026-42"
+
+
+def test_training_card_prefills_captain(client, db):
+    login(client, db)
+    s = Settings(db); s.set("captain_name", "Casey Captain"); s.set("captain_phone", "918-555-0111"); db.commit()
+    c = m.Circulator(name="Riley Role", role="Circulator"); db.add(c); db.commit()
+    r = client.get(f"/admin/circulators/{c.id}/training-card.pdf")
+    from pypdf import PdfReader; import io
+    text = "".join(p.extract_text() for p in PdfReader(io.BytesIO(r.content)).pages)
+    assert "Casey Captain" in text and "918-555-0111" in text
