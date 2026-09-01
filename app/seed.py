@@ -89,6 +89,16 @@ def seed_polling_places(db) -> dict:
     return out
 
 
+def status(db) -> dict:
+    """Row counts for a quick production sanity check (`python -m app.seed --status`)."""
+    from sqlalchemy import func
+    c = lambda model, **flt: db.scalar(select(func.count()).select_from(model).filter_by(**flt)) or 0
+    return {"pamphlets": c(m.Pamphlet), "sheets": c(m.Sheet), "circulators": c(m.Circulator), "signups_new": c(m.VolunteerSignup, status="New"),
+            "issues": c(m.Issue), "locations": c(m.Location), "locations_public": c(m.Location, public=True), "events": c(m.Event),
+            "contacts_public": c(m.Contact, public=True), "qa_tasks": c(m.QATask), "records": c(m.RecordsLog), "users": c(m.User),
+            "settings": c(m.Setting)}
+
+
 def _slug(v: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", (v or "").lower()).strip("-")[:60] or "location"
 
@@ -180,8 +190,13 @@ def main(argv=None):
                     help="pre-create the print run P-001..P-N (default N = Settings print_run)")
     ap.add_argument("--sheets", type=int, help="sheets per pamphlet (default = Settings sheets_per_pamphlet)")
     ap.add_argument("--polling-places", action="store_true", help="load polling places as hidden candidate signing locations")
+    ap.add_argument("--status", action="store_true", help="print row counts and exit (no changes)")
     a = ap.parse_args(argv)
     dbmod.init_db()
+    if a.status:
+        with dbmod.SessionLocal() as db:
+            print("status:", status(db))
+        return
     with dbmod.SessionLocal() as db:
         out = seed(db, a.admin_user, a.admin_password)
         if a.pamphlets is not None:
