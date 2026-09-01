@@ -315,3 +315,11 @@ def test_share_bar_and_statute_html_links(client):
     assert statutes.html_url("62-868") == "https://law.justia.com/codes/oklahoma/title-62/section-62-868/"
     assert statutes.html_url("34-6").startswith("https://www.oscn.net/")
     assert "law.justia.com/codes/oklahoma/title-62/section-62-868" in client.get("/faq").text and "os62.pdf" not in client.get("/faq").text
+
+
+def test_faq_inline_statute_links(client):
+    html = client.get("/faq").text
+    body = html.split("<dl", 1)[1].split("</dl>", 1)[0]
+    assert body.count('class="cite"') >= 8
+    assert '<a class="cite" href="https://www.oscn.net/applications/oscn/DeliverDocument.asp?CiteID=71574" rel="noopener" target="_blank">34 O.S. § 23</a>' in body
+    assert 'href="https://law.justia.com/codes/oklahoma/title-62/section-62-868/" rel="noopener" target="_blank">62 O.S. § 868(H)</a>' in body
