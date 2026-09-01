@@ -45,7 +45,8 @@
 <header class="site-head">
   <div class="wrap">
     <a class="brand" href="/"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></a>
-    <nav class="site-nav" aria-label="Main">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/sign" {% if path == '/sign' %}aria-current="page"{% endif %}>Where to sign</a>
       <a href="/registered" {% if path == '/registered' %}aria-current="page"{% endif %}>Am I registered?</a>
       <a href="/contact" {% if path == '/contact' %}aria-current="page"{% endif %}>Who to call</a>
@@ -64,6 +65,11 @@
   <p class="small">No voter information is collected on this site. Registration lookups go directly to the <a href="{{ petition.links.voter_portal }}" rel="noopener">Oklahoma State Election Board's OK Voter Portal</a>. {% if user %}<a href="/admin">Admin</a>{% else %}<a href="/admin/login">Staff sign-in</a>{% endif %}</p>
 </div></footer>
 {% endblock %}
+<script>
+(function(){var b=document.querySelector('.nav-toggle'),h=document.querySelector('.site-head');if(!b||!h)return;
+b.addEventListener('click',function(){var open=h.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');b.lastChild.textContent=open?'Close':'Menu';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){h.classList.remove('open');b.setAttribute('aria-expanded','false');b.lastChild.textContent='Menu';b.focus();}});})();
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

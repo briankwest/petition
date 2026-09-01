@@ -300,3 +300,8 @@ def test_favicon_and_opengraph(client):
     assert '<meta property="og:image" content="https://petition.mcalester.net/static/og.png">' in html
     assert '<link rel="canonical" href="https://petition.mcalester.net/sign">' in html
     assert '<meta name="twitter:card" content="summary_large_image">' in html and 'rel="manifest"' in html
+
+
+def test_mobile_nav_toggle_present(client):
+    html = client.get("/").text
+    assert 'class="nav-toggle"' in html and 'aria-controls="site-nav"' in html and 'id="site-nav"' in html
