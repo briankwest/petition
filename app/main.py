@@ -73,8 +73,13 @@ def create_app(engine=None) -> FastAPI:
         response = await call_next(request)
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
-        response.headers.setdefault("X-Frame-Options", "DENY")
-        response.headers.setdefault("Content-Security-Policy", "frame-ancestors 'none'")
+        if request.url.path.startswith("/admin/documents/file/"):
+            # built PDFs are embedded in the admin preview iframe (same origin only)
+            response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+            response.headers.setdefault("Content-Security-Policy", "frame-ancestors 'self'")
+        else:
+            response.headers.setdefault("X-Frame-Options", "DENY")
+            response.headers.setdefault("Content-Security-Policy", "frame-ancestors 'none'")
         if getattr(request.state, "session", None) is not None and request.state.session.get("_dirty"):
             write_session(request, response)
             request.state.session.pop("_dirty", None)

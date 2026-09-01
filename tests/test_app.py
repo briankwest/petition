@@ -284,6 +284,8 @@ def test_admin_documents_page(client, db, tmp_path, monkeypatch):
     login(client, db)
     page = client.get("/admin/documents"); assert page.status_code == 200 and "01-petition-pamphlet.pdf" in page.text and "DRAFT" in page.text and "placeholders outstanding" in page.text
     f = client.get("/admin/documents/file/01-petition-pamphlet.pdf"); assert f.status_code == 200 and f.headers["content-type"].startswith("application/pdf") and "attachment" not in f.headers.get("content-disposition", "")
+    assert f.headers["x-frame-options"] == "SAMEORIGIN" and f.headers["content-security-policy"] == "frame-ancestors 'self'"   # embeddable in the preview iframe
+    assert client.get("/admin/documents").headers["x-frame-options"] == "DENY"
     dl = client.get("/admin/documents/file/01-petition-pamphlet.pdf?download=1"); assert "attachment" in dl.headers["content-disposition"]
     assert client.get("/admin/documents/file/../../pyproject.toml").status_code in (404, 400)
     assert client.get("/admin/documents/view/01-petition-pamphlet.pdf").status_code == 200
