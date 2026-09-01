@@ -22,3 +22,5 @@ OK Voter Portal (registration lookup; requires name + date of birth): https://ok
 | `precincts/roads.geojson` | 827 highway-class centerlines only (US 69/270, SH 31/63/113/9E, Indian Nation Tpke, George Nigh Expy) filtered from the 8,375-segment PSAP layer 15; `--full-roads` keeps everything (~17 MB) | 455 KB |
 
 Geocoding (`toolkit.geo.lookup.geocode`): U.S. Census Bureau geocoder first (no key); OpenStreetMap Nominatim as fallback when Census has no match or returns the wrong street directional (e.g. Census maps "801 N 9th St, McAlester" to S 9th St). Nominatim usage policy: ≤ 1 request/s, identified User-Agent — fallback only, never bulk.
+
+| `../reference/source-docs/publication_for_public_hearings_1870.pdf` | Pittsburg County legal advertisement, filed May 18, 2026 (County Clerk) | Official pre-adoption wording: "Emerald ProjectCo Data Center Project Economic Development Project Plan"; "Incentive District No. 1 / No. 2, Pittsburg County" ("TID Districts"); 62 O.S. § 850 et seq.; hearings June 8 + June 22, 2026, Southeast Expo Center. See NOTES-public-hearing-notice.md. |
