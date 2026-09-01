@@ -561,3 +561,11 @@ def test_return_location_prefills_quick_card(client, db):
     ctx = B.base_context(from_db(db), final=False, duplex="long-edge")
     html = B.render_html("03-circulator-quick-card", ctx)
     assert "Campaign office, 123 Main St" in html and "8:00 p.m. every day" in html
+
+
+def test_districts_editable_and_three_by_default(client, db):
+    from app.petition import from_db
+    assert "District No. 3" in from_db(db).measure.districts
+    tok = login(client, db)
+    r = client.post("/admin/petition", data={"csrf": tok, "districts": "Tax Increment District A and B"}, follow_redirects=False)
+    assert r.status_code == 303 and from_db(db).measure.districts == "Tax Increment District A and B"

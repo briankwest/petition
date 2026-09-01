@@ -429,7 +429,7 @@ async def petition_save(request: Request, db: Session = Depends(get_db)):
     s = Settings(db)
     if _frozen(s):
         return go("/admin/petition", err="The petition is frozen (filed). Unfreeze it first — every change after filing must be deliberate and logged.")
-    for key in ("resolution_number", "resolution_title", "election_date", "captain_name", "captain_phone",
+    for key in ("resolution_number", "resolution_title", "election_date", "districts", "captain_name", "captain_phone",
                 "return_location", "daily_return_deadline", "duplex"):
         s.set(key, F.s(form, key))
     for key in ("adoption_date", "filing_deadline_override"):

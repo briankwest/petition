@@ -29,6 +29,7 @@ def from_db(db: Session, base: cfg.Petition | None = None) -> cfg.Petition:
     m.resolution_number = s.raw("resolution_number") or m.resolution_number
     m.title = s.raw("resolution_title") or m.title
     m.adoption_date = s.adoption_date or m.adoption_date
+    m.districts = s.raw("districts") or m.districts
     if s.raw("measure_text"):
         m.exact_text_override = s.raw("measure_text")
     p.election.date = s.election_date or p.election.date

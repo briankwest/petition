@@ -17,6 +17,8 @@
       <p class="help">Only if the Election Board gives a different date in writing.</p></div>
   </div>
   <div class="field"><label for="rt">Resolution title (exact)</label><input id="rt" name="resolution_title" value="{{ s.raw('resolution_title') or '' }}" {{ d }}></div>
+  <div class="field"><label for="di">Tax abatement districts (as named in the resolution)</label><input id="di" name="districts" value="{{ s.raw('districts') or p.measure.districts }}" {{ d }}>
+    <p class="help">Listed on the cover and in descriptions. The adopted resolution's own wording controls — match it exactly.</p></div>
   <div class="field"><label for="mt">Exact adopted text — word for word, with exhibits (Markdown)</label>
     <textarea id="mt" name="measure_text" rows="16" {{ d }}>{{ measure_text }}</textarea>
     <p class="help">Use the file-stamped/certified adopted version, never the agenda draft. Do not summarize (34 O.S. § 1: “an exact copy of the text of the measure”).</p></div>
