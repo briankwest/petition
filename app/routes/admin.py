@@ -91,15 +91,10 @@ SETTING_FIELDS = [
     ("site_title", "Site title (top of every page)", "text", "Shown in the header and the browser tab. Change it to reuse this site for another petition."),
     ("site_eyebrow", "Site eyebrow (small line above the title)", "text", None),
     ("site_description", "Site description (search + social previews)", "textarea", "One or two sentences. Used for the meta description and Open Graph / Twitter cards."),
-    ("adoption_date", "Resolution adoption date", "date", "Leave blank while the resolution is tabled. Sets the 30-day filing clock (62 O.S. § 868(B)(3))."),
-    ("filing_deadline_override", "Filing deadline override", "date", "Only if the Election Board gives a different date in writing."),
-    ("election_date", "Election date", "date", "Next general county election after filing (62 O.S. § 868(H)) — confirm with the Election Board."),
     ("registered_voters", "Registered voters in county", "number", "Written, dated figure from the County Election Board. Legal minimum = 10%."),
     ("registered_voters_source", "Voter count source", "text", "Who gave it and how (email, letter)."),
     ("registered_voters_date", "Voter count date", "date", None),
     ("print_run", "Print run (pamphlets)", "number", None),
-    ("sheets_per_pamphlet", "Signature sheets per pamphlet", "number", None),
-    ("rows_per_sheet", "Signature lines per sheet", "number", None),
     ("est_valid_rate", "Estimated validity rate", "number", "Fraction of collected signatures expected to survive verification (e.g. 0.85)."),
     ("overcollect_fraction", "Overcollection fraction", "number", "Target = legal minimum × (1 + this). 0.5 = collect 150% of the minimum."),
     ("site_status", "Site status", "select", None),
@@ -437,7 +432,7 @@ async def petition_save(request: Request, db: Session = Depends(get_db)):
     for key in ("resolution_number", "resolution_title", "election_date", "captain_name", "captain_phone",
                 "return_location", "daily_return_deadline", "duplex"):
         s.set(key, F.s(form, key))
-    for key in ("adoption_date",):
+    for key in ("adoption_date", "filing_deadline_override"):
         v = F.s(form, key)
         if v and F.d(form, key) is None:
             return go("/admin/petition", err="Adoption date: use YYYY-MM-DD.")

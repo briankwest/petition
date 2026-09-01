@@ -157,7 +157,9 @@ def test_admin_crud_pages(client, db):
     r = client.post("/admin/issues/new", data={"csrf": tok, "opened_on": "2026-09-05", "issue_type": "E7", "status": "Open", "priority": "High"}, follow_redirects=False)
     assert r.status_code == 303
     assert db.scalar(select(m.Issue)).number == "I-001"
-    r = client.post("/admin/settings", data={"csrf": tok, "adoption_date": "2026-10-05", "registered_voters": "27727", "banner": "Hello", "site_status": "circulating", "est_valid_rate": "0.85", "overcollect_fraction": "0.5", "print_run": "200"}, follow_redirects=False)
+    r = client.post("/admin/petition", data={"csrf": tok, "adoption_date": "2026-10-05"}, follow_redirects=False)
+    assert r.status_code == 303
+    r = client.post("/admin/settings", data={"csrf": tok, "registered_voters": "27727", "banner": "Hello", "site_status": "circulating", "est_valid_rate": "0.85", "overcollect_fraction": "0.5", "print_run": "200"}, follow_redirects=False)
     assert r.status_code == 303
     assert "Hello" in client.get("/").text
     j = client.get("/api/stats.json").json()
@@ -346,7 +348,7 @@ def test_admin_statute_links(client, db):
     tok = login(client, db)
     assert 'class="cite"' in client.get("/admin").text                      # dashboard tabled notice
     assert 'CiteID=71558' in client.get("/admin/pamphlets").text or True      # list page may not cite
-    st = client.get("/admin/settings").text
+    st = client.get("/admin/petition").text
     assert 'section-62-868/" rel="noopener" target="_blank">62 O.S. § 868(B)(3)</a>' in st
     r = client.get("/admin/circulators/new?err=Circulators%20must%20be%20registered%20Oklahoma%20voters%20(34%20O.S.%20%C2%A7%206).")
     assert 'CiteID=71557" rel="noopener" target="_blank">34 O.S. § 6</a>' in r.text

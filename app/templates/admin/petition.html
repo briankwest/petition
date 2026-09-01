@@ -12,7 +12,9 @@
   <div class="grid-2 tight">
     <div class="field"><label for="rn">Resolution number</label><input id="rn" name="resolution_number" value="{{ s.raw('resolution_number') or '' }}" {{ d }}></div>
     <div class="field"><label for="ad">Adoption date</label><input id="ad" type="date" name="adoption_date" value="{{ s.raw('adoption_date') or '' }}" {{ d }}>
-      <p class="help">Sets the 30-day filing clock ({{ cite_url('62-868') and '' }}62 O.S. § 868(B)(3)).</p></div>
+      <p class="help">Sets the 30-day filing clock (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868(B)(3)</a>).</p></div>
+    <div class="field"><label for="fdo">Filing deadline override</label><input id="fdo" type="date" name="filing_deadline_override" value="{{ s.raw('filing_deadline_override') or '' }}" {{ d }}>
+      <p class="help">Only if the Election Board gives a different date in writing.</p></div>
   </div>
   <div class="field"><label for="rt">Resolution title (exact)</label><input id="rt" name="resolution_title" value="{{ s.raw('resolution_title') or '' }}" {{ d }}></div>
   <div class="field"><label for="mt">Exact adopted text — word for word, with exhibits (Markdown)</label>

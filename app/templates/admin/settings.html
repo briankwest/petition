@@ -2,6 +2,7 @@
 {% block atitle %}Settings{% endblock %}
 {% block content %}
 <h1>Settings</h1>
+<p class="small">Site and campaign settings only. The measure, dates, proponents, captain and pamphlet layout live on the <a href="/admin/petition">Petition</a> page.</p>
 <div class="tiles small-tiles">
   <div class="tile"><span class="num">{{ deadline|date('not set') }}</span><span class="lbl">Filing deadline (adoption + 30 days)</span></div>
   <div class="tile"><span class="num">{{ legal_min|int }}</span><span class="lbl">Legal minimum</span></div>
