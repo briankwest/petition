@@ -9,7 +9,7 @@ Status vocabularies mirror the existing "Petition Captain Master Tracker.xlsx" s
 captain is not retrained; defect codes E1–E8 mirror 34 O.S. § 6.1(A)(1)–(8)."""
 from __future__ import annotations
 from datetime import date, datetime, time, timezone
-from sqlalchemy import (String, Integer, Float, Boolean, Date, Time, DateTime, Text, ForeignKey, UniqueConstraint)
+from sqlalchemy import (String, Integer, Float, Boolean, Date, Time, DateTime, Text, ForeignKey, UniqueConstraint, LargeBinary)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
 
@@ -259,3 +259,42 @@ class VolunteerSignup(Base):
     @property
     def role_list(self) -> list[str]:
         return [r for r in (self.roles or "").split(",") if r]
+
+
+class DocumentBuild(Base):
+    """One server-side document generation run (stored in Postgres so it survives deploys)."""
+    __tablename__ = "document_builds"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    kind: Mapped[str] = mapped_column(String(8))                      # draft | final
+    status: Mapped[str] = mapped_column(String(8), default="running") # running | ok | failed
+    built_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    built_by: Mapped[str | None] = mapped_column(String(64))
+    duplex: Mapped[str | None] = mapped_column(String(16))
+    manifest: Mapped[str | None] = mapped_column(Text)                # JSON
+    check_report: Mapped[str | None] = mapped_column(Text)            # JSON [{doc,check,ok,detail}]
+    petition_snapshot: Mapped[str | None] = mapped_column(Text)       # JSON summary + placeholders
+    error: Mapped[str | None] = mapped_column(Text)
+    filed: Mapped[bool] = mapped_column(Boolean, default=False)
+    pamphlet_sha256: Mapped[str | None] = mapped_column(String(64))
+    pamphlet_fingerprint: Mapped[str | None] = mapped_column(String(64))
+    files: Mapped[list["DocumentFile"]] = relationship(back_populates="build", cascade="all, delete-orphan", order_by="DocumentFile.name")
+
+    @property
+    def checks_failed(self) -> int:
+        import json as _j
+        try:
+            return sum(1 for r in _j.loads(self.check_report or "[]") if not r.get("ok"))
+        except ValueError:
+            return 0
+
+
+class DocumentFile(Base):
+    __tablename__ = "document_files"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    build_id: Mapped[int] = mapped_column(ForeignKey("document_builds.id", ondelete="CASCADE"))
+    name: Mapped[str] = mapped_column(String(80))
+    pages: Mapped[int | None] = mapped_column(Integer)
+    bytes_len: Mapped[int] = mapped_column(Integer, default=0)
+    sha256: Mapped[str | None] = mapped_column(String(64))
+    content: Mapped[bytes] = mapped_column(LargeBinary)
+    build: Mapped[DocumentBuild] = relationship(back_populates="files")

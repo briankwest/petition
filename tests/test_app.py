@@ -107,13 +107,13 @@ def test_pamphlet_workflow(client, db):
     unverified = m.Circulator(name="Unverified U")
     verified = m.Circulator(name="Verified V", registered_voter_verified=True, trained_on=date(2026, 9, 1))
     db.add_all([unverified, verified]); db.commit()
-    r = client.post("/admin/pamphlets/P-001/issue", data={"csrf": tok, "circulator_id": unverified.id}, follow_redirects=False)
-    assert r.status_code == 303 and "err=" in r.headers["location"] and "registration" in r.headers["location"]
-    r = client.post("/admin/pamphlets/P-001/issue", data={"csrf": tok, "circulator_id": verified.id}, follow_redirects=False)
-    assert "msg=Issued" in r.headers["location"]
+    r = client.post("/admin/pamphlets/P-001/assign", data={"csrf": tok, "circulator_id": unverified.id}, follow_redirects=False)
+    assert r.status_code == 303 and "err=" in r.headers["location"] and "recorded first" in _loc(r)
+    r = client.post("/admin/pamphlets/P-001/assign", data={"csrf": tok, "circulator_id": verified.id}, follow_redirects=False)
+    assert "Assigned to" in _loc(r)
     db.expire_all()
     p = db.scalar(select(m.Pamphlet).where(m.Pamphlet.number == "P-001"))
-    assert p.status == "Issued" and p.issued_to_id == verified.id and p.sheets[0].status == "In Field"
+    assert p.status == "Ready to Print" and p.issued_to_id == verified.id     # printing happens after freeze, one at a time
 
     # sheet grid save
     form = {"csrf": tok, "status": "Returned", "issued_to_id": verified.id, "returned_on": "2026-09-10"}
@@ -282,7 +282,7 @@ def test_admin_documents_page(client, db, tmp_path, monkeypatch):
     monkeypatch.setenv("DOCS_DIRS", str(d))
     assert client.get("/admin/documents", follow_redirects=False).status_code == 303          # login required
     login(client, db)
-    page = client.get("/admin/documents"); assert page.status_code == 200 and "01-petition-pamphlet.pdf" in page.text and "DRAFT" in page.text and "placeholders outstanding" in page.text
+    page = client.get("/admin/documents"); assert page.status_code == 200 and "01-petition-pamphlet.pdf" in page.text and "Generate (draft)" in page.text and "placeholder(s)" in page.text
     f = client.get("/admin/documents/file/01-petition-pamphlet.pdf"); assert f.status_code == 200 and f.headers["content-type"].startswith("application/pdf") and "attachment" not in f.headers.get("content-disposition", "")
     assert f.headers["x-frame-options"] == "SAMEORIGIN" and f.headers["content-security-policy"] == "frame-ancestors 'self'"   # embeddable in the preview iframe
     assert client.get("/admin/documents").headers["x-frame-options"] == "DENY"
@@ -389,7 +389,7 @@ def test_petition_from_db_and_admin_page(client, db):
     # frozen locks the form
     Settings(db).set("petition_frozen", True); db.commit()
     r = client.post("/admin/petition", data={"csrf": tok, "resolution_number": "X"}, follow_redirects=False)
-    assert "frozen" in r.headers["location"]
+    assert "frozen" in _loc(r)
     assert from_db(db).measure.resolution_number == "2026-42"
 
 
@@ -401,3 +401,119 @@ def test_training_card_prefills_captain(client, db):
     from pypdf import PdfReader; import io
     text = "".join(p.extract_text() for p in PdfReader(io.BytesIO(r.content)).pages)
     assert "Casey Captain" in text and "918-555-0111" in text
+
+
+PETITION_DATA = {"resolution_number": "2026-42", "resolution_title": "A Resolution Approving the Plan",
+    "adoption_date": "2026-10-05", "election_date": "2026-11-10",
+    "measure_text": "BE IT RESOLVED by the Board of County Commissioners that the Plan is approved.",
+    "gist": "This referendum asks county voters whether to approve or reject the resolution approving the plan and establishing the districts for the data center project.",
+    "ballot_title": "This measure refers the resolution to the voters. A YES vote approves the resolution. A NO vote rejects the resolution. Shall the resolution be approved?",
+    "prop1_name": "Brian West", "prop1_address": "714 E Osage Ave", "prop1_city": "McAlester", "prop1_zip": "74501",
+    "captain_name": "Casey Captain", "captain_phone": "918-555-0111",
+    "rows_per_sheet": "10", "sheets_per_pamphlet": "5", "duplex": "long-edge"}
+
+
+def _loc(r):
+    from urllib.parse import unquote
+    return unquote(r.headers["location"])
+
+
+def _wait_build(db, bid, timeout=180):
+    import time as _t
+    for _ in range(timeout * 2):
+        db.expire_all()
+        b = db.get(m.DocumentBuild, bid)
+        if b and b.status != "running":
+            return b
+        _t.sleep(0.5)
+    raise AssertionError("build did not finish")
+
+
+def _last_build_id(db):
+    from sqlalchemy import select as _sel, func as _f
+    return db.execute(_sel(_f.max(m.DocumentBuild.id))).scalar()
+
+
+def test_online_builds_freeze_and_single_pamphlet_print(client, db):
+    import re as _re
+    tok = login(client, db)
+    # --- draft build via the route ---
+    r = client.post("/admin/documents/generate", data={"csrf": tok, "kind": "draft"}, follow_redirects=False)
+    assert r.status_code == 303 and "started" in _loc(r)
+    b = _wait_build(db, _last_build_id(db))
+    assert b.status == "ok" and len(b.files) == 7 and b.pamphlet_fingerprint
+    page = client.get("/admin/documents"); assert f"/admin/documents/build/{b.id}" in page.text
+    f = client.get(f"/admin/documents/build/{b.id}/01-petition-pamphlet.pdf")
+    assert f.status_code == 200 and f.headers["content-type"].startswith("application/pdf") and f.headers["x-frame-options"] == "SAMEORIGIN"
+    assert "attachment" in client.get(f"/admin/documents/build/{b.id}/01-petition-pamphlet.pdf?download=1").headers["content-disposition"]
+    assert client.get(f"/admin/documents/build/{b.id}").status_code == 200
+    # --- final refused while placeholders remain ---
+    r = client.post("/admin/documents/generate", data={"csrf": tok, "kind": "final"}, follow_redirects=False)
+    assert "placeholders" in _loc(r)
+    # --- fill the petition, final build passes ---
+    r = client.post("/admin/petition", data={"csrf": tok, **PETITION_DATA}, follow_redirects=False)
+    assert "No placeholders remain" in _loc(r)
+    client.post("/admin/documents/generate", data={"csrf": tok, "kind": "final"}, follow_redirects=False)
+    fb = _wait_build(db, _last_build_id(db))
+    assert fb.kind == "final" and fb.status == "ok" and fb.checks_failed == 0, fb.error or fb.check_report
+    # --- freeze needs the filing facts ---
+    r = client.post(f"/admin/documents/build/{fb.id}/freeze", data={"csrf": tok}, follow_redirects=False)
+    assert "Record the filing" in _loc(r)
+    r = client.post(f"/admin/documents/build/{fb.id}/freeze", data={"csrf": tok, "filed_at": "2026-10-06T09:30",
+        "filed_office": "Secretary, Pittsburg County Election Board", "filed_receiver": "Tonya Barnes", "note": "2 copies file-stamped"}, follow_redirects=False)
+    assert "FROZEN" in _loc(r)
+    db.expire_all()
+    s = Settings(db)
+    assert s.bool("petition_frozen") and s.raw("filed_fingerprint") == fb.pamphlet_fingerprint
+    assert db.query(m.RecordsLog).filter(m.RecordsLog.item.like("True copy filed%")).count() == 1
+    # --- pamphlets: assign -> print (stamped) -> issue; void & reprint ---
+    client.post("/admin/pamphlets/bulk-create", data={"csrf": tok, "start": "1", "count": "2", "sheets": "5"}, follow_redirects=False)
+    good = m.Circulator(name="Alex Rivera", role="Circulator", registered_voter_verified=True, registered_verified_on=date.today(), trained_on=date.today())
+    bad = m.Circulator(name="Notyet Person", role="Circulator")
+    db.add_all([good, bad]); db.commit()
+    r = client.post("/admin/pamphlets/P-001/assign", data={"csrf": tok, "circulator_id": str(bad.id)}, follow_redirects=False)
+    assert "34 O.S. § 6" in _loc(r)
+    r = client.post("/admin/pamphlets/P-001/print", data={"csrf": tok}, follow_redirects=False)
+    assert r.status_code == 303 and "Assign" in _loc(r)                    # unassigned -> refused
+    client.post("/admin/pamphlets/P-001/assign", data={"csrf": tok, "circulator_id": str(good.id)}, follow_redirects=False)
+    r = client.post("/admin/pamphlets/P-001/print", data={"csrf": tok})
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/pdf")
+    from pypdf import PdfReader
+    import io
+    text = "".join(pg.extract_text() for pg in PdfReader(io.BytesIO(r.content)).pages)
+    assert "P-001" in text and "Alex Rivera" in text and f"V-{good.id:04d}" in text
+    db.expire_all()
+    p1 = db.query(m.Pamphlet).filter_by(number="P-001").one()
+    assert p1.status == "Printed" and p1.version_hash == fb.pamphlet_fingerprint and p1.print_batch == f"build-{fb.id}"
+    r = client.post("/admin/pamphlets/P-001/print", data={"csrf": tok}, follow_redirects=False)
+    assert "already printed" in _loc(r)
+    r = client.post("/admin/pamphlets/P-001/void", data={"csrf": tok, "reason": "short"}, follow_redirects=False)
+    assert "at least 10" in _loc(r)
+    r = client.post("/admin/pamphlets/P-001/void", data={"csrf": tok, "reason": "Volunteer reassigned to another precinct"}, follow_redirects=False)
+    assert "destroy" in _loc(r)
+    db.expire_all(); assert db.query(m.Pamphlet).filter_by(number="P-001").one().status == "Ready to Print"
+    # reprint and hand over
+    client.post("/admin/pamphlets/P-001/print", data={"csrf": tok})
+    r = client.post("/admin/pamphlets/P-001/issue", data={"csrf": tok}, follow_redirects=False)
+    assert "Issued to" in _loc(r)
+    db.expire_all(); assert db.query(m.Pamphlet).filter_by(number="P-001").one().status == "Issued"
+    # a petition edit while frozen is rejected; unfreeze needs a reason
+    r = client.post("/admin/petition", data={"csrf": tok, "resolution_number": "X"}, follow_redirects=False)
+    assert "frozen" in _loc(r)
+    r = client.post("/admin/documents/unfreeze", data={"csrf": tok, "reason": "no"}, follow_redirects=False)
+    assert "at least 10" in _loc(r)
+    r = client.post("/admin/documents/unfreeze", data={"csrf": tok, "reason": "Refiling with corrected exhibit B"}, follow_redirects=False)
+    db.expire_all(); assert not Settings(db).bool("petition_frozen")
+    assert db.query(m.RecordsLog).filter(m.RecordsLog.item == "PETITION UNFROZEN").count() == 1
+
+
+def test_prune_keeps_filed_builds(db):
+    from app import docbuilder
+    for i in range(25):
+        db.add(m.DocumentBuild(kind="draft", status="ok", built_by="t", filed=(i == 0)))   # oldest is filed
+    db.commit()
+    removed = docbuilder.prune(db, keep=5)
+    db.expire_all()
+    left = db.query(m.DocumentBuild).count()
+    assert removed == 19 and left == 6                       # 5 newest + the filed one
+    assert db.query(m.DocumentBuild).filter_by(filed=True).count() == 1

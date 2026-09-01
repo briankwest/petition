@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Build #{{ b.id }}{% endblock %}
+{% block head %}{% if b.status == 'running' %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
+{% block content %}
+<p class="small"><a href="/admin/documents">← Documents</a></p>
+<h1>Build #{{ b.id }} <span class="pill">{{ b.kind }}</span>
+  {% if b.status == 'ok' %}<span class="pill ok">ok</span>{% elif b.status == 'running' %}<span class="pill warn">running…</span>{% else %}<span class="pill critical">failed</span>{% endif %}
+  {% if b.filed %}<span class="pill ok">FILED</span>{% endif %}
+  {% if filed_fp and b.pamphlet_fingerprint %}{% if matches_filed %}<span class="pill ok">matches filed</span>{% else %}<span class="pill critical">DIFFERS FROM FILED — do not print</span>{% endif %}{% endif %}
+</h1>
+<p class="small">{{ b.built_at|date }} by {{ b.built_by }} · duplex {{ b.duplex }}{% if b.pamphlet_fingerprint %} · pamphlet fingerprint <span class="mono">{{ b.pamphlet_fingerprint[:16] }}…</span>{% endif %}</p>
+{% if b.error %}<pre class="flash err" style="white-space:pre-wrap">{{ b.error }}</pre>{% endif %}
+{% if snap %}<p class="small">Snapshot: Resolution {{ snap.resolution_number }} · adopted {{ snap.adoption_date }} · deadline {{ snap.filing_deadline }} · election {{ snap.election_date }} · voters {{ snap.registered_voters }} · minimum {{ snap.legal_minimum }} · target {{ snap.target }} · {{ snap.rows_per_sheet }}×{{ snap.sheets_per_pamphlet }}{% if snap.placeholders %} · <strong>{{ snap.placeholders|length }} placeholders</strong>{% endif %}</p>{% endif %}
+{% if b.files %}
+<h2>Files</h2>
+<div class="tbl"><table><thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th>SHA-256</th><th></th></tr></thead>
+<tbody>{% for f in b.files %}<tr><td>{{ f.name }}</td><td class="num">{{ f.pages }}</td><td class="num">{{ (f.bytes_len/1024)|round|int }} KB</td><td class="mono small">{{ (f.sha256 or '')[:16] }}…</td>
+<td class="actions-cell"><a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}" target="_blank" rel="noopener">Preview</a> <a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}?download=1">Download</a></td></tr>{% endfor %}</tbody></table></div>
+{% endif %}
+{% if report %}
+<h2>Checks — {{ report|length - fails|length }} passed, {{ fails|length }} failed</h2>
+<div class="tbl"><table><thead><tr><th></th><th>Document</th><th>Check</th><th>Detail</th></tr></thead>
+<tbody>{% for r in report %}<tr {% if not r.ok %}style="background:var(--danger-soft)"{% endif %}><td>{% if r.ok %}✓{% else %}<strong>✗</strong>{% endif %}</td><td class="small">{{ r.doc }}</td><td>{{ r.check }}</td><td class="small">{{ r.detail }}</td></tr>{% endfor %}</tbody></table></div>
+{% endif %}
+{% if b.kind == 'final' and b.status == 'ok' and not b.checks_failed and not frozen and user and user.role == 'admin' %}
+<h2>Freeze — record the filing</h2>
+<p class="small">Do this only after the true copy is physically filed with the Secretary of the County Election Board and you hold the file-stamped copy. Freezing locks the Petition page and enables one-at-a-time pamphlet printing against this build's fingerprint.</p>
+<form method="post" action="/admin/documents/build/{{ b.id }}/freeze" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div class="grid-2 tight">
+    <div class="field"><label>Filed at (date &amp; time)</label><input type="datetime-local" name="filed_at" required></div>
+    <div class="field"><label>Office</label><input name="filed_office" value="Secretary, {{ petition.county }} County Election Board" required></div>
+    <div class="field"><label>Received by</label><input name="filed_receiver" required></div>
+    <div class="field"><label>Note (receipt #, copies left, etc.)</label><input name="note"></div>
+  </div>
+  <div class="actions"><button class="btn primary">Freeze — the filed instrument is final</button></div>
+</form>
+{% endif %}
+{% endblock %}

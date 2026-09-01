@@ -9,6 +9,8 @@ venv:
 
 docs:            ## render every document (draft mode, placeholders allowed) -> output/docs
 	$(PY) -m toolkit.docs.build --out output/docs
+docs-db:         ## render from the DATABASE (admin-entered data): DATABASE_URL=... make docs-db
+	$(PY) -m toolkit.docs.build --out output/docs --from-db
 docs-final:      ## render for filing: refuses while any placeholder remains -> output/final
 	$(PY) -m toolkit.docs.build --final --out output/final
 check-docs:      ## statutory + layout checks on the rendered PDFs

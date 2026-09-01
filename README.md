@@ -36,6 +36,7 @@ make test
 
 ```sh
 make docs            # render all documents (draft, legal size) -> output/docs
+make docs-db         # same, but from the DATABASE (admin-entered data): DATABASE_URL=... make docs-db
 make check-docs      # statutory + layout checks on the PDFs
 make xlsx            # export the Petition Master workbook from the database
 make xlsx-import     # one-time import of "Petition Captain Master Tracker.xlsx" into the database

@@ -99,3 +99,18 @@ dokku run petition python -m app.seed --pamphlets --polling-places
   once the venue has agreed.
 - Contacts whose name/phone are still bracketed placeholders (`[NAME]`, `[PHONE]`) are kept off the public
   site automatically; fill them in under admin → Contacts.
+
+
+## Online documents, freeze, and one-at-a-time printing
+
+- Admin → **Petition** holds every value the documents need (dates, adopted text, proponents, captain).
+  `config/petition.yaml` is seed-only.
+- Admin → **Documents** → *Generate (draft/final)* renders all documents on the server and stores them in
+  Postgres (survives deploys; last 20 builds kept, filed builds always kept). Each build carries its
+  statutory check report and a pamphlet content fingerprint.
+- **Freeze** (admin role, on a passing final build) records the physical filing (date/office/receiver →
+  Records Log), locks the Petition page, and pins the filed fingerprint. **Unfreeze** requires a logged reason.
+- Pamphlets print **one at a time** from each pamphlet page: Assign (cleared circulator) → Print
+  (stamped with the pamphlet number + circulator; refused unless frozen and matching the filed
+  fingerprint) → Mark issued. Void & reprint (logged) covers reassignment — destroy voided paper.
+- Locally: `make docs-db` renders from a database (`DATABASE_URL=…`), `make docs` from the YAML seed.

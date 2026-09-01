@@ -62,3 +62,27 @@ def test_training_cards_doc(tmp_path):
         assert (float(pg.mediabox.width), float(pg.mediabox.height)) == (612.0, 1008.0)
     text = r.pages[2].extract_text()
     assert "Circulator" in text and "34 O.S. § 6" in text
+
+
+def test_stamped_pamphlet_matches_filed_fingerprint(tmp_path):
+    from toolkit import config as cfg
+    from toolkit.docs.build import render_pamphlet
+    from toolkit.docs.check import load, fingerprint, content_fingerprint
+    p = cfg.load()
+    p.measure.resolution_number, p.measure.title = "2026-42", "A Resolution Approving the Plan"
+    from datetime import date as _d
+    p.measure.adoption_date, p.election.date = _d(2026, 10, 5), _d(2026, 11, 10)
+    p.measure.exact_text_override = "BE IT RESOLVED that the Plan is approved."
+    p.proponents = [{"name": "Brian West", "address": "714 E Osage Ave", "city": "McAlester", "zip": "74501"}]
+    p.contacts["petition_captain"] = {"name": "Casey Captain", "phone": "918-555-0111"}
+    stamp = {"number": "P-017", "issued_to": "Alex Rivera", "training_id": "V-0007"}
+    a, b = tmp_path / "plain.pdf", tmp_path / "stamped.pdf"
+    a.write_bytes(render_pamphlet(p)); b.write_bytes(render_pamphlet(p, stamp=stamp))
+    pa, pb = load(a), load(b)
+    assert fingerprint(pa) != fingerprint(pb)                                  # raw text differs (stamps)
+    ig = [stamp["number"], stamp["issued_to"], stamp["training_id"], "Issued to:"]
+    assert content_fingerprint(pa) == content_fingerprint(pb, ignore=ig)       # same filed instrument
+    # a petition-content change is still caught
+    p.gist = p.gist + " Changed."
+    c = tmp_path / "changed.pdf"; c.write_bytes(render_pamphlet(p, stamp=stamp))
+    assert content_fingerprint(pa) != content_fingerprint(load(c), ignore=ig)

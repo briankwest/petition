@@ -40,6 +40,11 @@ Always activate the venv first: `. .venv/bin/activate` (Python 3.14; WeasyPrint 
 - `toolkit/docs/` — Jinja2 + WeasyPrint. Legal size only (612×1008 pt / 1008×612 pt). The
   pamphlet is one PDF: cover(Warning) → petition → exact measure (padded to even) → proponents →
   [signature sheet, affidavit] × N with sheets on odd pages. `check.py` is the contract.
+  On the server, documents render from `app.petition.from_db(db)` (admin-entered data; YAML is
+  seed-only): admin Documents → Generate stores builds in Postgres (`DocumentBuild`/`DocumentFile`,
+  `app/docbuilder.py`); Freeze pins the filed pamphlet's `content_fingerprint` and locks
+  `/admin/petition`; pamphlets print one at a time (Assign → Print stamped → Issue), refused
+  unless the print matches the filed fingerprint.
 - `app/models.py` — Petition Master data model (Setting, User, Circulator, Pamphlet, Sheet,
   Issue, Location, Event, Contact, QATask, RecordsLog). Status vocabularies mirror the captain's
   original tracker. **No signer PII columns exist and none may be added.**

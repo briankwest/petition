@@ -63,8 +63,20 @@ def base_context(p: cfg.Petition, final: bool, duplex: str) -> dict:
         "watermark_text": WATERMARK_TEXT,
         "eb": p.contacts.get("election_board", {}),
         "captain": p.contacts.get("petition_captain") or {},
-        "cards": ROLES, "volunteer": None,
+        "cards": ROLES, "volunteer": None, "stamp": None,
     }
+
+
+def render_pamphlet(petition: cfg.Petition, stamp: dict | None = None, duplex: str | None = None) -> bytes:
+    """The pamphlet alone, optionally stamped per copy: {"number": "P-017", "issued_to": "Alex
+    Rivera", "training_id": "V-0007"}. Stamps fill blanks only (pamphlet number, cover
+    assignment line, affidavit printed name); the petition content is unchanged, so the
+    stamped print matches the filed instrument under check.content_fingerprint()."""
+    duplex = duplex or (petition.layout.duplex if petition.layout.duplex in DUPLEX_MODES else "long-edge")
+    ctx = base_context(petition, final=True, duplex=duplex)
+    ctx["stamp"] = stamp
+    html = env().get_template(DOCS["01-petition-pamphlet"][0]).render(doc_key="01-petition-pamphlet", doc_title="Petition Pamphlet", **ctx)
+    return HTML(string=html, base_url=str(TEMPLATES)).write_pdf()
 
 
 def render_training_card(role_key: str, volunteer: dict | None = None, petition: cfg.Petition | None = None) -> bytes:
@@ -157,8 +169,21 @@ def main(argv=None) -> int:
     ap.add_argument("--final", action="store_true", help="filing build: refuse while placeholders remain; no watermark")
     ap.add_argument("--duplex", choices=DUPLEX_MODES, default=None, help="default: config layout.duplex")
     ap.add_argument("--only", nargs="*", choices=list(DOCS), help="render a subset")
+    ap.add_argument("--from-db", nargs="?", const="", metavar="URL",
+                    help="render from the DATABASE (admin-entered data) instead of the YAML seed; URL defaults to $DATABASE_URL")
     a = ap.parse_args(argv)
-    p = cfg.load()
+    if a.from_db is not None:
+        import os
+        if a.from_db:
+            os.environ["DATABASE_URL"] = a.from_db
+        from app.db import make_engine, database_url, init_db
+        from sqlalchemy.orm import sessionmaker
+        from app.petition import from_db
+        eng = make_engine(database_url()); init_db(eng)
+        with sessionmaker(bind=eng)() as session:
+            p = from_db(session)
+    else:
+        p = cfg.load()
     duplex = a.duplex or (p.layout.duplex if p.layout.duplex in DUPLEX_MODES else "long-edge")
     try:
         paths = build_all(a.out, final=a.final, duplex=duplex, petition=p, only=a.only)

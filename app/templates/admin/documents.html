@@ -1,23 +1,38 @@
 {% extends "admin/base.html" %}
 {% block atitle %}Documents{% endblock %}
+{% block head %}{% if running %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
 {% block content %}
 <h1>Documents</h1>
-<p class="small">Generated from <code>config/petition.yaml</code> at deploy time — not from these admin settings. Legal size. Everything is a <strong>draft</strong> until the resolution is adopted, the exact text is inserted, and <code>make final</code> + <code>make freeze</code> produce the filing copy.</p>
-{% if manifest %}
-<div class="tiles small-tiles">
-  <div class="tile"><span class="num">{{ 'FINAL' if manifest.final else 'DRAFT' }}</span><span class="lbl">Build type</span></div>
-  <div class="tile"><span class="num">{{ manifest.built_at[:16].replace('T',' ') }}</span><span class="lbl">Built (UTC){% if manifest.git_sha %} · {{ manifest.git_sha }}{% endif %}</span></div>
-  <div class="tile"><span class="num">{{ manifest.config.rows_per_sheet }} × {{ manifest.config.sheets_per_pamphlet }}</span><span class="lbl">Lines per sheet × sheets per pamphlet</span></div>
-  <div class="tile"><span class="num">{{ manifest.duplex }}</span><span class="lbl">Duplex setting</span></div>
+{% if frozen %}<p class="flash ok"><strong>Petition FROZEN</strong> — filed {{ s.raw('filed_at') }} at {{ s.raw('filed_office') }} (received by {{ s.raw('filed_receiver') }}); build #{{ frozen_build_id }}, pamphlet fingerprint <span class="mono small">{{ (filed_fp or '')[:12] }}…</span>. Pamphlets can be printed one at a time from their pages.</p>
+{% elif placeholders %}<p class="flash warn"><strong>{{ placeholders|length }} placeholder(s)</strong> before a final build — fill them on the <a href="/admin/petition">Petition</a> page: {{ placeholders|join('; ') }}</p>
+{% else %}<p class="flash ok">No placeholders remain — generate a <strong>final</strong> build, verify it, then freeze it when the true copy is filed.</p>{% endif %}
+<div class="actions">
+  <form method="post" action="/admin/documents/generate" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="draft"><button class="btn" {% if running %}disabled{% endif %}>Generate (draft)</button></form>
+  <form method="post" action="/admin/documents/generate" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="final"><button class="btn primary" {% if running or not can_final %}disabled{% endif %}>Generate (final)</button></form>
+  {% if frozen and user and user.role == 'admin' %}
+  <form method="post" action="/admin/documents/unfreeze" class="inline" onsubmit="return this.reason.value.length >= 10 || (alert('A written reason (10+ characters) is required — it is logged.'), false)">
+    <input type="hidden" name="csrf" value="{{ csrf }}"><input name="reason" placeholder="Unfreeze reason (logged)" size="28"><button class="btn danger">Unfreeze</button></form>
+  {% endif %}
 </div>
-{% if manifest.placeholders %}<p class="flash warn"><strong>{{ manifest.placeholders|length }} placeholders outstanding:</strong> {{ manifest.placeholders|join('; ') }}</p>{% endif %}
-<p class="small">Adoption date: {{ manifest.config.adoption_date }} · Filing deadline: {{ manifest.config.filing_deadline }} · Election: {{ manifest.config.election_date }} · Registered voters: {{ manifest.config.registered_voters }} · Legal minimum: {{ manifest.config.legal_minimum }} · Target: {{ manifest.config.target }}</p>
-{% endif %}
+{% if running %}<p class="small">A build is running — this page refreshes automatically.</p>{% endif %}
+<h2>Builds (stored in the database)</h2>
 <div class="tbl"><table>
-<thead><tr><th>File</th><th>What it is</th><th class="num">Pages</th><th class="num">Size</th><th>Hash</th><th></th></tr></thead>
+<thead><tr><th>#</th><th>When (UTC)</th><th>Kind</th><th>By</th><th>Status</th><th>Checks</th><th>Vs. filed</th><th></th></tr></thead>
+<tbody>{% for b in builds %}<tr>
+<td class="num"><a href="/admin/documents/build/{{ b.id }}">{{ b.id }}</a>{% if b.filed %} <span class="pill ok">FILED</span>{% endif %}</td>
+<td class="num">{{ b.built_at|date }}</td><td>{{ b.kind }}</td><td>{{ b.built_by }}</td>
+<td>{% if b.status == 'ok' %}<span class="pill ok">ok</span>{% elif b.status == 'running' %}<span class="pill warn">running…</span>{% else %}<span class="pill critical">failed</span>{% endif %}</td>
+<td>{% if b.status == 'ok' %}{% if b.checks_failed %}<span class="pill critical">{{ b.checks_failed }} failed</span>{% else %}<span class="pill ok">all pass</span>{% endif %}{% endif %}</td>
+<td>{% if filed_fp and b.pamphlet_fingerprint %}{% if b.pamphlet_fingerprint == filed_fp %}<span class="pill ok">matches filed</span>{% else %}<span class="pill critical">DIFFERS — do not print</span>{% endif %}{% endif %}</td>
+<td class="actions-cell"><a class="btn" href="/admin/documents/build/{{ b.id }}">Open</a></td>
+</tr>{% else %}<tr><td colspan="8">No server builds yet — Generate one above.</td></tr>{% endfor %}</tbody></table></div>
+<h2>Built at deploy (fallback)</h2>
+<p class="small">Rendered from <code>config/petition.yaml</code> when this version was deployed. Use a database build above for current data.</p>
+<div class="tbl"><table>
+<thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th></th></tr></thead>
 <tbody>{% for f in files %}<tr>
-<td><a href="/admin/documents/view/{{ f.name }}">{{ f.name }}</a></td><td>{{ f.title }}</td>
-<td class="num">{{ f.pages if f.pages is not none else '—' }}</td><td class="num">{{ (f.bytes/1024)|round|int }} KB</td><td class="mono small">{{ f.sha256 or '—' }}</td>
+<td><a href="/admin/documents/view/{{ f.name }}">{{ f.name }}</a> <span class="small muted">{{ f.title }}</span></td>
+<td class="num">{{ f.pages if f.pages is not none else '—' }}</td><td class="num">{{ (f.bytes/1024)|round|int }} KB</td>
 <td class="actions-cell"><a class="btn" href="/admin/documents/view/{{ f.name }}">Preview</a> <a class="btn" href="/admin/documents/file/{{ f.name }}?download=1">Download</a></td>
-</tr>{% else %}<tr><td colspan="6">No built documents found (looked in: {{ dirs|join(', ') or 'nothing' }}). Run <code>make docs</code> locally or redeploy.</td></tr>{% endfor %}</tbody></table></div>
+</tr>{% else %}<tr><td colspan="4">Nothing found in {{ dirs|join(', ') or 'dist/' }}.</td></tr>{% endfor %}</tbody></table></div>
 {% endblock %}

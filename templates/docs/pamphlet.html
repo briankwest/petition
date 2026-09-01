@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block footer_text %}Pittsburg County Referendum · Pamphlet No. ______{% endblock %}
+{% block footer_text %}Pittsburg County Referendum · Pamphlet No. {% if stamp %}{{ stamp.number }}{% else %}______{% endif %}{% endblock %}
 {% block css %}
 .cover .warning-word { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 16pt; text-transform: uppercase; letter-spacing: 1pt; margin: 0 0 6pt; }
 .cover .warning-text { font-size: {{ L.warning_pt }}pt; font-weight: bold; margin: 0; }
@@ -82,7 +82,8 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
   </table>
   <div class="rule-box center">Use only the final filed version — do not detach sheets.</div>
   <p class="sans small">This pamphlet is laid out for legal-size (8.5 × 14 in) duplex printing. The petition, the exact copy of the measure and the proponents of record are portrait pages; each signature sheet is a landscape page with its circulator affidavit on the reverse. A copy of this petition and all signatures on it are public records subject to the Oklahoma Open Records Act.</p>
-  <div class="pamphlet-no">Pamphlet No. ____________</div>
+  <div class="pamphlet-no">Pamphlet No. {% if stamp %}{{ stamp.number }}{% else %}____________{% endif %}</div>
+  {% if stamp and stamp.issued_to %}<div class="pamphlet-no" style="border-width:1pt;font-weight:normal">Issued to: <strong>{{ stamp.issued_to }}</strong>{% if stamp.training_id %} ({{ stamp.training_id }}){% endif %}</div>{% endif %}
   {% if draft %}
   <div class="draft-line">DRAFT WORKING COPY — DO NOT CIRCULATE OR COLLECT SIGNATURES UNTIL THE EXACT ADOPTED MEASURE IS INSERTED AND A TRUE COPY IS FILED WITH THE SECRETARY OF THE {{ p.county|upper }} COUNTY ELECTION BOARD.</div>
   {% endif %}
@@ -126,7 +127,7 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
   <div class="sheet-head">
     <div style="width:3.2in">SIGNATURE SHEET {{ n }} OF {{ sheets|length }}</div>
     <div>{{ p.county }} County Referendum · Data Center Tax Abatement ({{ f.abatement }})</div>
-    <div style="width:2.6in">Pamphlet No. __________</div>
+    <div style="width:2.6in">Pamphlet No. {% if stamp %}{{ stamp.number }}{% else %}__________{% endif %}</div>
   </div>
   <p class="gist"><span class="lbl">GIST:</span> {{ p.gist }}</p>
   <p class="notice-line">NOTICE: {{ notice }}</p>
@@ -159,7 +160,7 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
 County of {{ p.county }}{{ ' ' * (13 - p.county|length) }}  )</p>
     <p class="aff-body">{{ affidavit.body }}</p>
     <p class="fill wide">Signature of circulator (affiant): <span class="blank"></span></p>
-    <p class="fill wide">Printed name of circulator: <span class="blank"></span></p>
+    <p class="fill wide">Printed name of circulator: {% if stamp and stamp.issued_to %}<strong>{{ stamp.issued_to }}</strong>{% else %}<span class="blank"></span>{% endif %}</p>
     <p class="fill wide">Complete residence address: <span class="blank"></span></p>
     <p class="fill wide">City: <span class="blank" style="min-width:2.4in"></span> &nbsp; State: OK &nbsp; ZIP: <span class="blank" style="min-width:1.2in"></span></p>
     <p class="paren">{{ affidavit.affiant_line }}</p>

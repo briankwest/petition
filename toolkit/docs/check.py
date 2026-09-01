@@ -84,6 +84,26 @@ def fingerprint(pages: list[Page]) -> str:
     return h.hexdigest()
 
 
+def content_fingerprint(pages: list["Page"], ignore: tuple[str, ...] | list[str] = ()) -> str:
+    """Fingerprint for filed-vs-print comparison. Unlike fingerprint(), it strips underscore
+    blanks and any per-pamphlet stamp strings (pamphlet number, assignee name, training ID)
+    so a stamped print compares equal to the unstamped filed instrument when the petition
+    content is identical — and differs whenever the petition content itself changed."""
+    h = hashlib.sha256()
+    ig = [norm(s) for s in ignore if s]
+    for p in pages:
+        t = p.text
+        for s in ig:
+            t = t.replace(s, " ")
+        t = re.sub(r"_+", " ", t)
+        t = re.sub(r"\( *\)", " ", t)              # empty parens left by a removed stamp line
+        # order-insensitive: filling a blank can reflow pdfplumber's two-column extraction order,
+        # so hash the sorted bag of words — any added/removed/changed word still changes the hash
+        words = " ".join(sorted(re.sub(r"\s+", " ", t).split()))
+        h.update(f"{int(p.width)}x{int(p.height)}|{words}\n".encode())
+    return h.hexdigest()
+
+
 def read_filed() -> dict:
     out = {}
     for name in ("SHA256SUMS", "FINGERPRINT"):

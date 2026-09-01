@@ -210,7 +210,7 @@ def pamphlet_detail(request: Request, number: str, db: Session = Depends(get_db)
     p = _pamphlet(db, number)
     circ = db.scalars(select(m.Circulator).where(m.Circulator.active.is_(True)).order_by(m.Circulator.name)).all()
     issues = db.scalars(select(m.Issue).where(m.Issue.pamphlet_id == p.id).order_by(m.Issue.number)).all()
-    return render(request, "admin/pamphlet.html", p=p, circulators=circ, statuses=m.PAMPHLET_STATUSES,
+    return render(request, "admin/pamphlet.html", p=p, circulators=circ, s=Settings(db), statuses=m.PAMPHLET_STATUSES,
                   sheet_statuses=m.SHEET_STATUSES, defect_codes=m.DEFECT_CODES,
                   defect_text=dict(zip(m.DEFECT_CODES, statutes.exclusions())), issues=issues)
 
@@ -244,11 +244,92 @@ async def pamphlet_save(request: Request, number: str, db: Session = Depends(get
     return go(f"/admin/pamphlets/{number}", msg="Pamphlet saved.")
 
 
+@router.post("/pamphlets/{number}/assign", dependencies=AUTH)
+async def pamphlet_assign(request: Request, number: str, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    p = _pamphlet(db, number)
+    c = p.issued_to or db.get(m.Circulator, F.i(form, "circulator_id") or 0)
+    if not c:
+        return go(f"/admin/pamphlets/{number}", err="Pick a circulator.")
+    if not c.can_circulate:
+        return go(f"/admin/pamphlets/{number}", err=f"Cannot assign to {c.name}: registered-voter verification and training must be recorded first (34 O.S. § 6).")
+    if p.status not in ("Ready to Print",):
+        return go(f"/admin/pamphlets/{number}", err=f"{p.number} is {p.status} — assignment happens before printing. Void the print first if you need to reassign.")
+    p.issued_to_id = c.id
+    db.commit()
+    return go(f"/admin/pamphlets/{number}", msg=f"Assigned to {c.name}. Next: Print (enabled once the petition is frozen).")
+
+
+@router.post("/pamphlets/{number}/print", dependencies=AUTH)
+async def pamphlet_print(request: Request, number: str, db: Session = Depends(get_db)):
+    from fastapi.responses import Response
+    await F.parse(request)
+    p = _pamphlet(db, number)
+    s = Settings(db)
+    if not s.bool("petition_frozen"):
+        return go(f"/admin/pamphlets/{number}", err="Printing is locked until the petition is FROZEN (true copy filed). Documents → final build → Freeze.")
+    if not p.issued_to_id or not p.issued_to:
+        return go(f"/admin/pamphlets/{number}", err="Assign this pamphlet to a cleared circulator first — pamphlets print one at a time, per person.")
+    if not p.issued_to.can_circulate:
+        return go(f"/admin/pamphlets/{number}", err=f"{p.issued_to.name} is no longer cleared (34 O.S. § 6). Fix their record or reassign.")
+    if p.status == "Printed":
+        return go(f"/admin/pamphlets/{number}", err=f"{p.number} is already printed. Void & reprint if this copy is lost or reassigned.")
+    if p.status not in ("Ready to Print",):
+        return go(f"/admin/pamphlets/{number}", err=f"{p.number} is {p.status} — nothing to print.")
+    try:
+        from toolkit.docs.build import render_pamphlet
+        from toolkit.docs.check import load as load_pdf, content_fingerprint
+    except ImportError:
+        raise HTTPException(503, "Document rendering is not available on this server.")
+    petition = petition_from_db(db)
+    stamp = {"number": p.number, "issued_to": p.issued_to.name, "training_id": f"V-{p.issued_to.id:04d}"}
+    pdf = render_pamphlet(petition, stamp=stamp)
+    import tempfile as _tf
+    from pathlib import Path as _P
+    with _tf.NamedTemporaryFile(suffix=".pdf", delete=False) as fh:
+        fh.write(pdf); tmp = _P(fh.name)
+    try:
+        fp = content_fingerprint(load_pdf(tmp), ignore=[stamp["number"], stamp["issued_to"], stamp["training_id"], "Issued to:"])
+    finally:
+        tmp.unlink(missing_ok=True)
+    filed_fp = s.raw("filed_fingerprint")
+    if not filed_fp or fp != filed_fp:
+        return go(f"/admin/pamphlets/{number}", err="REFUSED: this print would DIFFER from the filed instrument. The petition data has changed since filing — do not print. Compare builds on the Documents page.")
+    p.status, p.printed_on = "Printed", date.today()
+    p.version_hash = filed_fp
+    p.print_batch = f"build-{s.int('frozen_build_id')}"
+    db.add(m.RecordsLog(occurred_at=datetime.now(timezone.utc), item=f"Pamphlet {p.number} printed",
+                        person=request.state.user.username,
+                        notes=f"Stamped for {p.issued_to.name} (V-{p.issued_to.id:04d}); matches filed fingerprint {filed_fp[:12]}…"))
+    db.commit()
+    return Response(pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": f'inline; filename="{p.number}-pamphlet.pdf"',
+                             "X-Frame-Options": "SAMEORIGIN", "Content-Security-Policy": "frame-ancestors 'self'"})
+
+
+@router.post("/pamphlets/{number}/void", dependencies=AUTH)
+async def pamphlet_void(request: Request, number: str, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    p = _pamphlet(db, number)
+    reason = F.s(form, "reason") or ""
+    if p.status != "Printed":
+        return go(f"/admin/pamphlets/{number}", err="Only a Printed (not yet issued) pamphlet can be voided. If it is in the field, mark it returned and open an Issue.")
+    if len(reason) < 10:
+        return go(f"/admin/pamphlets/{number}", err="Voiding requires a written reason (at least 10 characters). Destroy the voided paper copy.")
+    db.add(m.RecordsLog(occurred_at=datetime.now(timezone.utc), item=f"Pamphlet {p.number} print VOIDED",
+                        person=request.state.user.username, notes=f"Reason: {reason}. The voided paper copy must be destroyed."))
+    p.status, p.printed_on, p.print_batch, p.version_hash = "Ready to Print", None, None, None
+    db.commit()
+    return go(f"/admin/pamphlets/{number}", msg=f"{p.number} voided — destroy the old copy. Assign/print again when ready.")
+
+
 @router.post("/pamphlets/{number}/issue", dependencies=AUTH)
 async def pamphlet_issue(request: Request, number: str, db: Session = Depends(get_db)):
     form = await F.parse(request)
     p = _pamphlet(db, number)
-    c = db.get(m.Circulator, F.i(form, "circulator_id") or 0)
+    if p.status != "Printed":
+        return go(f"/admin/pamphlets/{number}", err=f"{p.number} is {p.status} — a pamphlet is issued only after its stamped copy is printed.")
+    c = p.issued_to or db.get(m.Circulator, F.i(form, "circulator_id") or 0)
     if not c:
         return go(f"/admin/pamphlets/{number}", err="Pick a circulator.")
     if not c.can_circulate:
@@ -868,8 +949,105 @@ def _find_doc(name: str) -> _Path | None:
     return None
 
 
+def _session_factory(request: Request):
+    from sqlalchemy.orm import sessionmaker
+    return sessionmaker(bind=request.app.state.engine, autoflush=False, expire_on_commit=False)
+
+
+@router.post("/documents/generate", dependencies=AUTH)
+async def documents_generate(request: Request, db: Session = Depends(get_db)):
+    from .. import docbuilder
+    form = await F.parse(request)
+    kind = F.s(form, "kind", "draft")
+    if kind not in ("draft", "final"):
+        return go("/admin/documents", err="Unknown build kind.")
+    bid, err = docbuilder.start_build(kind, request.state.user.username, session_factory=_session_factory(request))
+    if err:
+        return go("/admin/documents", err=err)
+    return go("/admin/documents", msg=f"Build #{bid} ({kind}) started.")
+
+
+@router.get("/documents/build/{bid}", dependencies=AUTH)
+def document_build(request: Request, bid: int, db: Session = Depends(get_db)):
+    import json as _json2
+    b = db.get(m.DocumentBuild, bid) or _404()
+    s = Settings(db)
+    report = _json2.loads(b.check_report or "[]")
+    manifest = _json2.loads(b.manifest or "{}")
+    snap = _json2.loads(b.petition_snapshot or "{}")
+    filed_fp = s.raw("filed_fingerprint")
+    return render(request, "admin/document_build.html", b=b, s=s, report=report, manifest=manifest, snap=snap,
+                  fails=[r for r in report if not r["ok"]], frozen=s.bool("petition_frozen"),
+                  matches_filed=(filed_fp is not None and b.pamphlet_fingerprint == filed_fp), filed_fp=filed_fp)
+
+
+@router.get("/documents/build/{bid}/{name}", dependencies=AUTH)
+def document_build_file(bid: int, name: str, download: int = 0, db: Session = Depends(get_db)):
+    from fastapi.responses import Response
+    if not _SAFE_NAME.match(name):
+        _404()
+    f = db.scalar(select(m.DocumentFile).where(m.DocumentFile.build_id == bid, m.DocumentFile.name == name)) or _404()
+    disp = "attachment" if download else "inline"
+    return Response(f.content, media_type="application/pdf",
+                    headers={"Content-Disposition": f'{disp}; filename="{f.name}"',
+                             "X-Frame-Options": "SAMEORIGIN", "Content-Security-Policy": "frame-ancestors 'self'"})
+
+
+@router.post("/documents/build/{bid}/freeze", dependencies=[Depends(require_admin)])
+async def document_build_freeze(request: Request, bid: int, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    b = db.get(m.DocumentBuild, bid) or _404()
+    s = Settings(db)
+    if s.bool("petition_frozen"):
+        return go(f"/admin/documents/build/{bid}", err="Already frozen. Unfreeze first if you truly need to re-file.")
+    if b.kind != "final" or b.status != "ok" or b.checks_failed:
+        return go(f"/admin/documents/build/{bid}", err="Only a FINAL build with every check passing can be frozen.")
+    filed_at = F.s(form, "filed_at")
+    if not filed_at or not F.s(form, "filed_office") or not F.s(form, "filed_receiver"):
+        return go(f"/admin/documents/build/{bid}", err="Record the filing: date/time, office, and who received it.")
+    s.set("petition_frozen", True); s.set("frozen_build_id", b.id)
+    s.set("filed_at", filed_at); s.set("filed_office", F.s(form, "filed_office"))
+    s.set("filed_receiver", F.s(form, "filed_receiver")); s.set("filed_note", F.s(form, "note"))
+    s.set("filed_sha256", b.pamphlet_sha256); s.set("filed_fingerprint", b.pamphlet_fingerprint)
+    b.filed = True
+    db.add(m.RecordsLog(occurred_at=datetime.now(timezone.utc), item=f"True copy filed with the Secretary of the County Election Board — build #{b.id}",
+                        office=F.s(form, "filed_office"), person=F.s(form, "filed_receiver"), receipt_obtained=True,
+                        documents=f"01-petition-pamphlet.pdf sha256 {b.pamphlet_sha256}; fingerprint {b.pamphlet_fingerprint}",
+                        notes=f"Filed at {filed_at} (recorded by {request.state.user.username}). {F.s(form, 'note') or ''}".strip()))
+    db.commit()
+    return go(f"/admin/documents/build/{bid}", msg="Petition FROZEN — the filed instrument is locked. Pamphlets can now be printed one at a time.")
+
+
+@router.post("/documents/unfreeze", dependencies=[Depends(require_admin)])
+async def documents_unfreeze(request: Request, db: Session = Depends(get_db)):
+    form = await F.parse(request)
+    s = Settings(db)
+    reason = F.s(form, "reason") or ""
+    if not s.bool("petition_frozen"):
+        return go("/admin/documents", err="The petition is not frozen.")
+    if len(reason) < 10:
+        return go("/admin/documents", err="Unfreezing requires a written reason (at least 10 characters). It is logged.")
+    s.set("petition_frozen", False)
+    db.add(m.RecordsLog(occurred_at=datetime.now(timezone.utc), item="PETITION UNFROZEN",
+                        person=request.state.user.username, notes=f"Reason: {reason}"))
+    db.commit()
+    return go("/admin/documents", msg="Unfrozen. Every document change from here must be deliberate — a new final build and filing are required.")
+
+
 @router.get("/documents", dependencies=AUTH)
-def documents(request: Request):
+def documents(request: Request, db: Session = Depends(get_db)):
+    from .. import docbuilder
+    s = Settings(db)
+    builds = docbuilder.list_builds(db)
+    p = petition_from_db(db)
+    ctx_extra = {"builds": builds, "running": any(b.status == "running" for b in builds),
+                 "can_final": not p.placeholders, "placeholders": p.placeholders, "s": s,
+                 "frozen": s.bool("petition_frozen"), "filed_fp": s.raw("filed_fingerprint"),
+                 "frozen_build_id": s.int("frozen_build_id")}
+    return _documents_page(request, ctx_extra)
+
+
+def _documents_page(request: Request, ctx_extra: dict):
     manifest, files, seen = None, [], set()
     for d in _docs_dirs():
         mp = d / "manifest.json"
@@ -885,7 +1063,7 @@ def documents(request: Request):
             meta = next((x for x in (manifest or {}).get("files", []) if x.get("name") == f.name), {})
             files.append({"name": f.name, "title": meta.get("title") or ("Precinct wall map (legal, landscape)" if "precincts" in f.name else f.stem),
                           "bytes": f.stat().st_size, "pages": meta.get("pages"), "sha256": (meta.get("sha256") or "")[:12]})
-    return render(request, "admin/documents.html", files=files, manifest=manifest, dirs=[str(d) for d in _docs_dirs()])
+    return render(request, "admin/documents.html", files=files, manifest=manifest, dirs=[str(d) for d in _docs_dirs()], **ctx_extra)
 
 
 @router.get("/documents/view/{name}", dependencies=AUTH)

@@ -3,14 +3,30 @@
 {% block content %}
 <p class="small"><a href="/admin/pamphlets">← Pamphlets</a></p>
 <h1>{{ p.number }} <span class="pill">{{ p.status }}</span></h1>
+{% set frozen = s.bool('petition_frozen') if s else False %}
+<p class="small flow">Flow: <span class="pill {% if p.status == 'Ready to Print' and not p.issued_to_id %}warn{% endif %}">1 Assign</span> →
+<span class="pill {% if p.status == 'Ready to Print' and p.issued_to_id %}warn{% endif %}">2 Print (stamped, one at a time)</span> →
+<span class="pill {% if p.status == 'Printed' %}warn{% endif %}">3 Hand over (Issue)</span> →
+<span class="pill {% if p.status in ('Issued', 'In Field') %}warn{% endif %}">4 Return &amp; audit</span>
+{% if p.issued_to %} · assigned to <strong>{{ p.issued_to.name }}</strong> (V-{{ '%04d' % p.issued_to.id }}){% endif %}</p>
 <div class="actions quick">
-  <form method="post" action="/admin/pamphlets/{{ p.number }}/issue" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}">
-    <select name="circulator_id"><option value="">Issue to…</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}{% if not c.can_circulate %} (not cleared){% endif %}</option>{% endfor %}</select>
-    <button class="btn">Issue</button></form>
+  {% if p.status == 'Ready to Print' %}
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/assign" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <select name="circulator_id"><option value="">Assign to…</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}{% if not c.can_circulate %} (not cleared){% endif %}</option>{% endfor %}</select>
+    <button class="btn">Assign</button></form>
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/print" class="inline" target="_blank"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <button class="btn primary" {% if not frozen or not p.issued_to_id %}disabled title="{% if not frozen %}Enabled after the petition is frozen (filed).{% else %}Assign a cleared circulator first.{% endif %}"{% endif %}>Print stamped pamphlet</button></form>
+  {% elif p.status == 'Printed' %}
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/issue" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn primary">Mark issued to {{ p.issued_to.name if p.issued_to else '…' }}</button></form>
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/void" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <input name="reason" placeholder="Void reason (logged; destroy the copy)" size="26"><button class="btn danger">Void &amp; reprint</button></form>
+  {% else %}
   <form method="post" action="/admin/pamphlets/{{ p.number }}/return" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn">Mark returned</button></form>
   <form method="post" action="/admin/pamphlets/{{ p.number }}/file" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn">Mark filed</button></form>
+  {% endif %}
   <a class="btn" href="/admin/issues/new?pamphlet={{ p.number }}">Open issue</a>
 </div>
+{% if not frozen and p.status == 'Ready to Print' %}<p class="small muted">Printing unlocks when the petition is frozen (Documents → final build → Freeze). Every pamphlet prints individually, stamped with its number and its circulator.</p>{% endif %}
 <form method="post" action="/admin/pamphlets/{{ p.number }}" class="form">
   <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="grid-3">
