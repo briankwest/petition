@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Pamphlets{% endblock %}
+{% block content %}
+<h1>Pamphlets</h1>
+<form class="filters" method="get">
+  <select name="status" onchange="this.form.submit()"><option value="">All statuses</option>{% for st in statuses %}<option value="{{ st }}" {% if st == status %}selected{% endif %}>{{ st }} ({{ counts.get(st, 0) }})</option>{% endfor %}</select>
+  <input name="q" value="{{ q }}" placeholder="P-0"><button class="btn">Filter</button>
+</form>
+<details class="bulk"><summary>Create pamphlets</summary>
+<form method="post" action="/admin/pamphlets/bulk-create" class="inline">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <label>Start at P-<input type="number" name="start" value="{{ next_number }}" min="1" style="width:6em"></label>
+  <label>Count <input type="number" name="count" value="{{ s.print_run }}" min="1" max="5000" style="width:6em"></label>
+  <label>Sheets each <input type="number" name="sheets" value="{{ s.sheets_per_pamphlet }}" min="1" max="20" style="width:5em"></label>
+  <label>Print batch <input name="print_batch" placeholder="batch-1"></label>
+  <button class="btn primary">Create</button>
+</form>
+<p class="help">Numbers already in use are skipped. Every pamphlet printed must be byte-identical to the filed true copy — record the print batch and version hash.</p>
+</details>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>Status</th><th>Issued to</th><th>Issued</th><th>Returned</th><th class="num">Collected</th><th class="num">Valid est.</th><th class="num">Notarized</th><th class="num">Audited</th><th class="num">Rejected</th></tr></thead>
+<tbody>{% for p in rows %}<tr>
+<td><a href="/admin/pamphlets/{{ p.number }}">{{ p.number }}</a></td><td><span class="pill">{{ p.status }}</span></td><td>{{ p.issued_to.name if p.issued_to else '' }}</td><td>{{ p.issued_on|date('') }}</td><td>{{ p.returned_on|date('') }}</td>
+<td class="num">{{ p.collected }}</td><td class="num">{{ p.valid_estimate }}</td><td class="num">{{ p.notarized_sheets }}/{{ p.sheets|length }}</td><td class="num">{{ p.audited_ok_sheets }}</td><td class="num">{{ p.rejected_sheets }}</td>
+</tr>{% else %}<tr><td colspan="10">No pamphlets yet — create them above once the true copy is filed and printed.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">{{ petition.county }} County referendum · {{ petition.fmt.abatement }} data center tax abatement</p>
+  <h1>Let {{ petition.county }} County voters decide.</h1>
+  <p class="lede">{{ petition.gist }}</p>
+  <div class="cta-row">
+    <a class="cta" href="/sign">Where to sign</a>
+    <a class="cta secondary" href="/registered">Am I registered?</a>
+    <a class="cta secondary" href="/contact">Who to call</a>
+  </div>
+</section>
+
+{% if stats %}
+<section class="counts" aria-labelledby="counts-h">
+  <h2 id="counts-h">Signature count <span class="asof">as of {{ stats.as_of|date }}</span></h2>
+  <div class="tiles">
+    <div class="tile"><span class="num">{{ stats.collected|int }}</span><span class="lbl">Signatures collected</span></div>
+    <div class="tile"><span class="num">{{ stats.valid_estimate|int }}</span><span class="lbl">Estimated valid</span></div>
+    <div class="tile"><span class="num">{{ stats.legal_minimum|int }}</span><span class="lbl">Legal minimum (10% of registered voters)</span></div>
+    <div class="tile"><span class="num">{{ stats.target|int }}</span><span class="lbl">Our target</span></div>
+    {% if stats.days_remaining is not none %}<div class="tile"><span class="num">{{ stats.days_remaining }}</span><span class="lbl">Days left to file</span></div>{% endif %}
+  </div>
+  {% if show_progress and stats.progress_to_target is not none %}
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ (stats.progress_to_target * 100)|round|int }}" aria-label="Progress to target">
+    <span style="width: {{ [stats.progress_to_target * 100, 100]|min }}%"></span>
+  </div>
+  <p class="small">{{ stats.progress_to_target|pct }} of target · {{ stats.progress_to_legal|pct }} of the legal minimum</p>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="two-col">
+  <div>
+    <h2>Upcoming signing times</h2>
+    {% if events %}
+    <ul class="events">
+      {% for e in events %}<li><strong>{{ e.date|date }}</strong>{% if e.start %} · {{ e.start|time }}{% if e.end %}–{{ e.end|time }}{% endif %}{% endif %}<br>{{ e.location.name }}{% if e.location.address %}, {{ e.location.address }}{% endif %}{% if e.location.city %}, {{ e.location.city }}{% endif %}</li>{% endfor %}
+    </ul>
+    <p><a href="/sign">All locations and the map →</a></p>
+    {% else %}
+    <p>No signing times are scheduled yet. Signatures can only be collected after the resolution is adopted and a true copy of the petition is filed with the County Election Board. Check back, or <a href="/contact">call us</a>.</p>
+    {% endif %}
+  </div>
+  <div>
+    <h2>Before you come</h2>
+    <ol class="steps">
+      <li>You must be a <strong>registered voter living in {{ petition.county }} County</strong>. <a href="/registered">Check in two minutes.</a></li>
+      <li>Know the address on your voter registration and your birth month and day — the sheet asks for them.</li>
+      <li>Sign only your own name, once. That is the law (34 O.S. § 23).</li>
+    </ol>
+  </div>
+</section>
+<section class="callout volunteer-callout">
+  <h2>Want to help?</h2>
+  <p>Circulators, notaries, drivers and event helpers are all needed. Circulators must be registered Oklahoma voters, 18 or older, and are trained before carrying a pamphlet.</p>
+  <p><a class="cta" href="/volunteer">Volunteer</a></p>
+</section>
+{% endblock %}

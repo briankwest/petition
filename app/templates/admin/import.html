@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Import / Export{% endblock %}
+{% block content %}
+<h1>Import / Export</h1>
+<section><h2>Export the Petition Master workbook</h2><p>Downloads an .xlsx with every pamphlet, sheet, volunteer, issue, event and the dashboard math — for offline work, backups, or the attorney.</p><p><a class="btn primary" href="/admin/export.xlsx">Download petition-master.xlsx</a></p></section>
+<section><h2>Import the old tracker</h2><p>One-time load of <code>Petition Captain Master Tracker.xlsx</code>. Rows that already exist (by pamphlet number / issue number / name) are updated, not duplicated.</p>
+<form method="post" action="/admin/import" enctype="multipart/form-data" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="file" name="file" accept=".xlsx" required><button class="btn">Import</button></form>
+{% if summary %}<h3>Result</h3><div class="tbl"><table><tbody>{% for k, v in summary.items() %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}</section>
+{% endblock %}

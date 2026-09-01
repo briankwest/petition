@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+{% block atitle %}{{ p.number }}{% endblock %}
+{% block content %}
+<p class="small"><a href="/admin/pamphlets">← Pamphlets</a></p>
+<h1>{{ p.number }} <span class="pill">{{ p.status }}</span></h1>
+<div class="actions quick">
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/issue" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <select name="circulator_id"><option value="">Issue to…</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}{% if not c.can_circulate %} (not cleared){% endif %}</option>{% endfor %}</select>
+    <button class="btn">Issue</button></form>
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/return" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn">Mark returned</button></form>
+  <form method="post" action="/admin/pamphlets/{{ p.number }}/file" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn">Mark filed</button></form>
+  <a class="btn" href="/admin/issues/new?pamphlet={{ p.number }}">Open issue</a>
+</div>
+<form method="post" action="/admin/pamphlets/{{ p.number }}" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div class="grid-3">
+    <div class="field"><label>Status</label><select name="status">{% for st in statuses %}<option {% if st == p.status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></div>
+    <div class="field"><label>Issued to</label><select name="issued_to_id"><option value="">—</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label>Print batch</label><input name="print_batch" value="{{ p.print_batch or '' }}"></div>
+    <div class="field"><label>Printed on</label><input type="date" name="printed_on" value="{{ p.printed_on or '' }}"></div>
+    <div class="field"><label>Issued on</label><input type="date" name="issued_on" value="{{ p.issued_on or '' }}"></div>
+    <div class="field"><label>Returned on</label><input type="date" name="returned_on" value="{{ p.returned_on or '' }}"></div>
+    <div class="field"><label>Version hash (must equal filed copy)</label><input name="version_hash" value="{{ p.version_hash or '' }}" class="mono"></div>
+    <div class="field span2"><label>Notes</label><input name="notes" value="{{ p.notes or '' }}"></div>
+  </div>
+  <h2>Signature sheets</h2>
+  <p class="help">Counts only — never enter signer names here. A sheet with a bad or missing affidavit/notarization loses every signature on it (34 O.S. § 6.1).</p>
+  <div class="sheets">
+  {% for sh in p.sheets %}{% set k = 's' ~ sh.sheet_no ~ '_' %}
+  <fieldset class="sheet">
+    <legend>Sheet {{ sh.sheet_no }} <span class="mono">{{ p.number }}-S{{ sh.sheet_no }}</span></legend>
+    <div class="grid-4">
+      <div class="field"><label>Status</label><select name="{{ k }}status">{% for st in sheet_statuses %}<option {% if st == sh.status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></div>
+      <div class="field"><label>Circulator</label><select name="{{ k }}circulator_id"><option value="">—</option>{% for c in circulators %}<option value="{{ c.id }}" {% if sh.circulator_id == c.id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+      <div class="field"><label>Collected</label><input type="number" min="0" name="{{ k }}collected" value="{{ sh.collected }}"></div>
+      <div class="field"><label>Questionable</label><input type="number" min="0" name="{{ k }}questionable" value="{{ sh.questionable }}"></div>
+      <div class="field"><label>Rejected</label><input type="number" min="0" name="{{ k }}rejected" value="{{ sh.rejected }}"></div>
+      <div class="field"><label>Issued</label><input type="date" name="{{ k }}issued_on" value="{{ sh.issued_on or '' }}"></div>
+      <div class="field"><label>Returned</label><input type="date" name="{{ k }}returned_on" value="{{ sh.returned_on or '' }}"></div>
+      <div class="field"><label>Notarized on</label><input type="date" name="{{ k }}notarized_on" value="{{ sh.notarized_on or '' }}"></div>
+      <div class="field"><label>Notary name</label><input name="{{ k }}notary_name" value="{{ sh.notary_name or '' }}"></div>
+      <div class="field"><label>Commission #</label><input name="{{ k }}notary_commission" value="{{ sh.notary_commission or '' }}"></div>
+      <div class="field"><label>Commission expires</label><input type="date" name="{{ k }}notary_expiration" value="{{ sh.notary_expiration or '' }}"></div>
+      <div class="field"><label>Notes</label><input name="{{ k }}notes" value="{{ sh.notes or '' }}"></div>
+    </div>
+    <div class="defects">{% for code in defect_codes %}<label class="check small" title="{{ defect_text[code] }}"><input type="checkbox" name="{{ k }}defects" value="{{ code }}" {% if code in sh.defects %}checked{% endif %}> {{ code }}</label>{% endfor %}</div>
+  </fieldset>
+  {% endfor %}
+  </div>
+  <div class="actions sticky"><button class="btn primary">Save pamphlet and all sheets</button></div>
+</form>
+{% if issues %}<h2>Issues on this pamphlet</h2><ul class="plain">{% for i in issues %}<li><a href="/admin/issues/{{ i.id }}">{{ i.number }}</a> {{ i.issue_type or '' }} — {{ i.status }}</li>{% endfor %}</ul>{% endif %}
+<details class="help-block"><summary>Defect codes (34 O.S. § 6.1)</summary><dl>{% for code in defect_codes %}<dt>{{ code }}</dt><dd>{{ defect_text[code] }}.</dd>{% endfor %}</dl></details>
+{% endblock %}

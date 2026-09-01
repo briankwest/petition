@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Where to sign · {{ site_title }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="/static/map.css">{% endblock %}
+{% block content %}
+<h1>Where to sign</h1>
+<p class="lede">Bring nothing but yourself. A trained circulator with an official, filed pamphlet will be at each location during the hours shown.</p>
+<div class="finder">
+  <label for="addr">Find my precinct and the nearest signing location</label>
+  <form id="finder-form" onsubmit="return false"><input id="addr" type="text" inputmode="text" placeholder="Street address, city" autocomplete="street-address"><button class="btn" id="finder-go" type="submit">Look up</button></form>
+  <p class="small">Your address is sent to the U.S. Census Bureau geocoder to find the precinct and is not stored.</p>
+  <div id="finder-result" aria-live="polite"></div>
+</div>
+<div id="map" class="map" role="region" aria-label="Map of Pittsburg County precincts and signing locations"></div>
+
+{% if events %}
+<h2>Upcoming signing times</h2>
+<div class="tbl"><table>
+<thead><tr><th>Date</th><th>Time</th><th>Location</th><th>Address</th></tr></thead>
+<tbody>{% for e in events %}<tr><td>{{ e.date|date }}</td><td>{% if e.start %}{{ e.start|time }}{% if e.end %}–{{ e.end|time }}{% endif %}{% endif %}</td><td>{{ e.location.name }}</td><td>{{ e.location.address or '' }}{% if e.location.city %}, {{ e.location.city }}{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+
+<h2>Locations</h2>
+{% if locations %}
+<ul class="cards">
+{% for l in locations %}
+<li class="card">
+  <h3>{{ l.name }} <span class="pill {{ l.status }}">{{ l.status }}</span></h3>
+  <p>{{ l.address or '' }}{% if l.city %}, {{ l.city }}{% endif %}{% if l.zip %} {{ l.zip }}{% endif %}{% if l.precinct %} · Precinct {{ l.precinct }}{% endif %}</p>
+  {% if l.hours %}<p><strong>Hours:</strong> {{ l.hours }}</p>{% endif %}
+  {% if l.notes %}<p class="small">{{ l.notes }}</p>{% endif %}
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No signing locations are published yet. Signatures can only be collected on official pamphlets after the petition's true copy is filed with the County Election Board.</p>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="/static/map.js"></script>
+<script>
+(function(){
+  var el=document.getElementById('map');
+  if(window.initPetitionMap){ window.petitionMap=window.initPetitionMap(el,{precinctsUrl:'/static/precincts/pittsburg_web.geojson',locationsUrl:'/api/locations.geojson',countyUrl:'/static/precincts/county.geojson',municipalitiesUrl:'/static/precincts/municipalities.geojson',pollingPlaces:true}); }
+  else { el.innerHTML='<p class="small">Map is loading…</p>'; }
+  var go=document.getElementById('finder-go'), out=document.getElementById('finder-result');
+  go.addEventListener('click',function(){
+    var a=document.getElementById('addr').value.trim(); if(!a){out.textContent='Enter a street address.';return;}
+    out.textContent='Looking up…';
+    fetch('/api/precinct?address='+encodeURIComponent(a)).then(function(r){return r.json().then(function(j){return [r.status,j];});}).then(function(x){
+      var st=x[0], j=x[1];
+      if(st!==200){ out.textContent=j.detail||'Lookup unavailable right now.'; return; }
+      var pct=(j.precinct&&j.precinct.precinct)||j.precinct||'unknown';
+      var near=j.nearest||(j.nearest_locations&&j.nearest_locations[0]);
+      out.innerHTML='<p><strong>Precinct '+pct+'</strong>'+(j.polling_place?' · polling place: '+j.polling_place:'')+(near?'<br>Nearest signing location: '+near.name+(near.distance_mi?' ('+near.distance_mi+' mi)':''):'')+'</p>';
+      if(window.petitionMap&&j.lat&&j.lon){ window.petitionMap.focus(j.lat,j.lon,pct); }
+    }).catch(function(){ out.textContent='Lookup unavailable right now.'; });
+  });
+})();
+</script>
+{% endblock %}

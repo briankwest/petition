@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block analytics %}{% endblock %}
+{% block bodyclass %}admin{% endblock %}
+{% block title %}{% block atitle %}Admin{% endblock %} · Petition Master{% endblock %}
+{% block shell %}
+<div class="admin-shell">
+  <aside class="admin-nav">
+    <a class="brand" href="/admin"><span class="brand-eyebrow">Petition Master</span><span class="brand-name">{{ petition.county }} County</span></a>
+    <nav aria-label="Admin">
+      {% set items = [('/admin','Dashboard'),('/admin/pamphlets','Pamphlets'),('/admin/circulators','Volunteers'),('/admin/signups','Sign-ups'),('/admin/issues','Issues'),('/admin/events','Events'),('/admin/locations','Locations'),('/admin/contacts','Contacts'),('/admin/qa','Filing QA'),('/admin/records','Records log'),('/admin/settings','Settings'),('/admin/import','Import / Export')] %}
+      {% for href, label in items %}<a href="{{ href }}" {% if path == href or (href != '/admin' and path.startswith(href)) %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+      {% if user and user.role == 'admin' %}<a href="/admin/users" {% if path.startswith('/admin/users') %}aria-current="page"{% endif %}>Users</a>{% endif %}
+      <a href="/" target="_blank" rel="noopener">View site ↗</a>
+    </nav>
+    {% if user %}<form class="logout" method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><span class="small">{{ user.username }} ({{ user.role }})</span><button class="linklike">Sign out</button></form>{% endif %}
+  </aside>
+  <main id="main" class="admin-main">
+    {% if msg %}<p class="flash ok">{{ msg }}</p>{% endif %}{% if err %}<p class="flash err">{{ err }}</p>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

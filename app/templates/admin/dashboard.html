@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard <span class="asof">as of {{ st.as_of|date }}</span></h1>
+{% if signups_new %}<p class="flash warn"><a href="/admin/signups">{{ signups_new }} volunteer sign-up{{ '' if signups_new == 1 else 's' }}</a> from the website awaiting review.</p>{% endif %}
+{% if not s.adoption_date %}<p class="flash warn">No adoption date is set — the resolution is tabled. The 30-day filing clock starts on adoption (62 O.S. § 868(B)(3)). Set it under <a href="/admin/settings">Settings</a> the day the Board votes.</p>{% endif %}
+<div class="tiles">
+  <div class="tile"><span class="num">{{ st.collected|int }}</span><span class="lbl">Collected</span></div>
+  <div class="tile"><span class="num">{{ st.valid_estimate|int }}</span><span class="lbl">Valid estimate (collected − questionable − rejected)</span></div>
+  <div class="tile"><span class="num">{{ st.est_valid|int }}</span><span class="lbl">Projected valid at {{ st.est_valid_rate|pct }}</span></div>
+  <div class="tile"><span class="num">{{ st.legal_minimum|int }}</span><span class="lbl">Legal minimum (10% of {{ st.registered_voters|int }})</span></div>
+  <div class="tile"><span class="num">{{ st.target|int }}</span><span class="lbl">Target</span></div>
+  <div class="tile"><span class="num">{{ st.remaining_to_target|int }}</span><span class="lbl">Remaining to target</span></div>
+  <div class="tile"><span class="num">{{ st.days_remaining if st.days_remaining is not none else '—' }}</span><span class="lbl">Days to filing deadline{% if st.filing_deadline %} ({{ st.filing_deadline|date }}){% endif %}</span></div>
+  <div class="tile"><span class="num">{{ st.signatures_per_day_needed if st.signatures_per_day_needed is not none else '—' }}</span><span class="lbl">Signatures / day needed</span></div>
+</div>
+{% if st.progress_to_target is not none %}
+<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ (st.progress_to_target*100)|round|int }}"><span style="width: {{ [st.progress_to_target*100,100]|min }}%"></span></div>
+<p class="small">{{ st.progress_to_target|pct }} of target · {{ st.progress_to_legal|pct }} of legal minimum · capacity used {{ st.capacity_used|pct }} of {{ st.capacity|int }}</p>
+{% endif %}
+<div class="grid-2">
+  <section><h2>Pamphlets ({{ st.pamphlets_total }})</h2><div class="tbl"><table><tbody>
+  {% for k, v in st.pamphlets.items() %}<tr><td><a href="/admin/pamphlets?status={{ k|urlencode }}">{{ k }}</a></td><td class="num">{{ v }}</td></tr>{% endfor %}</tbody></table></div></section>
+  <section><h2>Sheets</h2><div class="tbl"><table><tbody>
+  {% for k, v in st.sheets.items() %}<tr><td>{{ k }}</td><td class="num">{{ v }}</td></tr>{% endfor %}</tbody></table></div></section>
+</div>
+<div class="grid-2">
+  <section><h2>Open issues ({{ st.open_issues }})</h2>
+  {% if issues %}<ul class="plain">{% for i in issues %}<li><a href="/admin/issues/{{ i.id }}">{{ i.number }}</a> <span class="pill {{ i.priority|lower }}">{{ i.priority }}</span> {{ i.issue_type or '' }}{% if i.pamphlet %} · {{ i.pamphlet.number }}{% endif %}</li>{% endfor %}</ul>{% else %}<p class="small">None.</p>{% endif %}
+  <p><a class="btn" href="/admin/issues/new">Open an issue</a></p></section>
+  <section><h2>Pamphlets in the field</h2>
+  {% if outstanding %}<ul class="plain">{% for p in outstanding %}<li><a href="/admin/pamphlets/{{ p.number }}">{{ p.number }}</a> — {{ p.issued_to.name if p.issued_to else '?' }}{% if p.issued_on %} since {{ p.issued_on|date }}{% endif %}</li>{% endfor %}</ul>{% else %}<p class="small">None issued.</p>{% endif %}
+  <p class="small">{{ st.circulators_ready }} volunteers cleared to circulate (registration verified + trained).</p></section>
+</div>
+{% endblock %}

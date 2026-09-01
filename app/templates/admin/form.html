@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% block atitle %}{{ title }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ back }}">← Back</a></p>
+<h1>{{ title }}</h1>
+<form method="post" action="{{ action }}" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% for f in fields %}
+  <div class="field {{ f.type }}">
+    {% if f.type == 'checkbox' %}
+      <label class="check"><input type="checkbox" name="{{ f.name }}" value="on" {% if f.value %}checked{% endif %}> {{ f.label }}</label>
+    {% elif f.type == 'select' %}
+      <label for="f-{{ f.name }}">{{ f.label }}</label>
+      <select id="f-{{ f.name }}" name="{{ f.name }}" {% if f.required %}required{% endif %}>
+      {% for o in f.options %}{% set ov = o[0] if o is not string else o %}{% set ol = o[1] if o is not string else o %}<option value="{{ ov }}" {% if f.value is not none and ov|string == f.value|string %}selected{% endif %}>{{ ol }}</option>{% endfor %}
+      </select>
+    {% elif f.type == 'textarea' %}
+      <label for="f-{{ f.name }}">{{ f.label }}</label>
+      <textarea id="f-{{ f.name }}" name="{{ f.name }}" rows="{{ f.rows }}">{{ f.value or '' }}</textarea>
+    {% else %}
+      <label for="f-{{ f.name }}">{{ f.label }}</label>
+      <input id="f-{{ f.name }}" type="{{ f.type }}" name="{{ f.name }}" value="{{ f.value if f.value is not none else '' }}" {% if f.step %}step="{{ f.step }}"{% endif %} {% if f.required %}required{% endif %}>
+    {% endif %}
+    {% if f.readonly %}<dl class="ro">{% for k, v in f.readonly %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}</dl>{% endif %}
+    {% if f.help %}<p class="help">{{ f.help }}</p>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="actions"><button class="btn primary">Save</button> <a class="btn" href="{{ back }}">Cancel</a></div>
+</form>
+{% if extra %}<div class="extra">{{ extra|safe }}</div>{% endif %}
+{% endblock %}

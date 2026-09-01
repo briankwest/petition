@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block css %}
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 12pt; line-height: 1.3; }
+.bar { border: 2.5pt solid #000; padding: 5pt 10pt; text-align: center; font-weight: bold; font-size: 15pt; margin: 0 0 6pt; }
+.bar small { display: block; font-weight: normal; font-size: 11pt; }
+.goal { border: 1.5pt solid #000; padding: 5pt 10pt; margin: 0 0 6pt; font-weight: bold; font-size: 11.5pt; }
+table.panels { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 6pt; }
+table.panels td { width: 50%; border: 1.5pt solid #000; padding: 6pt 8pt; vertical-align: top; }
+table.panels td + td { border-left: 0; }
+.panel h3 { font-size: 12.5pt; margin: 0 0 4pt; text-transform: uppercase; }
+ul { margin: 0; padding-left: 0; list-style: none; } li { margin: 0 0 2pt; padding-left: 18pt; text-indent: -18pt; line-height: 1.25; }
+li::before { content: "☐  "; }
+.ecodes { border: 2pt solid #000; padding: 6pt 10pt; margin: 0 0 8pt; }
+.ecodes h3 { margin: 0 0 4pt; font-size: 12.5pt; }
+.ecodes p { margin: 0 0 2pt; font-size: 10.5pt; padding-left: 0; text-indent: 0; line-height: 1.25; }
+.ecodes .kill { font-weight: bold; }
+table.log { width: 100%; table-layout: fixed; }
+table.log th, table.log td { border: 1pt solid #000; padding: 4pt 5pt; }
+table.log th { background: #eee; font-size: 11pt; text-align: left; }
+table.log td { height: 0.42in; }
+.src { font-size: 10pt; color: #333; margin: 6pt 0 0; }
+{% endblock %}
+{% block content %}
+<div class="bar">NOTARY CHECKLIST — Petition circulator affidavits <small>Use before leaving the notary table. {{ p.county }} County Data Center Tax Abatement Referendum.</small></div>
+<div class="goal">Goal: protect every signature sheet from being rejected because of a bad or incomplete circulator affidavit. One notary defect throws out every signature on that sheet (34 O.S. § 6.1(A)(7)).</div>
+<table class="panels"><tr>
+ <td class="panel"><h3>Before notarizing</h3><ul>
+  <li>The full petition pamphlet is intact; no pages detached.</li>
+  <li>The affidavit is on the back of the signature sheet it verifies and names that sheet number.</li>
+  <li>The circulator is a registered Oklahoma voter, 18 or older, and personally witnessed every signature on that sheet.</li>
+  <li>The circulator is present in front of the notary and signs in the notary's presence (or acknowledges a prior signature only if the notary can lawfully do so).</li>
+  <li>The pamphlet number and sheet number are recorded in the tracking log.</li></ul></td>
+ <td class="panel"><h3>Affidavit must show (34 O.S. § 6)</h3><ul>
+  <li>Venue: State of Oklahoma, County of {{ p.county }}.</li>
+  <li>Circulator printed name and signature.</li>
+  <li>Circulator complete residence address.</li>
+  <li>Date the affidavit is sworn (day, month, year).</li>
+  <li>Notary signature and printed name/title.</li>
+  <li>Notary complete address.</li>
+  <li>Notary commission number.</li>
+  <li>Notary commission expiration date.</li>
+  <li>Official Oklahoma notary public seal, fully visible.</li></ul></td>
+</tr><tr>
+ <td class="panel"><h3>Before leaving the notary</h3><ul>
+  <li>Seal is visible and not cut off or smeared.</li>
+  <li>Commission number written clearly.</li>
+  <li>Expiration date complete and readable — and not expired.</li>
+  <li>Notary signed in the correct place; circulator signed in the correct place.</li>
+  <li>Nothing crossed out or altered without explanation.</li>
+  <li>Flag any questionable affidavit for Petition Captain review.</li></ul></td>
+ <td class="panel"><h3>Do not accept without review</h3><ul>
+  <li>Missing notary seal or notary signature.</li>
+  <li>Missing circulator signature.</li>
+  <li>Missing commission number or expiration date.</li>
+  <li>Wrong county in the venue line without correction.</li>
+  <li>Affidavit detached from its signature sheet or the pamphlet.</li>
+  <li>Affidavit signed by someone other than the circulator.</li>
+  <li>Affidavit notarized before the signatures were collected.</li></ul></td>
+</tr></table>
+<div class="ecodes"><h3>Defect codes — 34 O.S. § 6.1(A): signatures the county will not count (bold = whole sheet lost)</h3>
+{% for code, label, kills in exclusions_short %}<p class="{{ 'kill' if kills }}">{{ code }} — {{ label }}</p>{% endfor %}</div>
+<p class="src">34 O.S. § 6 requires the circulator to verify each sheet by affidavit; 34 O.S. § 3 treats the petition copy plus signature sheets as a pamphlet; 62 O.S. § 868 governs filing before circulation and the county count. Operational guidance, not legal advice.{% if draft %} DRAFT — no dates set.{% endif %}</p>
+
+<div class="bar pb">NOTARY SESSION LOG <small>One line per notarized affidavit / signature sheet. Keep with Petition Captain records — a working control sheet, not a substitute for the original notarized affidavit.</small></div>
+<table class="log">
+ <colgroup><col style="width:0.9in"><col style="width:0.9in"><col style="width:0.7in"><col style="width:1.6in"><col style="width:0.7in"><col style="width:0.8in"><col style="width:0.8in"><col></colgroup>
+ <thead><tr><th>Date</th><th>Pamphlet #</th><th>Sheet #</th><th>Circulator</th><th>Sig. count</th><th>Notary initials</th><th>Defect code</th><th>Notes</th></tr></thead>
+ <tbody>{% for i in range(24) %}<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>{% endfor %}</tbody>
+</table>
+{% endblock %}

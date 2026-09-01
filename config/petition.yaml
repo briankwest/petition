@@ -1,0 +1,95 @@
+# Single source of truth for every generated document, the workbook, the map and the site.
+# null / bracketed values are PLACEHOLDERS. `make final` refuses to build while any remain.
+# Dates: the Board of County Commissioners TABLED the resolution; there is no adoption date yet.
+
+county: Pittsburg
+state: Oklahoma
+governing_body: Board of County Commissioners of Pittsburg County, Oklahoma
+
+addressee:
+  name: Ross Selman                       # confirm the chair on the adoption date
+  title: Chairman of the Board of County Commissioners of Pittsburg County, Oklahoma
+
+measure:
+  resolution_number: null                 # "[INSERT EXACT RESOLUTION NUMBER AFTER ADOPTION]"
+  title: null                             # exact title as adopted
+  adoption_date: null                     # TABLED — set the day the Board adopts it (YYYY-MM-DD)
+  short_description: >-
+    Resolution approving the Emerald ProjectCo Data Center Economic Development Project Plan
+    and establishing Tax Abatement District No. 1 and Tax Abatement District No. 2
+  project_name: Emerald ProjectCo Data Center Economic Development Project Plan
+  districts: Tax Abatement District No. 1 and Tax Abatement District No. 2
+  abatement_percent: 85
+  exact_text_file: measure/adopted-resolution.md   # verbatim adopted text + exhibits (placeholder until adopted)
+
+election:
+  date: null                              # next general county election after filing (62 O.S. § 868(H)) — confirm with Election Board
+  type: regular
+
+deadlines:                                # statutory day counts, never edit without a cite
+  filing_days_after_adoption: 30          # 62 O.S. § 868(B)(3)
+  protest_days_after_publication: 10      # 62 O.S. § 868(C)
+  ballot_title_da_review_days: 3          # 62 O.S. § 868(D)(2)
+  ballot_title_appeal_days: 10            # 62 O.S. § 868(E)
+
+threshold:
+  # 62 O.S. § 868(B)(2): "ten percent (10%) of the registered voters residing in the county."
+  # Inactive voters are still registered, so we plan against the TOTAL (conservative).
+  # Confirm with the Election Board Secretary which figure the county will count against.
+  registered_voters: 27727                # total registered (provided 2026-09-01)
+  registered_voters_active: 23338
+  registered_voters_inactive: 4389
+  registered_voters_source: Pittsburg County Election Board figure relayed by the campaign; obtain a written, dated copy for the Records Log
+  registered_voters_date: 2026-09-01
+  legal_fraction: 0.10                    # 62 O.S. § 868(B)(2)
+  target_fraction: 0.13                   # 30% over the legal minimum — matches the captain's tracker; Action Plan says 13–15%
+
+gist: >-
+  This referendum asks Pittsburg County voters whether to approve or reject the resolution adopted
+  by the Board of County Commissioners approving the Emerald ProjectCo Data Center Economic
+  Development Project Plan and establishing Tax Abatement District No. 1 and Tax Abatement
+  District No. 2, which would provide an 85 percent ad valorem (property) tax abatement for the
+  data center project under the Oklahoma Local Development Act.
+
+ballot_title: >-
+  This measure refers to the voters the resolution adopted by the Board of County Commissioners
+  of Pittsburg County, Oklahoma, approving the Emerald ProjectCo Data Center Economic Development
+  Project Plan and establishing Tax Abatement District No. 1 and Tax Abatement District No. 2
+  under the Oklahoma Local Development Act. The resolution provides an 85 percent ad valorem
+  (property) tax abatement for the data center project within the districts. A YES vote approves
+  the resolution. A NO vote rejects the resolution. Shall the resolution be approved?
+
+proponents: []                            # up to 3: {name, address, city, zip}
+
+layout:
+  page: legal                             # 8.5 x 14 in
+  rows_per_sheet: 10
+  sheets_per_pamphlet: 5
+  body_pt: 12
+  warning_pt: 12                          # statute minimum 10 (34 O.S. § 3)
+  row_height_in: 0.5
+  margins_in: 0.75
+  duplex: long-edge                       # verify on the actual printer
+
+contacts:
+  election_board:
+    name: Pittsburg County Election Board
+    secretary: Tonya Barnes
+    address: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501
+    phone: 918-423-3877
+    fax: 918-423-7088
+    email: pittsburgcounty@elections.ok.gov
+    hours: Mon–Fri 8:00 a.m.–4:00 p.m.
+  petition_captain: {name: null, phone: null}
+  attorney: {name: null, phone: null}
+  district_attorney: {name: null, phone: null}
+
+links:
+  voter_portal: https://okvoterportal.okelections.gov/
+  election_board: https://pittsburg.okcounties.org/offices/election-board
+  site: https://petition.mcalester.net
+
+site:
+  canonical_host: petition.mcalester.net
+
+statutes: [62-868, 34-1, 34-3, 34-6, 34-6.1, 34-23, 34-24]

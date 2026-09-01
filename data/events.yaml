@@ -1,0 +1,8 @@
+# Dated signing events (a location + a date/time window). Public on the site and map.
+events:
+  - id: example-event
+    location_id: example-stipe-center
+    date: null                 # YYYY-MM-DD — set once circulation is legal (after the true copy is filed)
+    start: "09:00"
+    end: "13:00"
+    notes: "Example entry. Delete before publishing."

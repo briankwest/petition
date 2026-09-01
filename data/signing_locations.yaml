@@ -1,0 +1,15 @@
+# Places where a circulator with an official filed pamphlet will be. Public on the site and map.
+# lat/lon are filled by `make geocode` (Census geocoder) if missing.
+# status: planned | active | closed
+locations:
+- id: example-stipe-center
+  name: J.I. Stipe Center (example — replace)
+  address: 801 N. 9th St.
+  city: McAlester
+  zip: '74501'
+  lat: 34.935803
+  lon: -95.755396
+  status: planned
+  hours: Sat 9:00 a.m.–1:00 p.m.
+  notes: Example entry. Delete before publishing.
+  precinct: 1

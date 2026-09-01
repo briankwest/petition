@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block footer_text %}Pittsburg County Referendum · Pamphlet No. ______{% endblock %}
+{% block css %}
+.cover .warning-word { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 16pt; text-transform: uppercase; letter-spacing: 1pt; margin: 0 0 6pt; }
+.cover .warning-text { font-size: {{ L.warning_pt }}pt; font-weight: bold; margin: 0; }
+.cover h1 { font-size: 22pt; text-align: center; margin: 20pt 0 6pt; }
+.cover h2 { font-size: 15pt; text-align: center; margin: 0 0 4pt; font-weight: normal; }
+.cover table.grid td:first-child { width: 2.1in; font-weight: bold; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 11pt; }
+.pamphlet-no { border: 2pt solid #000; padding: 10pt; margin: 14pt auto 0; width: 4in; text-align: center; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14pt; font-weight: bold; }
+.draft-line { color: #7a0000; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12pt; border: 2pt solid #7a0000; padding: 8pt; margin: 14pt 0 0; }
+.petition h1 { text-align: center; font-size: 18pt; letter-spacing: 1pt; margin-bottom: 14pt; }
+.petition p { font-size: 12.5pt; line-height: 1.5; margin-bottom: 10pt; }
+.petition .question { font-weight: bold; }
+.measure h1 { text-align: center; font-size: 16pt; letter-spacing: 1pt; }
+.measure .body { border: 1pt solid #000; padding: 10pt 12pt; min-height: 3in; }
+.proponents h1 { text-align: center; font-size: 16pt; }
+.proponent { border: 1pt solid #000; padding: 10pt 12pt; margin: 0 0 12pt; break-inside: avoid; }
+.proponent .line { margin: 0 0 10pt; }
+.proponent .line .blank { min-width: 3.4in; }
+
+/* ---- signature sheets (landscape) ---- */
+.sheet { page: landscape; break-before: page; }
+.sheet.first { break-before: right; }
+.sheet-head { display: table; width: 12.5in; border: 1.5pt solid #000; margin: 0 0 5pt; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12pt; }
+.sheet-head > div { display: table-cell; padding: 4pt 8pt; border-right: 1pt solid #000; vertical-align: middle; }
+.sheet-head > div:last-child { border-right: 0; }
+.gist { font-weight: bold; font-size: 12pt; margin: 0 0 2pt; line-height: 1.25; }
+.gist .lbl { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.sheet .notice-line { font-style: italic; font-size: 10.5pt; margin: 0 0 2pt; line-height: 1.2; }
+.sheet .instr { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; margin: 0 0 4pt; line-height: 1.2; }
+table.sig { width: 12.5in; table-layout: fixed; border: 1.5pt solid #000; }
+table.sig th { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; font-weight: bold; background: #ececec; border: 1pt solid #000; padding: 2pt 4pt; height: 0.36in; vertical-align: middle; text-align: left; line-height: 1.1; }
+table.sig th.req { background: #dcdcdc; }
+table.sig td { border: 1pt solid #000; height: {{ L.row_height_in }}in; padding: 2pt 4pt; vertical-align: top; }
+table.sig td.num { text-align: center; vertical-align: middle; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12pt; background: #f4f4f4; }
+table.sig tr { break-inside: avoid; }
+.legend { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10pt; margin: 3pt 0 0; line-height: 1.2; }
+.sheet-foot { font-weight: bold; font-size: 10.5pt; }
+
+/* ---- affidavits (landscape, back of each sheet) ---- */
+.affidavit { page: landscape; break-before: page; }
+.aff-wrap { width: 12.5in; height: 7.6in; }
+.aff-wrap.rot { transform: rotate(180deg); transform-origin: 6.25in 3.8in; }
+.aff-head { border: 1.5pt solid #000; padding: 5pt 8pt; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12.5pt; margin: 0 0 8pt; }
+table.aff { width: 12.5in; table-layout: fixed; }
+table.aff td { vertical-align: top; padding: 0; }
+table.aff td.left { width: 7.7in; padding-right: 0.25in; }
+table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 0.2in; }
+.venue { font-family: "Courier New", Courier, monospace; font-size: 11pt; white-space: pre; margin: 0 0 8pt; line-height: 1.25; }
+.aff-body { font-size: 12.5pt; line-height: 1.5; margin: 0 0 12pt; }
+.fill { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 11pt; margin: 0 0 16pt; }
+.fill .blank { min-width: 3.6in; height: 18pt; }
+.fill.wide .blank { min-width: 5.4in; }
+.right .fill .blank { min-width: 2.2in; }
+.paren { font-size: 10pt; font-style: italic; margin: 0 0 8pt; }
+.jurat { font-size: 12.5pt; margin: 10pt 0 14pt; }
+.seal { border: 1.5pt dashed #000; width: 2in; height: 2in; margin: 6pt 0 0; text-align: center; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10pt; padding-top: 0.85in; color: #333; }
+.aff-foot { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 10.5pt; margin: 6pt 0 0; }
+.notary-title { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: bold; font-size: 11pt; margin: 0 0 8pt; }
+{% endblock %}
+
+{% block content %}
+{# ------------------------------------------------------------ 1. COVER / OUTER PAGE #}
+<section class="cover">
+  <div class="rule-box">
+    <p class="warning-word">Warning</p>
+    <p class="warning-text">{{ warning }}</p>
+  </div>
+  <h1>Referendum Petition Pamphlet</h1>
+  <h2>{{ p.county }} County, {{ p.state }}</h2>
+  <h2>{{ p.measure.project_name }}</h2>
+  <h2>{{ p.measure.districts }}</h2>
+  <table class="grid" style="margin-top:14pt">
+    <tr><td>Addressed to</td><td>The Honorable {{ p.addressee.name }}, {{ p.addressee.title }}</td></tr>
+    <tr><td>County</td><td>{{ p.county }} County, {{ p.state }}</td></tr>
+    <tr><td>Governing body</td><td>{{ p.governing_body }}</td></tr>
+    <tr><td>Measure</td><td>{{ p.measure.short_description }}</td></tr>
+    <tr><td>Resolution No.</td><td>{{ f.resolution_number }}</td></tr>
+    <tr><td>Adoption date</td><td>{{ f.adoption_date }}</td></tr>
+    <tr><td>Filing deadline</td><td>{{ f.filing_deadline }} (30 days after adoption, 62 O.S. § 868(B)(3))</td></tr>
+    <tr><td>Signature sheets</td><td>{{ L.sheets_per_pamphlet }} sheets × {{ L.rows_per_sheet }} lines = {{ p.signatures_per_pamphlet }} signatures per pamphlet. Each sheet's circulator affidavit is printed on its back.</td></tr>
+  </table>
+  <div class="rule-box center">Use only the final filed version — do not detach sheets.</div>
+  <p class="sans small">This pamphlet is laid out for legal-size (8.5 × 14 in) duplex printing. The petition, the exact copy of the measure and the proponents of record are portrait pages; each signature sheet is a landscape page with its circulator affidavit on the reverse. A copy of this petition and all signatures on it are public records subject to the Oklahoma Open Records Act.</p>
+  <div class="pamphlet-no">Pamphlet No. ____________</div>
+  {% if draft %}
+  <div class="draft-line">DRAFT WORKING COPY — DO NOT CIRCULATE OR COLLECT SIGNATURES UNTIL THE EXACT ADOPTED MEASURE IS INSERTED AND A TRUE COPY IS FILED WITH THE SECRETARY OF THE {{ p.county|upper }} COUNTY ELECTION BOARD.</div>
+  {% endif %}
+</section>
+
+{# ------------------------------------------------------------ 2. PETITION (34 O.S. § 1 form, county variant) #}
+<section class="petition pb">
+  <h1>Petition for Referendum</h1>
+  <p><strong>To the Honorable {{ p.addressee.name }}, {{ p.addressee.title }}:</strong></p>
+  <p>We, the undersigned legal voters of the State of Oklahoma and of the county of {{ p.county }}, respectfully order that Resolution No. {{ f.resolution_number }}, entitled {{ f.resolution_title }}, passed by the {{ p.governing_body }}, on {{ f.adoption_date }}, shall be referred to the people of {{ p.county }} County for their approval or rejection at the {{ p.election.type }} election to be held on {{ f.election_date }}, {{ attestation }}</p>
+  <p>Referendum petitions on a county measure shall be filed with the Secretary of the County Election Board not more than thirty (30) days after the passage or adoption of the resolution. The time for filing this petition expires on {{ f.filing_deadline }}.</p>
+  <p class="question">The question we herewith submit to our fellow voters is: Shall the following resolution (local legislation) be approved?</p>
+  <p class="small sans muted">This referendum petition is brought under the initiative and referendum powers reserved to the people of every county with reference to tax relief, incentives, exemptions or captured increments by 62 O.S. § 868 and Section 6C of Article X of the Oklahoma Constitution. The form follows 34 O.S. § 1. An exact copy of the measure follows, then the proponents of record, then the signature sheets.</p>
+</section>
+
+{# ------------------------------------------------------------ 3. EXACT COPY OF THE MEASURE #}
+<section class="measure pb">
+  <h1>Exact Copy of the Referred Measure</h1>
+  <p class="sans small center">Resolution No. {{ f.resolution_number }} · adopted {{ f.adoption_date }} · {{ p.measure.short_description }}</p>
+  <div class="body">{{ measure_html|safe }}</div>
+</section>
+
+{# ------------------------------------------------------------ 4. PROPONENTS OF RECORD #}
+<section class="proponents pb">
+  <h1>Proponents of Record</h1>
+  <p class="center small sans">Not more than three. Each gives a signature, complete printed name and the address associated with his or her Oklahoma voter registration record (34 O.S. § 1).</p>
+  {% for i in range(1, 4) %}
+  {% set pr = p.proponents[i-1] if p.proponents|length >= i else {} %}
+  <div class="proponent">
+    <p class="line sans"><strong>{{ i }}.</strong> Signature: <span class="blank"></span></p>
+    <p class="line sans">Printed name: {% if pr.name %}<strong>{{ pr.name }}</strong>{% else %}<span class="blank"></span>{% endif %}</p>
+    <p class="line sans">Residence address associated with Oklahoma voter registration: {% if pr.address %}<strong>{{ pr.address }}</strong>{% else %}<span class="blank"></span>{% endif %}</p>
+    <p class="line sans">City: {% if pr.city %}<strong>{{ pr.city }}</strong>{% else %}<span class="blank" style="min-width:2in"></span>{% endif %} &nbsp; State: OK &nbsp; ZIP: {% if pr.zip %}<strong>{{ pr.zip }}</strong>{% else %}<span class="blank" style="min-width:1in"></span>{% endif %}</p>
+  </div>
+  {% endfor %}
+</section>
+
+{# ------------------------------------------------------------ 5/6. SIGNATURE SHEETS + AFFIDAVITS #}
+{% for n in sheets %}
+<section class="sheet{% if loop.first %} first{% endif %}">
+  <div class="sheet-head">
+    <div style="width:3.2in">SIGNATURE SHEET {{ n }} OF {{ sheets|length }}</div>
+    <div>{{ p.county }} County Referendum · Data Center Tax Abatement ({{ f.abatement }})</div>
+    <div style="width:2.6in">Pamphlet No. __________</div>
+  </div>
+  <p class="gist"><span class="lbl">GIST:</span> {{ p.gist }}</p>
+  <p class="notice-line">NOTICE: {{ notice }}</p>
+  <p class="instr">Each signer personally completes one full line. Use your legal name and the address on your Oklahoma voter registration. Birth month/day only (MM/DD).</p>
+  <table class="sig">
+    <colgroup>
+      <col style="width:0.4in"><col style="width:2.6in"><col style="width:1.6in"><col style="width:1.7in"><col style="width:0.9in"><col style="width:2.2in"><col style="width:1.3in"><col style="width:0.9in"><col style="width:0.9in">
+    </colgroup>
+    <thead><tr>
+      <th class="center">#</th><th>Signature</th>
+      <th class="req">★ Legal First Name</th><th class="req">★ Legal Last Name</th><th class="req">★ House #</th>
+      <th>Street Name</th><th>City/Town</th><th class="req">★ ZIP</th><th class="req">★ Birth MM/DD</th>
+    </tr></thead>
+    <tbody>
+    {% for r in range(1, rows + 1) %}
+      <tr><td class="num">{{ (n - 1) * rows + r }}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="legend">★ Required for verification — four of these five fields must match the signer's voter registration record (34 O.S. § 1(B)). <span class="sheet-foot">Do not detach this sheet. Do not alter a signer's entry after the signer leaves. The circulator affidavit for this sheet is on the back.</span></p>
+</section>
+
+<section class="affidavit">
+ <div class="aff-wrap{% if duplex == 'short-edge' %} rot{% endif %}">
+  <div class="aff-head">CIRCULATOR AFFIDAVIT — verifies Signature Sheet {{ n }} of this pamphlet only (34 O.S. § 6)</div>
+  <table class="aff"><tr>
+   <td class="left">
+    <p class="venue">State of Oklahoma,       )
+                         ) ss.
+County of {{ p.county }}{{ ' ' * (13 - p.county|length) }}  )</p>
+    <p class="aff-body">{{ affidavit.body }}</p>
+    <p class="fill wide">Signature of circulator (affiant): <span class="blank"></span></p>
+    <p class="fill wide">Printed name of circulator: <span class="blank"></span></p>
+    <p class="fill wide">Complete residence address: <span class="blank"></span></p>
+    <p class="fill wide">City: <span class="blank" style="min-width:2.4in"></span> &nbsp; State: OK &nbsp; ZIP: <span class="blank" style="min-width:1.2in"></span></p>
+    <p class="paren">{{ affidavit.affiant_line }}</p>
+    <p class="jurat">{{ affidavit.jurat }}</p>
+    <p class="aff-foot">Return the full pamphlet intact. Do not remove this affidavit page or detach it from the signature sheet on its front. The affidavit is completed after the signatures on that sheet are collected and is sworn before an Oklahoma notary.</p>
+   </td>
+   <td class="right">
+    <p class="notary-title">NOTARY PUBLIC</p>
+    <p class="fill">Notary public signature: <span class="blank"></span></p>
+    <p class="fill">Printed name and title: <span class="blank"></span></p>
+    <p class="fill">Complete address: <span class="blank"></span></p>
+    <p class="fill"><span class="blank" style="min-width:3.9in"></span></p>
+    <p class="fill">Commission number: <span class="blank"></span></p>
+    <p class="fill">Commission expiration date: <span class="blank" style="min-width:1.6in"></span></p>
+    <div class="seal">Official Oklahoma Notary Public Seal</div>
+    <p class="paren" style="margin-top:8pt">{{ affidavit.notary_line }}</p>
+   </td>
+  </tr></table>
+ </div>
+</section>
+{% endfor %}
+{% endblock %}

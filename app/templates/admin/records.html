@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Records log{% endblock %}
+{% block content %}
+<h1>Filing &amp; records log</h1>
+<p class="help">Every filing, office visit, public-records request, print batch, and handoff — with who, when, and whether you got a receipt. This is the challenge-defense file.</p>
+<form method="post" action="/admin/records/new" class="form compact"><input type="hidden" name="csrf" value="{{ csrf }}">
+<div class="grid-3">
+<div class="field"><label>When</label><input type="datetime-local" name="occurred_at"></div>
+<div class="field span2"><label>Item</label><input name="item" required placeholder="e.g. True copy filed with Secretary of the County Election Board"></div>
+<div class="field"><label>Office</label><input name="office"></div>
+<div class="field"><label>Person</label><input name="person"></div>
+<div class="field"><label class="check"><input type="checkbox" name="receipt_obtained" value="on"> Receipt / file-stamp obtained</label></div>
+<div class="field span2"><label>Documents</label><input name="documents"></div>
+<div class="field"><label>Notes</label><input name="notes"></div>
+</div><div class="actions"><button class="btn primary">Log it</button></div></form>
+<div class="tbl"><table><thead><tr><th>When</th><th>Item</th><th>Office</th><th>Person</th><th>Receipt</th><th>Documents</th><th>Notes</th></tr></thead>
+<tbody>{% for r in rows %}<tr><td>{{ r.occurred_at|date('') }}</td><td>{{ r.item }}</td><td>{{ r.office or '' }}</td><td>{{ r.person or '' }}</td><td>{{ '✓' if r.receipt_obtained else '' }}</td><td>{{ r.documents or '' }}</td><td>{{ r.notes or '' }}</td></tr>{% else %}<tr><td colspan="7">Nothing logged yet.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

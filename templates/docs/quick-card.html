@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block css %}
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13pt; line-height: 1.3; }
+.bar { border: 2.5pt solid #000; padding: 5pt 10pt; text-align: center; font-weight: bold; font-size: 15pt; margin: 0 0 6pt; }
+.bar small { display: block; font-weight: normal; font-size: 11pt; }
+table.panels { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 6pt; }
+table.panels td { width: 50%; border: 1.5pt solid #000; padding: 6pt 8pt; vertical-align: top; }
+table.panels td + td { border-left: 0; }
+.panel h3 { font-size: 13pt; margin: 0 0 4pt; text-transform: uppercase; letter-spacing: 0.5pt; }
+ul { margin: 0; padding-left: 14pt; } li { margin: 0 0 2pt; }
+.rule { border: 2.5pt solid #000; background: #eee; padding: 6pt 10pt; font-weight: bold; text-align: center; font-size: 13.5pt; margin: 4pt 0 6pt; }
+.five { border: 2.5pt solid #000; padding: 6pt 10pt; margin: 0 0 6pt; }
+.five h3 { margin: 0 0 4pt; font-size: 13.5pt; }
+.five ol { margin: 0 0 4pt; padding-left: 18pt; columns: 2; } .five li { margin: 0 0 2pt; }
+.contact td { padding: 3pt 8pt; border: 1pt solid #000; font-size: 13pt; }
+.contact td:first-child { width: 2.3in; font-weight: bold; }
+.ecodes li { margin: 0 0 1pt; font-size: 11.5pt; line-height: 1.25; }
+.ecodes .kill { font-weight: bold; }
+.src { font-size: 10pt; color: #333; margin: 6pt 0 0; }
+{% endblock %}
+{% block content %}
+<div class="bar">CIRCULATOR QUICK CARD — {{ p.county }} County Data Center Tax Abatement Referendum <small>Print duplex on legal paper. Keep with your petition supplies. FRONT: voter conversation, signer rules, line check.</small></div>
+<table class="panels"><tr>
+ <td class="panel"><h3>What to say</h3><ul>
+  <li>“We are collecting signatures to let county voters decide whether to approve or reject the proposed {{ f.abatement }} data center tax abatement.”</li>
+  <li>“Signing does not force you to vote yes or no. It means you support putting the issue to a public vote.”</li>
+  <li>If asked: “This petition refers the county resolution to voters for approval or rejection.”</li>
+  <li>If they disagree: “Thank you for your time.” Move on calmly.</li></ul></td>
+ <td class="panel"><h3>Who can sign</h3><ul>
+  <li>A registered voter who lives in {{ p.county }} County (62 O.S. § 868; 34 O.S. § 23).</li>
+  <li>The signer must sign their own name — signing for anyone else is a felony.</li>
+  <li>Use the name and address on their Oklahoma voter registration, not a temporary address.</li>
+  <li>One signature per person. No duplicates.</li>
+  <li>Not sure they are registered? They can check at {{ p.links.voter_portal }} or call the Election Board, {{ eb.phone }}.</li></ul></td>
+</tr><tr>
+ <td class="panel"><h3>Each signer fills out one full line</h3><ul>
+  <li>Signature</li><li>★ Legal first name</li><li>★ Legal last name</li><li>★ House number</li><li>Street name</li><li>City or town</li><li>★ ZIP code</li><li>★ Birth month and day, MM/DD — <strong>not</strong> the year</li></ul></td>
+ <td class="panel"><h3>Before they walk away</h3><ul>
+  <li>Every field readable? Birth date is month/day only?</li>
+  <li>Only one voter on the line, and on the printed line?</li>
+  <li>Fix errors while the signer is present: single line through the error, write the correction, signer initials.</li>
+  <li><strong>Never</strong> fill in missing information after the signer leaves.</li></ul></td>
+</tr></table>
+<div class="five"><h3>★ The five fields that decide validity (34 O.S. § 1)</h3>
+ <ol>{% for d in five %}<li>{{ d|capitalize }}</li>{% endfor %}</ol>
+ <div>Four of these five must match the signer's voter registration record or the signature does not count (34 O.S. § 1(B)). Spell names the way they are registered.</div></div>
+<div class="rule">ABSOLUTE RULE: Use only official filed petition pamphlets. No loose sheets. No homemade forms. No signatures before the true copy is filed.</div>
+<p class="src">Based on 62 O.S. § 868 and 34 O.S. §§ 1, 3, 6, 6.1 and 23 (verbatim text in the campaign's statute file). Operational guidance, not legal advice.</p>
+
+<div class="bar pb">CIRCULATOR QUICK CARD — BACK <small>Packet protection, affidavit basics, why sheets get thrown out, return rules.</small></div>
+<table class="panels"><tr>
+ <td class="panel"><h3>Do not</h3><ul>
+  <li>Collect signatures before the Petition Captain says the filed packet is ready.</li>
+  <li>Detach, reorder, replace or remove pages.</li>
+  <li>Leave the packet unattended or let a voter take it away.</li>
+  <li>Fill in missing voter information after the signer leaves.</li>
+  <li>Argue, pressure, threaten or mislead anyone.</li></ul></td>
+ <td class="panel"><h3>Packet rules</h3><ul>
+  <li>Each pamphlet is a complete packet and stays together.</li>
+  <li>Log the pamphlet number and your name when you take it and when you return it.</li>
+  <li>Keep completed sheets clean, dry and flat.</li>
+  <li>Do not photograph or post completed signature lines.</li>
+  <li>Return packets daily or when the Petition Captain says.</li></ul></td>
+</tr><tr>
+ <td class="panel"><h3>Affidavit basics (34 O.S. § 6)</h3><ul>
+  <li>You must be a registered Oklahoma voter, 18 or older.</li>
+  <li>You must personally witness every signature on the sheets you circulate.</li>
+  <li>Sign only your own affidavit — never a blank one, never another circulator's.</li>
+  <li>Have it notarized after the signatures on that sheet are collected; it is on the back of that sheet.</li></ul></td>
+ <td class="panel"><h3>If challenged or harassed</h3><ul>
+  <li>Stay calm. Do not argue. Say: “Signing only supports putting the issue to a public vote.”</li>
+  <li>Step away if anyone becomes aggressive. Call the Petition Captain.</li>
+  <li>Write down date, time, location, witnesses and what happened.</li>
+  <li>Return the packet if it may have been damaged or compromised.</li></ul></td>
+</tr></table>
+<div class="five"><h3>Why signatures get thrown out (34 O.S. § 6.1) — bold ones lose the whole sheet</h3>
+ <ul class="ecodes">{% for code, label, kills in exclusions_short %}<li class="{{ 'kill' if kills }}">{{ code }} — {{ label }}</li>{% endfor %}</ul></div>
+<table class="contact">
+ <tr><td>Petition Captain</td><td>{{ captain.name or '[NAME — TBD]' }}</td></tr>
+ <tr><td>Phone</td><td>{{ captain.phone or '[PHONE — TBD]' }}</td></tr>
+ <tr><td>Return location</td><td>&nbsp;</td></tr>
+ <tr><td>Daily return deadline</td><td>&nbsp;</td></tr>
+ <tr><td>Final submission deadline</td><td>{{ f.filing_deadline }}</td></tr>
+</table>
+<p class="src">Return completed or partial packets quickly. Do not hold originals at home unless the Petition Captain approves it.{% if draft %} DRAFT — the resolution has been tabled; no dates are set.{% endif %}</p>
+{% endblock %}

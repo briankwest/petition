@@ -1,0 +1,19 @@
+# Who to call about the petition. Public on the site. Phones must be numbers you want published.
+contacts:
+  - role: Petition Captain
+    name: "[NAME]"
+    phone: "[PHONE]"
+    email: null
+    public: true
+  - role: Circulator Trainer
+    name: "[NAME]"
+    phone: "[PHONE]"
+    email: null
+    public: true
+  - role: Pittsburg County Election Board (registration questions)
+    name: Tonya Barnes, Secretary
+    phone: 918-423-3877
+    email: pittsburgcounty@elections.ok.gov
+    address: 1609 N. Strong Blvd. STE 200, McAlester, OK 74501
+    hours: Mon–Fri 8:00 a.m.–4:00 p.m.
+    public: true

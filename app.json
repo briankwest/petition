@@ -1,0 +1,9 @@
+{
+  "name": "petition",
+  "description": "petition.mcalester.net — Pittsburg County referendum petition site + Petition Master admin",
+  "scripts": {
+    "dokku": {
+      "postdeploy": "python -m app.seed"
+    }
+  }
+}

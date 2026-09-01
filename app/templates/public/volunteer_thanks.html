@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Thank you · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Thank you</h1>
+<p class="lede">Your sign-up reached the Petition Captain, who will be in touch. Circulators are confirmed as registered Oklahoma voters and given a short training before carrying a pamphlet.</p>
+<p><a class="cta" href="/sign">Where to sign</a> <a class="btn" href="/">Home</a></p>
+<h2>Questions now?</h2>
+<ul class="cards">{% for c in contacts %}<li class="card"><h3>{{ c.role }}</h3>{% if c.name %}<p>{{ c.name }}</p>{% endif %}{% if c.phone %}<p><a class="tel" href="tel:{{ c.phone|tel }}">{{ c.phone }}</a></p>{% endif %}</li>{% endfor %}</ul>
+{% endblock %}

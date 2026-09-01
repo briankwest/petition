@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Settings{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+<div class="tiles small-tiles">
+  <div class="tile"><span class="num">{{ deadline|date('not set') }}</span><span class="lbl">Filing deadline (adoption + 30 days)</span></div>
+  <div class="tile"><span class="num">{{ legal_min|int }}</span><span class="lbl">Legal minimum</span></div>
+  <div class="tile"><span class="num">{{ target|int }}</span><span class="lbl">Target</span></div>
+</div>
+<form method="post" action="/admin/settings" class="form">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% for f in fields %}
+  <div class="field {{ f.type }}">
+    {% if f.type == 'checkbox' %}<label class="check"><input type="checkbox" name="{{ f.name }}" value="on" {% if f.value %}checked{% endif %}> {{ f.label }}</label>
+    {% elif f.type == 'select' %}<label for="f-{{ f.name }}">{{ f.label }}</label><select id="f-{{ f.name }}" name="{{ f.name }}">{% for o in f.options %}<option value="{{ o }}" {% if o == f.value %}selected{% endif %}>{{ o }}</option>{% endfor %}</select>
+    {% elif f.type == 'textarea' %}<label for="f-{{ f.name }}">{{ f.label }}</label><textarea id="f-{{ f.name }}" name="{{ f.name }}" rows="3">{{ f.value or '' }}</textarea>
+    {% else %}<label for="f-{{ f.name }}">{{ f.label }}</label><input id="f-{{ f.name }}" type="{{ f.type }}" name="{{ f.name }}" value="{{ f.value if f.value is not none else '' }}" {% if f.step %}step="{{ f.step }}"{% endif %}>{% endif %}
+    {% if f.readonly %}<dl class="ro">{% for k, v in f.readonly %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}</dl>{% endif %}
+    {% if f.help %}<p class="help">{{ f.help }}</p>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="actions"><button class="btn primary">Save settings</button></div>
+</form>
+{% endblock %}

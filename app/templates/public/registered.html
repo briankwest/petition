@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Am I registered? · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Am I registered to sign?</h1>
+<p class="lede">Only <strong>registered voters who live in {{ petition.county }} County</strong> may sign this petition (62 O.S. § 868(B)(2); 34 O.S. § 23). Check before you come — it takes two minutes.</p>
+<div class="callout">
+  <p><a class="cta" href="{{ petition.links.voter_portal }}" rel="noopener">Open the OK Voter Portal</a></p>
+  <p>The portal is run by the Oklahoma State Election Board. It asks for your name as registered and your date of birth. We never see what you enter.</p>
+</div>
+<h2>What the signature sheet asks for</h2>
+<p>Oklahoma verifies a signature by matching these five fields against your voter registration (34 O.S. § 1). Four of the five must match, so use exactly what is on your registration:</p>
+<ol class="steps">
+  <li>Legal first name</li><li>Legal last name</li><li>ZIP code</li><li>House number</li><li>Birth month and day (MM/DD — not the year)</li>
+</ol>
+<p>You will also write your street name and city, and sign.</p>
+<h2>Not registered, or moved?</h2>
+<p>You can register or update your address through the portal or at the County Election Board. New registrations take effect after processing — ask the Election Board when yours will be active.</p>
+<div class="card">
+  <h3>{{ petition.contacts.election_board.name }}</h3>
+  <p>{{ petition.contacts.election_board.address }}<br>
+  <a href="tel:{{ petition.contacts.election_board.phone|tel }}">{{ petition.contacts.election_board.phone }}</a> · <a href="mailto:{{ petition.contacts.election_board.email }}">{{ petition.contacts.election_board.email }}</a><br>
+  {{ petition.contacts.election_board.hours }} · Secretary: {{ petition.contacts.election_board.secretary }}</p>
+</div>
+{% endblock %}

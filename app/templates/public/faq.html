@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Questions · {{ site_title }}{% endblock %}
+{% block content %}
+<h1>Questions</h1>
+<dl class="faq">
+<dt>What does signing do?</dt>
+<dd>Signing supports putting the county's resolution to a public vote. It does not commit you to voting yes or no. If enough registered voters sign, the resolution goes on the ballot at the next general county election (62 O.S. § 868(H)).</dd>
+<dt>Who may sign?</dt>
+<dd>A registered voter who lives in {{ petition.county }} County. Each person signs only their own name, once. Signing another person's name, signing twice, or signing when not a legal voter is a felony (34 O.S. § 23). <a href="/registered">Check your registration.</a></dd>
+<dt>How many signatures are needed?</dt>
+<dd>At least ten percent of the registered voters residing in the county (62 O.S. § 868(B)(2)). Signed pamphlets must be filed with the County Election Board within 30 days after the resolution is adopted.</dd>
+<dt>Why can't I sign online, or on a printed list at a store?</dt>
+<dd>Oklahoma counts only signatures on official petition pamphlets — a signature sheet attached to a full copy of the petition, witnessed by the circulator, and verified by the circulator's notarized affidavit (34 O.S. §§ 3, 6). Signatures on loose or homemade sheets are thrown out (34 O.S. § 6.1).</dd>
+<dt>Which fields decide whether my signature counts?</dt>
+<dd>{% for f in five %}{{ f }}{% if not loop.last %}, {% endif %}{% endfor %} — four of these five must match your voter registration (34 O.S. § 1). Also write your street and city, and sign.</dd>
+<dt>What gets a signature thrown out?</dt>
+<dd>Under 34 O.S. § 6.1 the count excludes:<ol>{% for e in exclusions %}<li>{{ e }}.</li>{% endfor %}</ol></dd>
+<dt>Is my signature public?</dt>
+<dd>Yes. A copy of the petition and all signatures are public records under the Oklahoma Open Records Act (34 O.S. § 3(B)). This website does not collect or store any voter information.</dd>
+</dl>
+<p class="small">Statute text: {% for k, u in cites.items() %}<a href="{{ u }}" rel="noopener">{{ k.replace('-', ' O.S. § ') }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+{% endblock %}

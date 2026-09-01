@@ -1,0 +1,8 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Issues{% endblock %}
+{% block content %}
+<h1>Issues</h1>
+<form class="filters" method="get"><select name="status" onchange="this.form.submit()"><option value="open" {% if status=='open' %}selected{% endif %}>Open</option><option value="all" {% if status=='all' %}selected{% endif %}>All</option>{% for st in statuses %}<option value="{{ st }}" {% if st == status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select> <a class="btn primary" href="/admin/issues/new">Open issue</a></form>
+<div class="tbl"><table><thead><tr><th>#</th><th>Date</th><th>Pamphlet</th><th>Sheet</th><th>Type</th><th>Status</th><th>Priority</th><th>Notes</th></tr></thead>
+<tbody>{% for i in rows %}<tr><td><a href="/admin/issues/{{ i.id }}">{{ i.number }}</a></td><td>{{ i.opened_on|date('') }}</td><td>{% if i.pamphlet %}<a href="/admin/pamphlets/{{ i.pamphlet.number }}">{{ i.pamphlet.number }}</a>{% endif %}</td><td>{{ i.sheet.sheet_no if i.sheet else '' }}</td><td>{{ i.issue_type or '' }}</td><td><span class="pill">{{ i.status }}</span></td><td><span class="pill {{ i.priority|lower }}">{{ i.priority }}</span></td><td>{{ (i.notes or '')[:80] }}</td></tr>{% else %}<tr><td colspan="8">No issues.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

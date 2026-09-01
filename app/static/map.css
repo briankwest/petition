@@ -1,0 +1,44 @@
+/* petition map — pairs with map.js. Host page must also load Leaflet 1.9.4 CSS from cdnjs:
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"> */
+.pmap-wrap{position:relative;width:100%;height:100%;min-height:420px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.pmap-wrap .pmap-canvas{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}
+.pmap-wrap .leaflet-container{background:#eef3f8;font:inherit}
+.pmap-label{background:transparent;border:none;box-shadow:none;font-weight:700;font-size:11.5px;letter-spacing:.01em;color:#1c1a19;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;pointer-events:none}
+.pmap-label.pmap-label-sm{font-size:10px}
+.pmap-pin{width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.45)}
+.pmap-pin.active{background:#1e7f4b}
+.pmap-pin.planned{background:#f2b705}
+.pmap-pin.closed{background:#8a8580}
+.pmap-pin.poll{background:#1e6fb8;border-radius:3px;width:11px;height:11px}
+.pmap-pin.you{background:#1f2a44;width:18px;height:18px;animation:pmap-pulse 1.4s ease-out infinite}
+@keyframes pmap-pulse{0%{box-shadow:0 0 0 0 rgba(31,42,68,.45)}100%{box-shadow:0 0 0 14px rgba(31,42,68,0)}}
+@media (prefers-reduced-motion:reduce){.pmap-pin.you{animation:none}}
+.pmap-popup{font-size:13.5px;line-height:1.4;min-width:200px}
+.pmap-popup h4{margin:0 0 4px;font-size:15px}
+.pmap-popup .k{color:#6b625f}
+.pmap-popup ul{margin:6px 0 0;padding-left:16px}
+.pmap-popup .status{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#fff}
+.pmap-popup .status.active{background:#1e7f4b}.pmap-popup .status.planned{background:#b8860b}.pmap-popup .status.closed{background:#8a8580}
+.pmap-finder{position:absolute;z-index:1000;top:10px;left:50px;right:10px;max-width:420px;background:#fff;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.35);padding:8px 10px}
+.pmap-finder form{display:flex;gap:6px}
+.pmap-finder input[type=text]{flex:1;min-width:0;font:inherit;font-size:14px;padding:7px 9px;border:1px solid #c9c4bf;border-radius:4px}
+.pmap-finder button{font:inherit;font-size:14px;padding:7px 12px;border:0;border-radius:4px;background:#1e6fb8;color:#fff;cursor:pointer}
+.pmap-finder button:disabled{opacity:.6;cursor:default}
+.pmap-finder .pmap-note{margin:5px 0 0;font-size:11px;color:#6b625f}
+.pmap-finder .pmap-result{margin:6px 0 0;font-size:13px;line-height:1.4}
+.pmap-finder .pmap-result.err{color:#c2352b}
+.pmap-finder .pmap-result ol{margin:4px 0 0;padding-left:18px}
+.pmap-legend{background:#fff;padding:8px 10px;border-radius:5px;box-shadow:0 1px 5px rgba(0,0,0,.3);font-size:12px;line-height:1.5}
+.pmap-legend .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:6px;border:1px solid rgba(0,0,0,.2)}
+.pmap-legend .sw.sq{border-radius:2px}
+.pmap-legend label{display:block;margin-top:4px;cursor:pointer}
+.pmap-legend .grad{display:inline-block;width:80px;height:10px;vertical-align:-1px;background:linear-gradient(90deg,#fff3c4,#1e6fb8)}
+@media (max-width:640px){.pmap-finder{left:10px;top:auto;bottom:24px;max-width:none}.pmap-label{font-size:11px}}
+
+/* Leaflet controls/popups sit on white; never inherit the host page's (possibly dark-mode) text color */
+.pmap-wrap .leaflet-control,.pmap-wrap .leaflet-bar a,.pmap-wrap .leaflet-popup-content-wrapper,.pmap-wrap .leaflet-popup-content,.pmap-legend,.pmap-finder,.pmap-wrap .leaflet-control-layers{color:#1c1a19}
+.pmap-wrap .leaflet-control-attribution{color:#333}
+.pmap-label.pmap-hidden{display:none}
+.pmap-legend{font-size:12.5px;line-height:1.55;max-width:250px}
+.pmap-legend .grad{width:64px}
+.pmap-legend label{margin-top:6px}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site_title }}{% endblock %}</title>
+<meta name="description" content="Official information for the Pittsburg County referendum petition on the data center tax abatement: where to sign, whether you are registered, and who to call.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Libre+Franklin:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/static/site.css">
+{% block head %}{% endblock %}
+{% block analytics %}{% if ga_id %}<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{ ga_id }}');
+</script>
+{% endif %}{% endblock %}
+</head>
+<body class="{% block bodyclass %}public{% endblock %}">
+<a class="skip" href="#main">Skip to content</a>
+{% block shell %}
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/sign" {% if path == '/sign' %}aria-current="page"{% endif %}>Where to sign</a>
+      <a href="/registered" {% if path == '/registered' %}aria-current="page"{% endif %}>Am I registered?</a>
+      <a href="/contact" {% if path == '/contact' %}aria-current="page"{% endif %}>Who to call</a>
+      <a href="/faq" {% if path == '/faq' %}aria-current="page"{% endif %}>Questions</a>
+      <a href="/volunteer" class="nav-cta" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
+    </nav>
+  </div>
+</header>
+{% if s and s.raw('banner') %}<div class="banner" role="status"><div class="wrap">{{ s.raw('banner') }}</div></div>{% endif %}
+<main id="main" class="wrap">
+{% if msg %}<p class="flash ok">{{ msg }}</p>{% endif %}{% if err %}<p class="flash err">{{ err }}</p>{% endif %}
+{% block content %}{% endblock %}
+</main>
+<footer class="site-foot"><div class="wrap">
+  <p>This site gives information about a referendum petition under the Oklahoma Local Development Act (62 O.S. § 868). Signing a petition only supports putting the question to a public vote. Signatures are collected only on official, filed paper pamphlets — never online.</p>
+  <p class="small">No voter information is collected on this site. Registration lookups go directly to the <a href="{{ petition.links.voter_portal }}" rel="noopener">Oklahoma State Election Board's OK Voter Portal</a>. {% if user %}<a href="/admin">Admin</a>{% else %}<a href="/admin/login">Staff sign-in</a>{% endif %}</p>
+</div></footer>
+{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>
