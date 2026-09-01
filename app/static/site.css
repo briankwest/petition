@@ -88,7 +88,8 @@ td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
 tr:last-child td{border-bottom:none}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 /* map + finder */
-.map{height:min(70vh,560px);border:1px solid var(--rule);border-radius:6px;background:var(--code);margin:12px 0 24px}
+.map{height:min(140vh,1120px);border:1px solid var(--rule);border-radius:8px;background:var(--code);margin:12px 0 24px}
+@media (max-width:640px){.map{height:70vh}}
 .finder{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin:8px 0 0}
 .finder label{display:block;font-weight:600;margin-bottom:6px}
 .finder form{display:flex;gap:8px;flex-wrap:wrap}
