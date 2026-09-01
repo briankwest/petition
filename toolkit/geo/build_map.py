@@ -158,7 +158,7 @@ def build_wall_map(out: Path) -> Path:
     urban = [f for f in fc["features"] if f["properties"]["precinct"] in (1, 3, 4, 5, 6, 7, 8, 11, 14, 54, 55, 41)]
     ub = [shape(f["geometry"]).bounds for f in urban]
     x0, y0, x1, y1 = min(b[0] for b in ub), min(b[1] for b in ub), max(b[2] for b in ub), max(b[3] for b in ub)
-    ins = fig.add_axes([0.725, 0.445, 0.255, 0.150])
+    ins = fig.add_axes([0.695, 0.415, 0.295, 0.205])
     draw(ins, 8, 0.8, muni_labels=False, min_lake_area=0)
     ins.set_xlim(x0 - 0.01, x1 + 0.01); ins.set_ylim(y0 - 0.01, y1 + 0.01)
     ins.axis("on"); ins.set_xticks([]); ins.set_yticks([])
@@ -171,8 +171,9 @@ def build_wall_map(out: Path) -> Path:
     fig.text(0.06, 0.972, "Pittsburg County, Oklahoma — Voting Precincts", fontsize=16, fontweight="bold", color="#1c1a19")
     fig.text(0.06, 0.955, "County referendum — Emerald ProjectCo data center tax abatement · Petition Captain wall map (legal 8.5 × 14 in)",
              fontsize=9, color="#6b625f")
-    fig.text(0.06, 0.012, f"Precinct boundaries: OU Center for Spatial Analysis (Oklahoma State Election Board mapping contractor), 2020 precincts. "
-             f"Polling places: Pittsburg County Election Board. Shading = commissioner district 1/2/3. Built {dt.date.today().isoformat()}.",
+    fig.text(0.06, 0.020, "Precinct boundaries: OU Center for Spatial Analysis (Oklahoma State Election Board mapping contractor), 2020 precincts.",
+             fontsize=7, color="#6b625f")
+    fig.text(0.06, 0.010, f"Polling places: Pittsburg County Election Board. Shading = commissioner district 1/2/3. Built {dt.date.today().isoformat()}.",
              fontsize=7, color="#6b625f")
 
     # polling place table — two columns below the map
@@ -180,18 +181,18 @@ def build_wall_map(out: Path) -> Path:
              color="#1c1a19", transform=tab.transAxes)
     half = (len(places) + 1) // 2
     step = 0.90 / half
-    cols = [(0.00, 0.055, 0.40), (0.53, 0.585, 0.93)]
+    cols = [(0.00, 0.055, 0.47), (0.53, 0.585, 1.00)]
     for i, r in enumerate(places):
         col, row = divmod(i, half) if False else (i // half, i % half)
         x_p, x_n, x_c = cols[col]
         y = 0.925 - (row + 1) * step
         if row % 2 == 0:
-            tab.axhspan(y - step / 2, y + step / 2, xmin=x_p, xmax=x_c + 0.07, color="#f1eeeb", zorder=0)
+            tab.axhspan(y - step / 2, y + step / 2, xmin=x_p, xmax=x_c, color="#f1eeeb", zorder=0)
         tab.text(x_p, y, r["precinct"], fontsize=8.6, fontweight="bold", va="center", color="#a61e2b", transform=tab.transAxes)
         name = r["polling_place"]
         if len(name) > 36: name = name[:35] + "…"
         tab.text(x_n, y, name, fontsize=8.6, va="center", transform=tab.transAxes)
-        tab.text(x_c, y, r["city"], fontsize=8.6, va="center", color="#6b625f", transform=tab.transAxes)
+        tab.text(x_c - 0.008, y, r["city"], fontsize=8.6, va="center", ha="right", color="#6b625f", transform=tab.transAxes)
     pdf = out / "pittsburg-precincts-legal.pdf"
     fig.savefig(pdf, format="pdf")
     plt.close(fig)
