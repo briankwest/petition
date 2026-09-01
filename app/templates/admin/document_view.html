@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+{% block atitle %}{{ doc_name }}{% endblock %}
+{% block content %}
+<p class="small"><a href="/admin/documents">← All documents</a></p>
+<h1>{{ doc_name }} <span class="asof">{{ (size/1024)|round|int }} KB</span></h1>
+<p><a class="btn primary" href="/admin/documents/file/{{ doc_name }}?download=1">Download</a> <a class="btn" href="/admin/documents/file/{{ doc_name }}" target="_blank" rel="noopener">Open in a new tab</a></p>
+<iframe class="pdf-frame" src="/admin/documents/file/{{ doc_name }}#view=FitH" title="{{ doc_name }}"></iframe>
+<p class="small">Print at 100% (no “fit to page”) on legal paper, duplex. Signature sheets are landscape with the affidavit on the back.</p>
+{% endblock %}

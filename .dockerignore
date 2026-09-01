@@ -8,3 +8,4 @@ Petition Captain Master Tracker*.xlsx
 *.local.yaml
 .env
 tests
+dist

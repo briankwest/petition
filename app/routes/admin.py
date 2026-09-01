@@ -764,6 +764,69 @@ async def qa_update(request: Request, tid: int, db: Session = Depends(get_db)):
     return go("/admin/qa", msg="Updated.")
 
 
+# ---------- documents (built PDFs) ----------
+import json as _json
+import re as _re
+from pathlib import Path as _Path
+from fastapi.responses import FileResponse
+from toolkit import ROOT as _ROOT
+
+_SAFE_NAME = _re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,80}\.pdf$")
+
+
+def _docs_dirs() -> list[_Path]:
+    """Where built PDFs live: dist/ (baked into the Docker image) or output/ (local `make docs`)."""
+    import os
+    env = os.environ.get("DOCS_DIRS")
+    if env:
+        return [_Path(p) for p in env.split(":") if p]
+    cands = [_ROOT / "dist" / "docs", _ROOT / "dist" / "map", _ROOT / "output" / "docs", _ROOT / "output" / "map"]
+    return [p for p in cands if p.is_dir()]
+
+
+def _find_doc(name: str) -> _Path | None:
+    if not _SAFE_NAME.match(name):
+        return None
+    for d in _docs_dirs():
+        f = d / name
+        if f.is_file() and f.resolve().parent == d.resolve():
+            return f
+    return None
+
+
+@router.get("/documents", dependencies=AUTH)
+def documents(request: Request):
+    manifest, files, seen = None, [], set()
+    for d in _docs_dirs():
+        mp = d / "manifest.json"
+        if manifest is None and mp.is_file():
+            try:
+                manifest = _json.loads(mp.read_text())
+            except Exception:
+                manifest = None
+        for f in sorted(d.glob("*.pdf")):
+            if f.name in seen:
+                continue
+            seen.add(f.name)
+            meta = next((x for x in (manifest or {}).get("files", []) if x.get("name") == f.name), {})
+            files.append({"name": f.name, "title": meta.get("title") or ("Precinct wall map (legal, landscape)" if "precincts" in f.name else f.stem),
+                          "bytes": f.stat().st_size, "pages": meta.get("pages"), "sha256": (meta.get("sha256") or "")[:12]})
+    return render(request, "admin/documents.html", files=files, manifest=manifest, dirs=[str(d) for d in _docs_dirs()])
+
+
+@router.get("/documents/view/{name}", dependencies=AUTH)
+def document_view(request: Request, name: str):
+    f = _find_doc(name) or _404()
+    return render(request, "admin/document_view.html", doc_name=name, size=f.stat().st_size)
+
+
+@router.get("/documents/file/{name}", dependencies=AUTH)
+def document_file(name: str, download: int = 0):
+    f = _find_doc(name) or _404()
+    return FileResponse(str(f), media_type="application/pdf", filename=name if download else None,
+                        content_disposition_type="attachment" if download else "inline")
+
+
 @router.get("/records", dependencies=AUTH)
 def records(request: Request, db: Session = Depends(get_db)):
     rows = db.scalars(select(m.RecordsLog).order_by(desc(m.RecordsLog.occurred_at), desc(m.RecordsLog.id))).all()

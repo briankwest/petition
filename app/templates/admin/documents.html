@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block atitle %}Documents{% endblock %}
+{% block content %}
+<h1>Documents</h1>
+<p class="small">Generated from <code>config/petition.yaml</code> at deploy time — not from these admin settings. Legal size. Everything is a <strong>draft</strong> until the resolution is adopted, the exact text is inserted, and <code>make final</code> + <code>make freeze</code> produce the filing copy.</p>
+{% if manifest %}
+<div class="tiles small-tiles">
+  <div class="tile"><span class="num">{{ 'FINAL' if manifest.final else 'DRAFT' }}</span><span class="lbl">Build type</span></div>
+  <div class="tile"><span class="num">{{ manifest.built_at[:16].replace('T',' ') }}</span><span class="lbl">Built (UTC){% if manifest.git_sha %} · {{ manifest.git_sha }}{% endif %}</span></div>
+  <div class="tile"><span class="num">{{ manifest.config.rows_per_sheet }} × {{ manifest.config.sheets_per_pamphlet }}</span><span class="lbl">Lines per sheet × sheets per pamphlet</span></div>
+  <div class="tile"><span class="num">{{ manifest.duplex }}</span><span class="lbl">Duplex setting</span></div>
+</div>
+{% if manifest.placeholders %}<p class="flash warn"><strong>{{ manifest.placeholders|length }} placeholders outstanding:</strong> {{ manifest.placeholders|join('; ') }}</p>{% endif %}
+<p class="small">Adoption date: {{ manifest.config.adoption_date }} · Filing deadline: {{ manifest.config.filing_deadline }} · Election: {{ manifest.config.election_date }} · Registered voters: {{ manifest.config.registered_voters }} · Legal minimum: {{ manifest.config.legal_minimum }} · Target: {{ manifest.config.target }}</p>
+{% endif %}
+<div class="tbl"><table>
+<thead><tr><th>File</th><th>What it is</th><th class="num">Pages</th><th class="num">Size</th><th>Hash</th><th></th></tr></thead>
+<tbody>{% for f in files %}<tr>
+<td><a href="/admin/documents/view/{{ f.name }}">{{ f.name }}</a></td><td>{{ f.title }}</td>
+<td class="num">{{ f.pages if f.pages is not none else '—' }}</td><td class="num">{{ (f.bytes/1024)|round|int }} KB</td><td class="mono small">{{ f.sha256 or '—' }}</td>
+<td class="actions-cell"><a class="btn" href="/admin/documents/view/{{ f.name }}">Preview</a> <a class="btn" href="/admin/documents/file/{{ f.name }}?download=1">Download</a></td>
+</tr>{% else %}<tr><td colspan="6">No built documents found (looked in: {{ dirs|join(', ') or 'nothing' }}). Run <code>make docs</code> locally or redeploy.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

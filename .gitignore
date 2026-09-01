@@ -11,3 +11,4 @@ Petition Captain Master Tracker*.xlsx
 .env
 .DS_Store
 *.egg-info/
+dist/

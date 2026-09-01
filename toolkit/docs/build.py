@@ -93,6 +93,49 @@ def build_all(out: str | Path, final: bool = False, duplex: str = "long-edge", p
     return written
 
 
+DOC_TITLES = {
+    "01-petition-pamphlet.pdf": "Petition pamphlet — cover, petition, measure, signature sheets with affidavits (legal, duplex)",
+    "02-ballot-title.pdf": "Proposed ballot title — separate filing (62 O.S. § 868(D))",
+    "03-circulator-quick-card.pdf": "Circulator quick card (legal, duplex)",
+    "04-notary-checklist.pdf": "Notary checklist + session log",
+    "05-action-plan.pdf": "Action plan after adoption",
+    "06-fallback-plan.pdf": "Fallback plan if the Board votes no",
+}
+
+
+def write_manifest(out_dir, paths, *, final: bool, duplex: str, petition) -> str:
+    """Describe the build for the admin Documents page (and for print orders)."""
+    import json, hashlib, subprocess
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from pypdf import PdfReader
+    files = []
+    for path in paths:
+        path = Path(path)
+        try:
+            pages = len(PdfReader(str(path)).pages)
+        except Exception:
+            pages = None
+        files.append({"name": path.name, "title": DOC_TITLES.get(path.name, path.stem), "bytes": path.stat().st_size,
+                      "pages": pages, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    try:
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip() or None
+    except Exception:
+        sha = None
+    manifest = {
+        "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "final": final, "duplex": duplex,
+        "git_sha": sha or __import__("os").environ.get("GIT_SHA"), "placeholders": petition.placeholders,
+        "config": {"county": petition.county, "adoption_date": petition.fmt.adoption_date, "filing_deadline": petition.fmt.filing_deadline,
+                   "election_date": petition.fmt.election_date, "registered_voters": petition.fmt.registered_voters,
+                   "legal_minimum": petition.fmt.legal_minimum, "target": petition.fmt.target_signatures,
+                   "rows_per_sheet": petition.layout.rows_per_sheet, "sheets_per_pamphlet": petition.layout.sheets_per_pamphlet},
+        "files": files,
+    }
+    mp = Path(out_dir) / "manifest.json"
+    mp.write_text(json.dumps(manifest, indent=2))
+    return str(mp)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default="output/docs")
@@ -108,6 +151,7 @@ def main(argv=None) -> int:
         print(e, file=sys.stderr); return 2
     for path in paths:
         print(f"wrote {path}")
+    write_manifest(a.out, paths, final=a.final, duplex=duplex, petition=p)
     if not a.final:
         print(f"draft build ({len(p.placeholders)} placeholders outstanding): " + "; ".join(p.placeholders))
     return 0

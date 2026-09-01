@@ -268,3 +268,22 @@ def test_seed_pamphlets_and_polling_places(db):
     assert loc.name == "Krebs City Hall" and loc.public is False and loc.precinct == "41"
     stipe = db.query(m.Location).filter_by(slug="polling-01").one()
     assert "precincts 1, 55" in stipe.notes and db.query(m.Location).filter_by(slug="polling-55").count() == 0
+
+
+def test_admin_documents_page(client, db, tmp_path, monkeypatch):
+    from pypdf import PdfWriter
+    import json
+    d = tmp_path / "docs"; d.mkdir()
+    w = PdfWriter(); w.add_blank_page(width=612, height=1008); w.write(d / "01-petition-pamphlet.pdf")
+    (d / "manifest.json").write_text(json.dumps({"built_at": "2026-09-01T12:00:00+00:00", "final": False, "duplex": "long-edge", "git_sha": "abc1234",
+        "placeholders": ["measure.adoption_date (tabled — no date yet)"], "config": {"adoption_date": "[ADOPTION DATE — TBD]", "filing_deadline": "x", "election_date": "x",
+        "registered_voters": "27,727", "legal_minimum": "2,773", "target": "3,605", "rows_per_sheet": 10, "sheets_per_pamphlet": 5},
+        "files": [{"name": "01-petition-pamphlet.pdf", "title": "Petition pamphlet", "bytes": 1, "pages": 1, "sha256": "deadbeef"}]}))
+    monkeypatch.setenv("DOCS_DIRS", str(d))
+    assert client.get("/admin/documents", follow_redirects=False).status_code == 303          # login required
+    login(client, db)
+    page = client.get("/admin/documents"); assert page.status_code == 200 and "01-petition-pamphlet.pdf" in page.text and "DRAFT" in page.text and "placeholders outstanding" in page.text
+    f = client.get("/admin/documents/file/01-petition-pamphlet.pdf"); assert f.status_code == 200 and f.headers["content-type"].startswith("application/pdf") and "attachment" not in f.headers.get("content-disposition", "")
+    dl = client.get("/admin/documents/file/01-petition-pamphlet.pdf?download=1"); assert "attachment" in dl.headers["content-disposition"]
+    assert client.get("/admin/documents/file/../../pyproject.toml").status_code in (404, 400)
+    assert client.get("/admin/documents/view/01-petition-pamphlet.pdf").status_code == 200
