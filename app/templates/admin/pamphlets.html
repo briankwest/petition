@@ -18,7 +18,7 @@
 <p class="help">Numbers already in use are skipped. Every pamphlet printed must be byte-identical to the filed true copy — record the print batch and version hash.</p>
 </details>
 <div class="tbl"><table>
-<thead><tr><th>#</th><th>Status</th><th>Issued to</th><th>Issued</th><th>Returned</th><th class="num">Collected</th><th class="num">Valid est.</th><th class="num">Notarized</th><th class="num">Audited</th><th class="num">Rejected</th></tr></thead>
+<thead><tr><th>#</th><th>Status</th><th>Assigned to</th><th>Issued</th><th>Returned</th><th class="num">Collected</th><th class="num">Valid est.</th><th class="num">Notarized</th><th class="num">Audited</th><th class="num">Rejected</th></tr></thead>
 <tbody>{% for p in rows %}<tr>
 <td><a href="/admin/pamphlets/{{ p.number }}">{{ p.number }}</a></td><td><span class="pill">{{ p.status }}</span></td><td>{{ p.issued_to.name if p.issued_to else '' }}</td><td>{{ p.issued_on|date('') }}</td><td>{{ p.returned_on|date('') }}</td>
 <td class="num">{{ p.collected }}</td><td class="num">{{ p.valid_estimate }}</td><td class="num">{{ p.notarized_sheets }}/{{ p.sheets|length }}</td><td class="num">{{ p.audited_ok_sheets }}</td><td class="num">{{ p.rejected_sheets }}</td>

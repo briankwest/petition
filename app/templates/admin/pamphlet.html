@@ -31,7 +31,7 @@
   <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="grid-3">
     <div class="field"><label>Status</label><select name="status">{% for st in statuses %}<option {% if st == p.status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></div>
-    <div class="field"><label>Issued to</label><select name="issued_to_id"><option value="">—</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label>Assigned to (printed on the pamphlet)</label><select name="issued_to_id"><option value="">—</option>{% for c in circulators %}<option value="{{ c.id }}" {% if p.issued_to_id == c.id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
     <div class="field"><label>Print batch</label><input name="print_batch" value="{{ p.print_batch or '' }}"></div>
     <div class="field"><label>Printed on</label><input type="date" name="printed_on" value="{{ p.printed_on or '' }}"></div>
     <div class="field"><label>Issued on</label><input type="date" name="issued_on" value="{{ p.issued_on or '' }}"></div>
