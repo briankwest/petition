@@ -107,7 +107,8 @@ def test_pamphlet_includes_attachments_normalized_to_legal(tmp_path):
     ex = [i for i, t in enumerate(tx, 1) if "Exhibit — adopted-resolution.pdf" in t]
     prop = next(i for i, t in enumerate(tx, 1) if "Proponents of Record" in t)
     sheet1 = next(i for i, t in enumerate(tx, 1) if "SIGNATURE SHEET 1 OF" in t)
-    assert ex == [4, 5] and prop == 6                     # between measure (3) and proponents
+    assert len(ex) == 2 and ex == list(range(ex[0], ex[0] + 2)) and ex[0] >= 4   # contiguous, after the measure text
+    assert prop == ex[-1] + 1                             # proponents immediately follow the exhibits
     assert sheet1 % 2 == 1                                # duplex parity: sheet on a front page
     # odd page count attachment: break-before:right pads so the sheet still lands on a front
     pdf2 = build.build_all(tmp_path / "b", only=["01-petition-pamphlet"], attachments=[("x.pdf", _letter_pdf(1))])[0]

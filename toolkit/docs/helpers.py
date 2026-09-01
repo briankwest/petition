@@ -103,6 +103,11 @@ def _replace_dates(md: str, p: Petition) -> str:
 def source_doc_html(key: str, p: Petition) -> str:
     """Google-Docs markdown export -> HTML with config-derived dates, numbers and Source Notes."""
     md = read_source(key)
+    # Legacy names from the drafts -> the official wording (county filed notice 2026-05-18 / config)
+    md = md.replace("Emerald ProjectCo Data Center Economic Development Project Plan", p.measure.project_name)
+    md = md.replace("Tax Abatement District No. 1 and Tax Abatement District No. 2", p.measure.districts)
+    md = md.replace("Tax Abatement District No. 1 and No. 2", p.measure.districts)
+    md = md.replace("Tax Abatement District No. 1, Tax Abatement District No. 2", p.measure.districts)
     md = _replace_dates(md, p)
     md = md.replace("\\[ \\]", "☐ ")
     if key == "action-plan":

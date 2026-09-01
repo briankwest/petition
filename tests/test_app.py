@@ -568,7 +568,7 @@ def test_return_location_prefills_quick_card(client, db):
 
 def test_districts_editable_and_three_by_default(client, db):
     from app.petition import from_db
-    assert "District No. 3" in from_db(db).measure.districts
+    assert "Incentive District No. 2, Pittsburg County" in from_db(db).measure.districts
     tok = login(client, db)
     r = client.post("/admin/petition", data={"csrf": tok, "districts": "Tax Increment District A and B"}, follow_redirects=False)
     assert r.status_code == 303 and from_db(db).measure.districts == "Tax Increment District A and B"

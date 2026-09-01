@@ -15,10 +15,10 @@ measure:
   title: null                             # exact title as adopted
   adoption_date: null                     # TABLED — set the day the Board adopts it (YYYY-MM-DD)
   short_description: >-
-    Resolution approving the Emerald ProjectCo Data Center Economic Development Project Plan
-    and establishing Tax Abatement District No. 1, Tax Abatement District No. 2 and Tax Abatement District No. 3
-  project_name: Emerald ProjectCo Data Center Economic Development Project Plan
-  districts: Tax Abatement District No. 1, Tax Abatement District No. 2 and Tax Abatement District No. 3   # per the current proposal (three districts); the ADOPTED resolution controls — edit on /admin/petition
+    Resolution approving the Emerald ProjectCo Data Center Project Economic Development Project Plan
+    and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County
+  project_name: Emerald ProjectCo Data Center Project Economic Development Project Plan
+  districts: Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County   # exact wording of the county's filed notice (2026-05-18, "TID Districts"); the ADOPTED resolution controls — edit on /admin/petition
   abatement_percent: 85
   exact_text_file: measure/adopted-resolution.md   # verbatim adopted text + exhibits (placeholder until adopted)
 
@@ -47,14 +47,14 @@ threshold:
 gist: >-
   This referendum asks Pittsburg County voters whether to approve or reject the resolution adopted
   by the Board of County Commissioners approving the Emerald ProjectCo Data Center Economic
-  Development Project Plan and establishing Tax Abatement District No. 1, Tax Abatement District No. 2 and Tax Abatement District No. 3,
+  Development Project Plan and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County,
   which would provide an 85 percent ad valorem (property) tax abatement for the
   data center project under the Oklahoma Local Development Act.
 
 ballot_title: >-
   This measure refers to the voters the resolution adopted by the Board of County Commissioners
   of Pittsburg County, Oklahoma, approving the Emerald ProjectCo Data Center Economic Development
-  Project Plan and establishing Tax Abatement District No. 1, Tax Abatement District No. 2 and Tax Abatement District No. 3
+  Project Plan and establishing Incentive District No. 1, Pittsburg County, and Incentive District No. 2, Pittsburg County
   under the Oklahoma Local Development Act. The resolution provides an 85 percent ad valorem
   (property) tax abatement for the data center project within the districts. A YES vote approves
   the resolution. A NO vote rejects the resolution. Shall the resolution be approved?
