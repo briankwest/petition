@@ -109,8 +109,8 @@ def build_wall_map(out: Path) -> Path:
     roads = PRECINCT_DIR / LAYER_FILES["roads"]
 
     fig = plt.figure(figsize=(8.5, 14))
-    ax = fig.add_axes([0.0, 0.415, 0.695, 0.50])
-    tab = fig.add_axes([0.06, 0.035, 0.88, 0.345]); tab.axis("off")
+    ax = fig.add_axes([0.059, 0.405, 0.615, 0.50])
+    tab = fig.add_axes([0.059, 0.075, 0.882, 0.30]); tab.axis("off")
 
     import math
 
@@ -158,7 +158,7 @@ def build_wall_map(out: Path) -> Path:
     urban = [f for f in fc["features"] if f["properties"]["precinct"] in (1, 3, 4, 5, 6, 7, 8, 11, 14, 54, 55, 41)]
     ub = [shape(f["geometry"]).bounds for f in urban]
     x0, y0, x1, y1 = min(b[0] for b in ub), min(b[1] for b in ub), max(b[2] for b in ub), max(b[3] for b in ub)
-    ins = fig.add_axes([0.695, 0.415, 0.295, 0.205])
+    ins = fig.add_axes([0.685, 0.425, 0.256, 0.185])
     draw(ins, 8, 0.8, muni_labels=False, min_lake_area=0)
     ins.set_xlim(x0 - 0.01, x1 + 0.01); ins.set_ylim(y0 - 0.01, y1 + 0.01)
     ins.axis("on"); ins.set_xticks([]); ins.set_yticks([])
@@ -168,12 +168,12 @@ def build_wall_map(out: Path) -> Path:
     from matplotlib.patches import Rectangle
     ax.add_patch(Rectangle((x0 - 0.01, y0 - 0.01), (x1 - x0) + 0.02, (y1 - y0) + 0.02, fill=False, edgecolor="#1c1a19", linewidth=1.0, zorder=9))
 
-    fig.text(0.06, 0.972, "Pittsburg County, Oklahoma — Voting Precincts", fontsize=16, fontweight="bold", color="#1c1a19")
-    fig.text(0.06, 0.955, "County referendum — Emerald ProjectCo data center tax abatement · Petition Captain wall map (legal 8.5 × 14 in)",
+    fig.text(0.059, 0.952, "Pittsburg County, Oklahoma — Voting Precincts", fontsize=16, fontweight="bold", color="#1c1a19")
+    fig.text(0.059, 0.937, "County referendum — Emerald ProjectCo data center tax abatement · Petition Captain wall map (legal 8.5 × 14 in)",
              fontsize=9, color="#6b625f")
-    fig.text(0.06, 0.020, "Precinct boundaries: OU Center for Spatial Analysis (Oklahoma State Election Board mapping contractor), 2020 precincts.",
+    fig.text(0.059, 0.049, "Precinct boundaries: OU Center for Spatial Analysis (Oklahoma State Election Board mapping contractor), 2020 precincts.",
              fontsize=7, color="#6b625f")
-    fig.text(0.06, 0.010, f"Polling places: Pittsburg County Election Board. Shading = commissioner district 1/2/3. Built {dt.date.today().isoformat()}.",
+    fig.text(0.059, 0.038, f"Polling places: Pittsburg County Election Board. Shading = commissioner district 1/2/3. Built {dt.date.today().isoformat()}.",
              fontsize=7, color="#6b625f")
 
     # polling place table — two columns below the map
