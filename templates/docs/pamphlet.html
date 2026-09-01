@@ -171,7 +171,7 @@ table.aff td.right { width: 4.8in; border-left: 1.5pt solid #000; padding-left: 
 County of {{ p.county }}{{ ' ' * (13 - p.county|length) }}  )</p>
     <p class="aff-body">{{ affidavit.body }}</p>
     <p class="fill wide">Signature of circulator (affiant): <span class="blank"></span></p>
-    <p class="fill wide">Printed name of circulator: {% if stamp and stamp.issued_to %}<strong>{{ stamp.issued_to }}</strong>{% else %}<span class="blank"></span>{% endif %}</p>
+    <p class="fill wide">Printed name of circulator: <span class="blank"></span></p>{# handwritten by the circulator at notarization — counsel's preference; the cover still carries the assignment #}
     <p class="fill wide">Complete residence address: <span class="blank"></span></p>
     <p class="fill wide">City: <span class="blank" style="min-width:2.4in"></span> &nbsp; State: OK &nbsp; ZIP: <span class="blank" style="min-width:1.2in"></span></p>
     <p class="paren">{{ affidavit.affiant_line }}</p>
