@@ -13,6 +13,7 @@ from markdown import markdown
 from weasyprint import HTML
 from toolkit import ROOT, statutes
 from toolkit import config as cfg
+from .roles import ROLES, ROLE_BY_KEY
 from .helpers import (EXCLUSION_SHORT, WATERMARK_TEXT, source_doc_html, source_notes, strip_tags, watermark_data_uri)
 
 TEMPLATES = ROOT / "templates" / "docs"
@@ -23,6 +24,7 @@ DOCS = {
     "04-notary-checklist": ("notary-checklist.html", "Notary Checklist"),
     "05-action-plan": ("action-plan.html", "Referendum Action Plan"),
     "06-fallback-plan": ("fallback-plan.html", "Fallback Plan"),
+    "07-training-cards": ("training-cards.html", "Volunteer Training Cards"),
 }
 DUPLEX_MODES = ("long-edge", "short-edge")
 
@@ -61,7 +63,19 @@ def base_context(p: cfg.Petition, final: bool, duplex: str) -> dict:
         "watermark_text": WATERMARK_TEXT,
         "eb": p.contacts.get("election_board", {}),
         "captain": p.contacts.get("petition_captain") or {},
+        "cards": ROLES, "volunteer": None,
     }
+
+
+def render_training_card(role_key: str, volunteer: dict | None = None, petition: cfg.Petition | None = None) -> bytes:
+    """One role's training card (front + acknowledgment), optionally pre-filled for a volunteer
+    ({"id", "name", "phone"}). Used by the admin's per-volunteer button."""
+    p = petition or cfg.load()
+    ctx = base_context(p, final=True, duplex="long-edge")           # no draft watermark on training material
+    ctx["cards"] = [ROLE_BY_KEY[role_key]]
+    ctx["volunteer"] = volunteer
+    html = env().get_template(DOCS["07-training-cards"][0]).render(doc_key="07-training-cards", doc_title="Volunteer Training Card", **ctx)
+    return HTML(string=html, base_url=str(TEMPLATES)).write_pdf()
 
 
 def render_html(key: str, ctx: dict) -> str:
@@ -100,6 +114,7 @@ DOC_TITLES = {
     "04-notary-checklist.pdf": "Notary checklist + session log",
     "05-action-plan.pdf": "Action plan after adoption",
     "06-fallback-plan.pdf": "Fallback plan if the Board votes no",
+    "07-training-cards.pdf": "Volunteer training cards — one per role, with signed training acknowledgment and wallet card",
 }
 
 

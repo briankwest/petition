@@ -49,3 +49,16 @@ def test_short_edge_duplex_pamphlet_passes(tmp_path):
     build.build_all(tmp_path, final=False, duplex="short-edge", only=["01-petition-pamphlet"])
     failures = [f"{r.check} ({r.detail})" for r in check.run_checks(tmp_path, only=["01-petition-pamphlet"]) if not r.ok]
     assert not failures, "\n".join(failures)
+
+
+def test_training_cards_doc(tmp_path):
+    from toolkit.docs import build
+    from toolkit.docs.roles import ROLES
+    from pypdf import PdfReader
+    paths = build.build_all(tmp_path, only=["07-training-cards"])
+    r = PdfReader(str(paths[0]))
+    assert len(r.pages) == 2 * len(ROLES)
+    for pg in r.pages:
+        assert (float(pg.mediabox.width), float(pg.mediabox.height)) == (612.0, 1008.0)
+    text = r.pages[2].extract_text()
+    assert "Circulator" in text and "34 O.S. § 6" in text

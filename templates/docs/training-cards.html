@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block footer_text %}Training Card · {{ p.county }} County Referendum{% endblock %}
+{% block css %}
+@page { background: none; }
+body { font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "DejaVu Sans", sans-serif; font-size: 12pt; line-height: 1.3; }
+.bar { border: 2.5pt solid #000; padding: 6pt 10pt; margin: 0 0 8pt; }
+.bar .k { font-size: 10.5pt; letter-spacing: 1pt; text-transform: uppercase; }
+.bar h1 { font-size: 22pt; margin: 2pt 0 0; }
+.summary { font-family: Georgia, "Liberation Serif", serif; font-size: 13pt; margin: 0 0 8pt; }
+.cols { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 6pt; }
+.cols td { vertical-align: top; border: 1.5pt solid #000; padding: 6pt 9pt; }
+.cols td + td { border-left: 0; }
+h3 { font-size: 12.5pt; margin: 0 0 4pt; text-transform: uppercase; letter-spacing: .5pt; }
+ul, ol { margin: 0; padding-left: 15pt; } li { margin: 0 0 3pt; }
+.rules li { margin: 0 0 4pt; } .cite { font-size: 10pt; color: #333; white-space: nowrap; }
+.never { border: 2.5pt solid #000; background: #eee; padding: 6pt 9pt; margin: 0 0 6pt; }
+.never h3 { margin-bottom: 3pt; }
+.call td { padding: 3pt 8pt; border: 1pt solid #000; font-size: 12pt; } .call td:first-child { width: 2.4in; font-weight: bold; }
+.ack { border: 2.5pt solid #000; padding: 10pt 12pt; margin: 0 0 10pt; }
+.ack p { margin: 0 0 8pt; font-family: Georgia, "Liberation Serif", serif; font-size: 12.5pt; }
+.sig td { padding: 10pt 8pt 4pt; border-bottom: 1pt solid #000; font-size: 10.5pt; color: #333; vertical-align: bottom; height: 34pt; }
+.sig td strong { color: #000; font-size: 13pt; }
+.ver { border: 1.5pt solid #000; padding: 6pt 9pt; margin: 10pt 0; }
+.wallet-wrap { margin-top: 14pt; border-top: 1.5pt dashed #000; padding-top: 6pt; }
+.wallet { width: 3.5in; min-height: 2.1in; border: 1.5pt solid #000; padding: 6pt 8pt; font-size: 10pt; line-height: 1.25; display: inline-block; vertical-align: top; margin-right: 10pt; }
+.wallet .wt { font-weight: bold; font-size: 10pt; margin: 0 0 2pt; } .wallet ol { padding-left: 12pt; } .wallet li { margin: 0 0 1pt; }
+.wallet .foot { margin-top: 3pt; border-top: 1pt solid #000; padding-top: 2pt; }
+.cut { font-size: 10pt; color: #333; }
+.fill { display: inline-block; min-width: 1.6in; border-bottom: 1pt solid #000; }
+.pb { break-before: page; }
+{% endblock %}
+{% block content %}
+{% for r in cards %}
+<div class="card {% if not loop.first %}pb{% endif %}">
+  <div class="bar"><div class="k">Training card · {{ p.county }} County Referendum on the {{ f.abatement }} Data Center Tax Abatement</div><h1>{{ r.title }}</h1></div>
+  <p class="summary">{{ r.summary }}</p>
+  <table class="cols"><tr>
+    <td><h3>Your job</h3><ul>{% for j in r.job %}<li>{{ j }}</li>{% endfor %}</ul></td>
+    <td><h3>The rules</h3><ul class="rules">{% for text, cite in r.rules %}<li>{{ text }} <span class="cite">({{ cite }})</span></li>{% endfor %}</ul></td>
+  </tr></table>
+  <div class="never"><h3>Never</h3><ul>{% for n in r.never %}<li>{{ n }}</li>{% endfor %}</ul></div>
+  <table class="call"><tr><td>Petition Captain</td><td>{{ captain.name or '____________________________' }} &nbsp; {{ captain.phone or '__________________' }}</td></tr>
+  <tr><td>Registration questions</td><td>{{ eb.name }} · {{ eb.phone }} · {{ p.links.voter_portal }}</td></tr>
+  <tr><td>If challenged or harassed</td><td>Stay calm, do not argue, step away, call the Captain, write down date/time/place/witnesses.</td></tr></table>
+  <p class="small muted" style="margin-top:6pt">Operational guidance for volunteers, not legal advice. Statutes: 62 O.S. § 868; 34 O.S. §§ 1, 3, 6, 6.1, 23. Verbatim text at {{ p.links.site }}/faq.</p>
+</div>
+<div class="card pb">
+  <div class="bar"><div class="k">Training acknowledgment · keep the signed original with the Petition Captain</div><h1>{{ r.title }}</h1></div>
+  <div class="ack">
+    <p>I received training for the role of <strong>{{ r.title }}</strong> for the {{ p.county }} County referendum petition. I have read the rules on this card, I understand them, and I will follow them. I understand that signatures are collected only on official, filed pamphlets; that pages are never detached; and that signing a petition with any name other than one's own, signing more than once, or signing when not a legal voter is a felony (34 O.S. § 23).</p>
+    {% if r.needs_registration %}<p>I am at least eighteen (18) years old and a registered voter of the State of Oklahoma (34 O.S. § 6). I will personally witness every signature on any sheet I circulate and will swear to that before a notary.</p>{% endif %}
+    <table class="sig"><tr>
+      <td style="width:46%"><strong>{{ volunteer.name if volunteer else '' }}</strong><br>Volunteer — printed name</td>
+      <td style="width:30%"><strong>{{ ('V-%04d' % volunteer.id) if volunteer else '' }}</strong><br>Training ID (from the admin)</td>
+      <td><strong>{{ volunteer.phone if volunteer else '' }}</strong><br>Phone</td></tr>
+    <tr><td><br>Volunteer signature</td><td><br>Date trained</td><td><br>Trainer — printed name</td></tr>
+    <tr><td><br>Trainer signature</td><td colspan="2"><br>Training location / session</td></tr></table>
+  </div>
+  {% if r.needs_registration %}
+  <div class="ver"><h3>Captain's verification (before any pamphlet is issued — 34 O.S. § 6)</h3>
+    <p>Oklahoma voter registration confirmed via <span class="fill">OK Voter Portal / Election Board</span> on <span class="fill"></span> by <span class="fill"></span>. Recorded in the admin (Volunteers → registration verified, trained on): <span class="fill">☐ yes</span></p></div>
+  {% endif %}
+  <div class="wallet-wrap"><p class="cut">✂ Cut along the dashed line. Carry the wallet card; the signed page above stays with the Captain.</p>
+    <div class="wallet"><div class="wt">{{ r.title }} — {{ p.county }} County Referendum</div>
+      <ol>{% for w in r.wallet %}<li>{{ w }}</li>{% endfor %}</ol>
+      <div class="foot">Captain: {{ captain.name or '____________' }} {{ captain.phone or '____________' }} · Election Board {{ eb.phone }}<br>{{ p.links.site }}{% if volunteer %} · {{ volunteer.name }} · V-{{ '%04d' % volunteer.id }}{% endif %}</div></div>
+    <div class="wallet"><div class="wt">Every volunteer — the five hard rules</div>
+      <ol><li>No signatures until the true copy is filed</li><li>Official, numbered pamphlets only — never loose sheets</li><li>Registered {{ p.county }} County voters, own name, once</li><li>Never detach, alter, or photograph pages</li><li>Neutral words: “signing lets voters decide”</li></ol>
+      <div class="foot">62 O.S. § 868 · 34 O.S. §§ 1, 3, 6, 6.1, 23 · {{ p.links.site }}/faq</div></div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

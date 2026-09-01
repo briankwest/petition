@@ -315,7 +315,7 @@ def test_share_bar_and_statute_html_links(client):
     for net in ("twitter.com/intent/tweet", "nextdoor.com/sharekit", "wa.me/?text=", 'href="sms:', 'href="mailto:', "facebook.com/sharer"):
         href = _re.search(r'href="([^"]*' + _re.escape(net.replace('href="', '')) + r'[^"]*)"', html).group(1)
         assert "petition.mcalester.net%2Fvolunteer" in href or "petition.mcalester.net/volunteer" in href, net   # every share carries the volunteer CTA
-    assert 'class="share-btn share-volunteer" href="/volunteer"' in html
+    assert "share-volunteer" not in html
     from toolkit import statutes
     assert statutes.html_url("62-868") == "https://law.justia.com/codes/oklahoma/title-62/section-62-868/"
     assert statutes.html_url("34-6").startswith("https://www.oscn.net/")
@@ -350,3 +350,17 @@ def test_admin_statute_links(client, db):
     assert 'section-62-868/" rel="noopener" target="_blank">62 O.S. § 868(B)(3)</a>' in st
     r = client.get("/admin/circulators/new?err=Circulators%20must%20be%20registered%20Oklahoma%20voters%20(34%20O.S.%20%C2%A7%206).")
     assert 'CiteID=71557" rel="noopener" target="_blank">34 O.S. § 6</a>' in r.text
+
+
+def test_training_card_for_volunteer(client, db):
+    from pypdf import PdfReader
+    import io
+    login(client, db)
+    c = m.Circulator(name="Pat Card", role="Notary", phone="918-555-0123"); db.add(c); db.commit()
+    page = client.get(f"/admin/circulators/{c.id}").text
+    assert f"/admin/circulators/{c.id}/training-card.pdf" in page and f"V-{c.id:04d}" in page
+    r = client.get(f"/admin/circulators/{c.id}/training-card.pdf")
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/pdf")
+    reader = PdfReader(io.BytesIO(r.content)); assert len(reader.pages) == 2
+    text = "".join(p.extract_text() for p in reader.pages)
+    assert "Notary" in text and "Pat Card" in text and f"V-{c.id:04d}" in text

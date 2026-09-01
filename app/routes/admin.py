@@ -401,10 +401,30 @@ def circulator_edit(request: Request, cid: int, db: Session = Depends(get_db)):
 
 
 def render_pamphlet_list(c: m.Circulator) -> str:
+    from toolkit.docs.roles import ROLE_KEY
+    card = (f'<p><a class="btn" href="/admin/circulators/{c.id}/training-card.pdf" target="_blank" rel="noopener">Training card (PDF) — {c.role}</a> '
+            f'<span class="small">Training ID <strong>V-{c.id:04d}</strong>. Print duplex, train, sign both sides, record “trained on” here.</span></p>'
+            if c.role in ROLE_KEY else "")
     if not c.pamphlets:
-        return ""
+        return card
     items = "".join(f'<li><a href="/admin/pamphlets/{p.number}">{p.number}</a> — {p.status}</li>' for p in c.pamphlets)
-    return f"<h3>Pamphlets</h3><ul>{items}</ul>"
+    return card + f"<h3>Pamphlets</h3><ul>{items}</ul>"
+
+
+@router.get("/circulators/{cid}/training-card.pdf", dependencies=AUTH)
+def circulator_training_card(cid: int, db: Session = Depends(get_db)):
+    from fastapi.responses import Response
+    from toolkit.docs.roles import ROLE_KEY
+    c = db.get(m.Circulator, cid) or _404()
+    key = ROLE_KEY.get(c.role) or "helper"
+    try:
+        from toolkit.docs.build import render_training_card
+        pdf = render_training_card(key, {"id": c.id, "name": c.name, "phone": c.phone or ""})
+    except ImportError:
+        raise HTTPException(503, "Document rendering is not available on this server.")
+    fname = f"training-card-{key}-V{c.id:04d}.pdf"
+    return Response(pdf, media_type="application/pdf", headers={"Content-Disposition": f'inline; filename="{fname}"',
+                                                                "X-Frame-Options": "SAMEORIGIN", "Content-Security-Policy": "frame-ancestors 'self'"})
 
 
 @router.post("/circulators/{cid}", dependencies=AUTH)
