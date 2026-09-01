@@ -109,12 +109,12 @@ def build_wall_map(out: Path) -> Path:
     roads = PRECINCT_DIR / LAYER_FILES["roads"]
 
     fig = plt.figure(figsize=(8.5, 14))
-    ax = fig.add_axes([0.03, 0.415, 0.94, 0.50])
+    ax = fig.add_axes([0.0, 0.415, 0.695, 0.50])
     tab = fig.add_axes([0.06, 0.035, 0.88, 0.345]); tab.axis("off")
 
     import math
 
-    def draw(axis, label_fs, road_lw, muni_labels=True, min_lake_area=2e-5):
+    def draw(axis, label_fs, road_lw, muni_labels=True, min_lake_area=2e-5, label_bounds=None):
         axis.set_aspect(1 / math.cos(math.radians(34.95)))
         axis.axis("off")
         if lakes.exists():
@@ -139,21 +139,26 @@ def build_wall_map(out: Path) -> Path:
                 axis.add_patch(_patch(g, facecolor="#ffd35c", alpha=0.25, edgecolor="#8a6d00", linewidth=0.5, zorder=4))
                 if muni_labels:
                     c = g.representative_point()
+                    if label_bounds:
+                        bx0, by0, bx1, by1 = label_bounds
+                        if not (bx0 + 0.055 <= c.x <= bx1 - 0.055 and by0 + 0.025 <= c.y <= by1 - 0.03):
+                            continue                      # keep names clear of the frame edges
                     axis.text(c.x, c.y + 0.012, f["properties"].get("CITYNAME", ""), ha="center", va="bottom", fontsize=6.5, style="italic", color="#5a4a00", zorder=6, clip_on=True)
         if county.exists():
             for f in json.loads(county.read_text())["features"]:
                 axis.add_patch(_patch(shape(f["geometry"]), facecolor="none", edgecolor="#1c1a19", linewidth=1.6, linestyle=(0, (5, 3)), zorder=7))
 
-    draw(ax, 8.5, 0.5)
     bounds = [shape(f["geometry"]).bounds for f in fc["features"]]
-    ax.set_xlim(min(b[0] for b in bounds) - 0.02, max(b[2] for b in bounds) + 0.02)
-    ax.set_ylim(min(b[1] for b in bounds) - 0.02, max(b[3] for b in bounds) + 0.02)
+    bx = (min(b[0] for b in bounds) - 0.02, min(b[1] for b in bounds) - 0.02,
+          max(b[2] for b in bounds) + 0.02, max(b[3] for b in bounds) + 0.02)
+    draw(ax, 8.5, 0.5, label_bounds=(bx[0], bx[1], bx[2], bx[3]))
+    ax.set_xlim(bx[0], bx[2]); ax.set_ylim(bx[1], bx[3])
 
     # McAlester inset: the small urban precincts are unreadable at county scale
     urban = [f for f in fc["features"] if f["properties"]["precinct"] in (1, 3, 4, 5, 6, 7, 8, 11, 14, 54, 55, 41)]
     ub = [shape(f["geometry"]).bounds for f in urban]
     x0, y0, x1, y1 = min(b[0] for b in ub), min(b[1] for b in ub), max(b[2] for b in ub), max(b[3] for b in ub)
-    ins = fig.add_axes([0.645, 0.425, 0.325, 0.175])
+    ins = fig.add_axes([0.725, 0.445, 0.255, 0.150])
     draw(ins, 8, 0.8, muni_labels=False, min_lake_area=0)
     ins.set_xlim(x0 - 0.01, x1 + 0.01); ins.set_ylim(y0 - 0.01, y1 + 0.01)
     ins.axis("on"); ins.set_xticks([]); ins.set_yticks([])
