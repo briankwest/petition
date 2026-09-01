@@ -56,8 +56,28 @@ def draw_og(title: str, eyebrow: str, tagline: str) -> Image.Image:
     mark = draw_mark(150)
     im.paste(mark, (80, 92), mark)
     d.text((262, 96), eyebrow.upper(), font=_font(False, 26), fill=MUTED, spacing=4)
-    d.text((262, 136), title, font=_font(True, 76), fill=NAVY)
-    d.multiline_text((80, 300), tagline, font=_font(False, 44), fill=NAVY, spacing=12)
+    # fit the title: shrink to the available width, wrapping to two lines for long names
+    max_w, size, lines = W - 262 - 60, 76, [title]
+    while True:
+        f = _font(True, size)
+        widths = [d.textlength(l, font=f) for l in lines]
+        if max(widths) <= max_w or size <= 40:
+            break
+        if len(lines) == 1 and size <= 60:
+            words = title.split(); best = None
+            for i in range(1, len(words)):
+                a, b = " ".join(words[:i]), " ".join(words[i:])
+                cand = max(d.textlength(a, font=f), d.textlength(b, font=f))
+                if best is None or cand < best[0]:
+                    best = (cand, [a, b])
+            lines = best[1]; continue
+        size -= 4
+    f = _font(True, size)
+    y = 136 if len(lines) == 1 else 128
+    for l in lines:
+        d.text((262, y), l, font=f, fill=NAVY); y += int(size * 1.15)
+    tag_y = max(300, y + 40)
+    d.multiline_text((80, tag_y), tagline, font=_font(False, 44), fill=NAVY, spacing=12)
     d.rectangle((80, 520, 200, 528), fill=BLUE)
     d.text((80, 548), "Where to sign · Am I registered? · Who to call", font=_font(False, 28), fill=MUTED)
     return im
