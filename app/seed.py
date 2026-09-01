@@ -217,6 +217,9 @@ def main(argv=None):
             st = Settings(db)
             for kv in a.set:
                 k, _, v = kv.partition("=")
+                if v.startswith("b64:"):                       # values with spaces survive `dokku run` this way
+                    import base64
+                    v = base64.b64decode(v[4:]).decode("utf-8")
                 if k not in DEFAULTS:
                     raise SystemExit(f"unknown setting: {k} (known: {', '.join(sorted(DEFAULTS))})")
                 st.set(k, v)
