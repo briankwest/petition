@@ -569,3 +569,8 @@ def test_districts_editable_and_three_by_default(client, db):
     tok = login(client, db)
     r = client.post("/admin/petition", data={"csrf": tok, "districts": "Tax Increment District A and B"}, follow_redirects=False)
     assert r.status_code == 303 and from_db(db).measure.districts == "Tax Increment District A and B"
+
+
+def test_faq_links_county_resolutions(client):
+    html = client.get("/faq").text
+    assert 'href="https://pittsburg.okcounties.org/resolutions"' in html and "County Election Board</strong> before any signature" in html
