@@ -143,7 +143,7 @@ body.admin{font-size:15px}
 .grid-2.tight{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
 @media (max-width:560px){.grid-2.tight{grid-template-columns:1fr}}
 fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}fieldset.field legend{font-weight:500;padding:0 6px}
-.checks{display:flex;flex-wrap:wrap;gap:4px 18px}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px 18px}
 .tabs{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 14px;font-size:14px}.tabs a{text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}.tabs a[aria-current=page]{border-bottom-color:var(--gold);font-weight:600}
 .inline-form{display:inline-block;margin:0 6px 6px 0}.actions-cell{white-space:nowrap}
 
