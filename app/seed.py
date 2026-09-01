@@ -89,6 +89,22 @@ def seed_polling_places(db) -> dict:
     return out
 
 
+def prune_examples(db) -> dict:
+    """Remove seed cruft: example locations/events and bracketed placeholder contacts."""
+    out = {"locations": 0, "events": 0, "contacts": 0}
+    for e in db.scalars(select(m.Event)).all():
+        if "example" in (e.notes or "").lower():
+            db.delete(e); out["events"] += 1
+    for l in db.scalars(select(m.Location)).all():
+        if l.slug == "example-stipe-center" or "example" in (l.notes or "").lower() or "(example" in (l.name or "").lower():
+            out["events"] += len(l.events); db.delete(l); out["locations"] += 1
+    for c in db.scalars(select(m.Contact)).all():
+        if _placeholder(c.name, c.phone):
+            db.delete(c); out["contacts"] += 1
+    db.commit()
+    return out
+
+
 def status(db) -> dict:
     """Row counts for a quick production sanity check (`python -m app.seed --status`)."""
     from sqlalchemy import func
@@ -115,10 +131,10 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
             out["settings"] += 1
     db.flush()
 
-    # contacts
+    # contacts — first run only: once the captain manages them in admin, deploys must not re-add rows
     have = {(c.role, c.name) for c in db.scalars(select(m.Contact)).all()}
     cpath = ROOT / "data" / "contacts.yaml"
-    if cpath.exists():
+    if cpath.exists() and not have:
         for i, c in enumerate((yaml.safe_load(cpath.read_text()) or {}).get("contacts", [])):
             key = (c.get("role"), c.get("name"))
             if key in have or not c.get("role"):
@@ -136,7 +152,8 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
     # locations + events
     lpath, epath = ROOT / "data" / "signing_locations.yaml", ROOT / "data" / "events.yaml"
     loc_by_yaml_id: dict[str, m.Location] = {}
-    if lpath.exists():
+    first_run_locations = db.scalar(select(m.Location).limit(1)) is None
+    if lpath.exists() and first_run_locations:
         for l in (yaml.safe_load(lpath.read_text()) or {}).get("locations", []):
             slug = _slug(l.get("id") or l.get("name"))
             row = db.scalar(select(m.Location).where(m.Location.slug == slug))
@@ -149,7 +166,7 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
                 db.add(row); out["locations"] += 1
             loc_by_yaml_id[l.get("id") or slug] = row
         db.flush()
-    if epath.exists():
+    if epath.exists() and first_run_locations:
         for e in (yaml.safe_load(epath.read_text()) or {}).get("events", []):
             loc = loc_by_yaml_id.get(e.get("location_id"))
             if loc is None:
@@ -165,9 +182,9 @@ def seed(db, admin_user: str | None = None, admin_password: str | None = None) -
                            public=not is_example and d is not None))
             out["events"] += 1
 
-    # QA tasks
+    # QA tasks — first run only
     have_tasks = {t.task for t in db.scalars(select(m.QATask)).all()}
-    for i, t in enumerate(QA_TASKS):
+    for i, t in enumerate(QA_TASKS if not have_tasks else []):
         if t not in have_tasks:
             db.add(m.QATask(task=t, sort_order=(i + 1) * 10)); out["qa_tasks"] += 1
 
@@ -191,6 +208,7 @@ def main(argv=None):
     ap.add_argument("--sheets", type=int, help="sheets per pamphlet (default = Settings sheets_per_pamphlet)")
     ap.add_argument("--polling-places", action="store_true", help="load polling places as hidden candidate signing locations")
     ap.add_argument("--status", action="store_true", help="print row counts and exit (no changes)")
+    ap.add_argument("--prune-examples", action="store_true", help="delete example locations/events and placeholder contacts")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="set a Settings value (repeatable), e.g. --set overcollect_fraction=0.6")
     a = ap.parse_args(argv)
     dbmod.init_db()
@@ -206,6 +224,10 @@ def main(argv=None):
             db.commit()
             st = Settings(db)
             print("now: registered_voters", st.registered_voters, "| legal_minimum", st.legal_minimum, "| target", st.target_signatures)
+        return
+    if a.prune_examples:
+        with dbmod.SessionLocal() as db:
+            print("pruned:", prune_examples(db))
         return
     if a.status:
         with dbmod.SessionLocal() as db:

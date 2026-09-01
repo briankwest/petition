@@ -1,15 +1,6 @@
-# Who to call about the petition. Public on the site. Phones must be numbers you want published.
+# Public contacts are managed in admin → Contacts; this file only seeds an EMPTY database on the first
+# deploy. Placeholder names/phones in brackets are kept off the public site automatically.
 contacts:
-  - role: Petition Captain
-    name: "[NAME]"
-    phone: "[PHONE]"
-    email: null
-    public: true
-  - role: Circulator Trainer
-    name: "[NAME]"
-    phone: "[PHONE]"
-    email: null
-    public: true
   - role: Pittsburg County Election Board (registration questions)
     name: Tonya Barnes, Secretary
     phone: 918-423-3877
