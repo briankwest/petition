@@ -511,7 +511,7 @@ async def petition_save(request: Request, db: Session = Depends(get_db)):
             props.append(row)
     import json as _j
     s.set("proponents", _j.dumps(props) if props else None)
-    for key in ("rows_per_sheet", "sheets_per_pamphlet"):
+    for key in ("rows_per_sheet", "sheets_per_pamphlet", "abatement_percent"):
         v = F.i(form, key)
         if v:
             s.set(key, v)

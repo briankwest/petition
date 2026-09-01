@@ -14,6 +14,7 @@ li::before { content: "☐  "; }
 .ecodes h3 { margin: 0 0 4pt; font-size: 12.5pt; }
 .ecodes p { margin: 0 0 2pt; font-size: 10.5pt; padding-left: 0; text-indent: 0; line-height: 1.25; }
 .ecodes .kill { font-weight: bold; }
+.log-section { page: landscape; }
 table.log { width: 100%; table-layout: fixed; }
 table.log th, table.log td { border: 1pt solid #000; padding: 4pt 5pt; }
 table.log th { background: #eee; font-size: 11pt; text-align: left; }
@@ -61,10 +62,12 @@ table.log td { height: 0.42in; }
 {% for code, label, kills in exclusions_short %}<p class="{{ 'kill' if kills }}">{{ code }} — {{ label }}</p>{% endfor %}</div>
 <p class="src">34 O.S. § 6 requires the circulator to verify each sheet by affidavit; 34 O.S. § 3 treats the petition copy plus signature sheets as a pamphlet; 62 O.S. § 868 governs filing before circulation and the county count. Operational guidance, not legal advice.{% if draft %} DRAFT — no dates set.{% endif %}</p>
 
-<div class="bar pb">NOTARY SESSION LOG <small>One line per notarized affidavit / signature sheet. Keep with Petition Captain records — a working control sheet, not a substitute for the original notarized affidavit.</small></div>
+<div class="log-section">
+<div class="bar pb">NOTARY SESSION LOG <small>One line per notarized affidavit / signature sheet. Landscape — keep with Petition Captain records; a working control sheet, not a substitute for the original notarized affidavit.</small></div>
 <table class="log">
- <colgroup><col style="width:0.9in"><col style="width:0.9in"><col style="width:0.7in"><col style="width:1.6in"><col style="width:0.7in"><col style="width:0.8in"><col style="width:0.8in"><col></colgroup>
- <thead><tr><th>Date</th><th>Pamphlet #</th><th>Sheet #</th><th>Circulator</th><th>Sig. count</th><th>Notary initials</th><th>Defect code</th><th>Notes</th></tr></thead>
- <tbody>{% for i in range(24) %}<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>{% endfor %}</tbody>
+ <colgroup><col style="width:0.85in"><col style="width:0.85in"><col style="width:0.6in"><col style="width:1.7in"><col style="width:0.65in"><col style="width:1.6in"><col style="width:1.05in"><col style="width:0.95in"><col style="width:0.7in"><col style="width:0.8in"><col></colgroup>
+ <thead><tr><th>Date</th><th>Pamphlet #</th><th>Sheet #</th><th>Circulator</th><th>Sig. count</th><th>Notary name</th><th>Commission #</th><th>Expiration</th><th>Initials</th><th>Defect code</th><th>Notes</th></tr></thead>
+ <tbody>{% for i in range(30) %}<tr>{% for c in range(11) %}<td></td>{% endfor %}</tr>{% endfor %}</tbody>
 </table>
+</div>
 {% endblock %}

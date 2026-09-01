@@ -628,3 +628,11 @@ def test_address_wrapping(client, db):
     db.add(m.Contact(role="Petition Captain", name="Brian", address="714 E Osage Ave, McAlester, OK 74501-6638", public=True)); db.commit()
     html = client.get("/contact").text
     assert '714 E Osage Ave,<br><span class="nowrap">McAlester, OK 74501-6638</span>' in html
+
+
+def test_abatement_percent_editable(client, db):
+    from app.petition import from_db
+    tok = login(client, db)
+    assert from_db(db).measure.abatement_percent == 85
+    r = client.post("/admin/petition", data={"csrf": tok, "abatement_percent": "80"}, follow_redirects=False)
+    assert r.status_code == 303 and from_db(db).measure.abatement_percent == 80

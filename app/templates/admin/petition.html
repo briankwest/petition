@@ -17,6 +17,8 @@
       <p class="help">Only if the Election Board gives a different date in writing.</p></div>
   </div>
   <div class="field"><label for="rt">Resolution title (exact)</label><input id="rt" name="resolution_title" value="{{ s.raw('resolution_title') or '' }}" {{ d }}></div>
+  <div class="field"><label for="ab">Abatement percentage</label><input id="ab" type="number" name="abatement_percent" value="{{ p.measure.abatement_percent }}" min="1" max="100" {{ d }}>
+    <p class="help">Used in campaign-facing text (“the proposed {{ p.measure.abatement_percent }}% abatement”). The gist and ballot title should follow the adopted resolution's own wording.</p></div>
   <div class="field"><label for="di">Tax abatement districts (as named in the resolution)</label><input id="di" name="districts" value="{{ s.raw('districts') or p.measure.districts }}" {{ d }}>
     <p class="help">Listed on the cover and in descriptions. The adopted resolution's own wording controls — match it exactly.</p></div>
   <div class="field"><label for="mt">Exact adopted text — word for word, with exhibits (Markdown)</label>

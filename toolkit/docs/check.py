@@ -214,9 +214,14 @@ def run_checks(out_dir: str | Path, final: bool = False, petition: cfg.Petition 
     for key in ("03-circulator-quick-card", "05-action-plan"):
         if key in docs:
             R.append(Result(key, "filing deadline identical to the pamphlet", any(pg.has(dl) for pg in docs[key]), dl))
-    for key in ("03-circulator-quick-card", "04-notary-checklist"):
-        if key in docs:
-            R.append(Result(key, "two pages (one duplex sheet)", len(docs[key]) == 2, f"{len(docs[key])} pages"))
+    if "03-circulator-quick-card" in docs:
+        R.append(Result("03-circulator-quick-card", "two pages (one duplex sheet)", len(docs["03-circulator-quick-card"]) == 2,
+                        f"{len(docs['03-circulator-quick-card'])} pages"))
+    if "04-notary-checklist" in docs:
+        pgs = docs["04-notary-checklist"]
+        ok = len(pgs) >= 2 and pgs[0].width < pgs[0].height and all(pg.width > pg.height for pg in pgs[1:])
+        R.append(Result("04-notary-checklist", "portrait checklist + landscape session-log pages", ok,
+                        f"{len(pgs)} pages: " + ", ".join("landscape" if pg.width > pg.height else "portrait" for pg in pgs)))
     for key in ("03-circulator-quick-card", "04-notary-checklist", "05-action-plan", "06-fallback-plan"):
         if key in docs:
             stale = [m for m in ("June 22", "July 22") if any(m in pg.text for pg in docs[key])]
