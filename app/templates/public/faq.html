@@ -19,9 +19,9 @@
 <dd>Under {{ cite('34-6.1', '34 O.S. § 6.1') }} the count excludes:<ol>{% for e in exclusions %}<li>{{ e }}.</li>{% endfor %}</ol></dd>
 <dt>Is my signature public?</dt>
 <dd>Yes. A copy of the petition and all signatures are public records under the Oklahoma Open Records Act ({{ cite('34-3', '34 O.S. § 3(B)') }}). This website does not collect or store any voter information.</dd>
-</dl>
 <dt>Where does the petition get filed, and where can I read county resolutions?</dt>
 <dd>The petition's true copy is filed with the <strong>Secretary of the {{ petition.county }} County Election Board</strong> before any signature is collected, and the signed pamphlets go back to the same office within 30 days of adoption ({{ cite('62-868', '62 O.S. § 868(B)') }}). The county publishes its resolutions at <a href="{{ petition.links.county_resolutions }}" rel="noopener" target="_blank">pittsburg.okcounties.org/resolutions</a>; certified copies are available from the County Clerk, 115 E Carl Albert Pkwy, Suite 103, McAlester.</dd>
+</dl>
 </dl>
 <p class="small">Full statute text: {% for k, u in cites.items() %}<a href="{{ u }}" rel="noopener" target="_blank">{{ k.replace('-', ' O.S. § ') }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
 {% endblock %}
