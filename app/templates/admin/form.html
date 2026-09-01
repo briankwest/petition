@@ -22,7 +22,7 @@
       <input id="f-{{ f.name }}" type="{{ f.type }}" name="{{ f.name }}" value="{{ f.value if f.value is not none else '' }}" {% if f.step %}step="{{ f.step }}"{% endif %} {% if f.required %}required{% endif %}>
     {% endif %}
     {% if f.readonly %}<dl class="ro">{% for k, v in f.readonly %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}</dl>{% endif %}
-    {% if f.help %}<p class="help">{{ f.help }}</p>{% endif %}
+    {% if f.help %}<p class="help">{{ f.help|linkcites }}</p>{% endif %}
   </div>
   {% endfor %}
   <div class="actions"><button class="btn primary">Save</button> <a class="btn" href="{{ back }}">Cancel</a></div>

@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Dashboard <span class="asof">as of {{ st.as_of|date }}</span></h1>
 {% if signups_new %}<p class="flash warn"><a href="/admin/signups">{{ signups_new }} volunteer sign-up{{ '' if signups_new == 1 else 's' }}</a> from the website awaiting review.</p>{% endif %}
-{% if not s.adoption_date %}<p class="flash warn">No adoption date is set — the resolution is tabled. The 30-day filing clock starts on adoption (62 O.S. § 868(B)(3)). Set it under <a href="/admin/settings">Settings</a> the day the Board votes.</p>{% endif %}
+{% if not s.adoption_date %}<p class="flash warn">No adoption date is set — the resolution is tabled. The 30-day filing clock starts on adoption (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868(B)(3)</a>). Set it under <a href="/admin/settings">Settings</a> the day the Board votes.</p>{% endif %}
 <div class="tiles">
   <div class="tile"><span class="num">{{ st.collected|int }}</span><span class="lbl">Collected</span></div>
   <div class="tile"><span class="num">{{ st.valid_estimate|int }}</span><span class="lbl">Valid estimate (collected − questionable − rejected)</span></div>

@@ -24,7 +24,7 @@
     <div class="field span2"><label>Notes</label><input name="notes" value="{{ p.notes or '' }}"></div>
   </div>
   <h2>Signature sheets</h2>
-  <p class="help">Counts only — never enter signer names here. A sheet with a bad or missing affidavit/notarization loses every signature on it (34 O.S. § 6.1).</p>
+  <p class="help">Counts only — never enter signer names here. A sheet with a bad or missing affidavit/notarization loses every signature on it (<a class="cite" href="{{ cite_url('34-6.1') }}" rel="noopener" target="_blank">34 O.S. § 6.1</a>).</p>
   <div class="sheets">
   {% for sh in p.sheets %}{% set k = 's' ~ sh.sheet_no ~ '_' %}
   <fieldset class="sheet">
@@ -50,5 +50,5 @@
   <div class="actions sticky"><button class="btn primary">Save pamphlet and all sheets</button></div>
 </form>
 {% if issues %}<h2>Issues on this pamphlet</h2><ul class="plain">{% for i in issues %}<li><a href="/admin/issues/{{ i.id }}">{{ i.number }}</a> {{ i.issue_type or '' }} — {{ i.status }}</li>{% endfor %}</ul>{% endif %}
-<details class="help-block"><summary>Defect codes (34 O.S. § 6.1)</summary><dl>{% for code in defect_codes %}<dt>{{ code }}</dt><dd>{{ defect_text[code] }}.</dd>{% endfor %}</dl></details>
+<details class="help-block"><summary>Defect codes (<a class="cite" href="{{ cite_url('34-6.1') }}" rel="noopener" target="_blank">34 O.S. § 6.1</a>)</summary><dl>{% for code in defect_codes %}<dt>{{ code }}</dt><dd>{{ defect_text[code] }}.</dd>{% endfor %}</dl></details>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% block atitle %}Sign-ups{% endblock %}
 {% block content %}
 <h1>Volunteer sign-ups</h1>
-<p class="small">Submitted on the public Volunteer page. Approving creates a volunteer record; you still verify voter registration and record training there before issuing a pamphlet (34 O.S. § 6).</p>
+<p class="small">Submitted on the public Volunteer page. Approving creates a volunteer record; you still verify voter registration and record training there before issuing a pamphlet (<a class="cite" href="{{ cite_url('34-6') }}" rel="noopener" target="_blank">34 O.S. § 6</a>).</p>
 <nav class="tabs" aria-label="Status">{% for st in statuses %}<a href="/admin/signups?status={{ st }}" {% if status == st %}aria-current="page"{% endif %}>{{ st }} ({{ counts[st] }})</a>{% endfor %}<a href="/admin/signups?status=all" {% if status == 'all' %}aria-current="page"{% endif %}>All</a></nav>
 <div class="tbl"><table>
 <thead><tr><th>Received</th><th>Name</th><th>Contact</th><th>Roles</th><th>Says registered / 18+</th><th>Availability &amp; notes</th><th>Status</th><th></th></tr></thead>

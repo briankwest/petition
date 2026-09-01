@@ -48,7 +48,27 @@ def fmt_time(v):
 
 templates.env.filters.update({"date": fmt_date, "int": fmt_int, "pct": fmt_pct, "tel": tel, "time": fmt_time})
 from toolkit import statutes as _statutes
+from markupsafe import Markup, escape as _escape
 templates.env.globals["cite_url"] = lambda sec: _statutes.html_url(sec) or _statutes.cite_url(sec)
+_CITE_RE = re.compile(r"(\d{2}) O\.S\. § ?(\d+(?:\.\d+)?)((?:\([A-Za-z0-9]{1,3}\))*)")
+_KNOWN = set(_statutes.available())
+
+
+def linkcites(text) -> Markup:
+    """Escape plain text and turn known statute citations into links (help text, flash messages)."""
+    if text is None:
+        return Markup("")
+    s = str(_escape(text))
+    def sub(m):
+        sec = f"{m.group(1)}-{m.group(2)}"
+        if sec not in _KNOWN:
+            return m.group(0)
+        url = _statutes.html_url(sec) or _statutes.cite_url(sec)
+        return f'<a class="cite" href="{url}" rel="noopener" target="_blank">{m.group(0)}</a>'
+    return Markup(_CITE_RE.sub(sub, s))
+
+
+templates.env.filters["linkcites"] = linkcites
 
 
 def render(request: Request, name: str, status_code: int = 200, **ctx):

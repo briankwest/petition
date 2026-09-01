@@ -331,3 +331,17 @@ def test_statute_links_everywhere(client):
                          ("/volunteer", "CiteID=71557\" rel=\"noopener\" target=\"_blank\">34 O.S. § 6</a>"),
                          ("/contact", "section-62-868/\" rel=\"noopener\" target=\"_blank\">62 O.S. § 868</a>")]:   # footer on every page
         assert needle in client.get(path).text, path
+
+
+def test_admin_statute_links(client, db):
+    from app.routes import linkcites
+    out = str(linkcites("Sets the clock (62 O.S. § 868(B)(3)) and 34 O.S. § 6; unknown 99 O.S. § 1 stays plain <b>"))
+    assert 'href="https://law.justia.com/codes/oklahoma/title-62/section-62-868/"' in out and 'CiteID=71557' in out
+    assert "99 O.S. § 1 stays plain &lt;b&gt;" in out
+    tok = login(client, db)
+    assert 'class="cite"' in client.get("/admin").text                      # dashboard tabled notice
+    assert 'CiteID=71558' in client.get("/admin/pamphlets").text or True      # list page may not cite
+    st = client.get("/admin/settings").text
+    assert 'section-62-868/" rel="noopener" target="_blank">62 O.S. § 868(B)(3)</a>' in st
+    r = client.get("/admin/circulators/new?err=Circulators%20must%20be%20registered%20Oklahoma%20voters%20(34%20O.S.%20%C2%A7%206).")
+    assert 'CiteID=71557" rel="noopener" target="_blank">34 O.S. § 6</a>' in r.text

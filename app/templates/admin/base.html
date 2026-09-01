@@ -15,7 +15,7 @@
     {% if user %}<form class="logout" method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><span class="small">{{ user.username }} ({{ user.role }})</span><button class="linklike">Sign out</button></form>{% endif %}
   </aside>
   <main id="main" class="admin-main">
-    {% if msg %}<p class="flash ok">{{ msg }}</p>{% endif %}{% if err %}<p class="flash err">{{ err }}</p>{% endif %}
+    {% if msg %}<p class="flash ok">{{ msg|linkcites }}</p>{% endif %}{% if err %}<p class="flash err">{{ err|linkcites }}</p>{% endif %}
     {% block content %}{% endblock %}
   </main>
 </div>
