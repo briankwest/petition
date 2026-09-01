@@ -2,13 +2,13 @@
 {% block title %}Am I registered? · {{ site_title }}{% endblock %}
 {% block content %}
 <h1>Am I registered to sign?</h1>
-<p class="lede">Only <strong>registered voters who live in {{ petition.county }} County</strong> may sign this petition (62 O.S. § 868(B)(2); 34 O.S. § 23). Check before you come — it takes two minutes.</p>
+<p class="lede">Only <strong>registered voters who live in {{ petition.county }} County</strong> may sign this petition (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868(B)(2)</a>; <a class="cite" href="{{ cite_url('34-23') }}" rel="noopener" target="_blank">34 O.S. § 23</a>). Check before you come — it takes two minutes.</p>
 <div class="callout">
   <p><a class="cta" href="{{ petition.links.voter_portal }}" rel="noopener">Open the OK Voter Portal</a></p>
   <p>The portal is run by the Oklahoma State Election Board. It asks for your name as registered and your date of birth. We never see what you enter.</p>
 </div>
 <h2>What the signature sheet asks for</h2>
-<p>Oklahoma verifies a signature by matching these five fields against your voter registration (34 O.S. § 1). Four of the five must match, so use exactly what is on your registration:</p>
+<p>Oklahoma verifies a signature by matching these five fields against your voter registration (<a class="cite" href="{{ cite_url('34-1') }}" rel="noopener" target="_blank">34 O.S. § 1</a>). Four of the five must match, so use exactly what is on your registration:</p>
 <ol class="steps">
   <li>Legal first name</li><li>Legal last name</li><li>ZIP code</li><li>House number</li><li>Birth month and day (MM/DD — not the year)</li>
 </ol>

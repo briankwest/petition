@@ -323,3 +323,11 @@ def test_faq_inline_statute_links(client):
     assert body.count('class="cite"') >= 8
     assert '<a class="cite" href="https://www.oscn.net/applications/oscn/DeliverDocument.asp?CiteID=71574" rel="noopener" target="_blank">34 O.S. § 23</a>' in body
     assert 'href="https://law.justia.com/codes/oklahoma/title-62/section-62-868/" rel="noopener" target="_blank">62 O.S. § 868(H)</a>' in body
+
+
+def test_statute_links_everywhere(client):
+    for path, needle in [("/", "CiteID=71574\" rel=\"noopener\" target=\"_blank\">34 O.S. § 23</a>"),
+                         ("/registered", "section-62-868/\" rel=\"noopener\" target=\"_blank\">62 O.S. § 868(B)(2)</a>"),
+                         ("/volunteer", "CiteID=71557\" rel=\"noopener\" target=\"_blank\">34 O.S. § 6</a>"),
+                         ("/contact", "section-62-868/\" rel=\"noopener\" target=\"_blank\">62 O.S. § 868</a>")]:   # footer on every page
+        assert needle in client.get(path).text, path

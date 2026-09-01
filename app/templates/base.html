@@ -61,7 +61,7 @@
 {% block content %}{% endblock %}
 </main>
 <footer class="site-foot"><div class="wrap">
-  <p>This site gives information about a referendum petition under the Oklahoma Local Development Act (62 O.S. § 868). Signing a petition only supports putting the question to a public vote. Signatures are collected only on official, filed paper pamphlets — never online.</p>
+  <p>This site gives information about a referendum petition under the Oklahoma Local Development Act (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>). Signing a petition only supports putting the question to a public vote. Signatures are collected only on official, filed paper pamphlets — never online.</p>
   <p class="small">No voter information is collected on this site. Registration lookups go directly to the <a href="{{ petition.links.voter_portal }}" rel="noopener">Oklahoma State Election Board's OK Voter Portal</a>. {% if user %}<a href="/admin">Admin</a>{% else %}<a href="/admin/login">Staff sign-in</a>{% endif %}</p>
 </div></footer>
 {% endblock %}

@@ -47,6 +47,8 @@ def fmt_time(v):
 
 
 templates.env.filters.update({"date": fmt_date, "int": fmt_int, "pct": fmt_pct, "tel": tel, "time": fmt_time})
+from toolkit import statutes as _statutes
+templates.env.globals["cite_url"] = lambda sec: _statutes.html_url(sec) or _statutes.cite_url(sec)
 
 
 def render(request: Request, name: str, status_code: int = 200, **ctx):
