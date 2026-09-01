@@ -62,5 +62,7 @@ def render(request: Request, name: str, status_code: int = 200, **ctx):
     s = ctx.get("s")
     base["site_title"] = (s.raw("site_title") if s is not None else None) or DEFAULTS["site_title"]
     base["site_eyebrow"] = (s.raw("site_eyebrow") if s is not None else None) or f"{petition.county} County, {petition.state}"
+    base["site_description"] = (s.raw("site_description") if s is not None else None) or DEFAULTS["site_description"]
+    base["canonical_host"] = os.environ.get("CANONICAL_HOST") or petition.canonical_host
     base.update(ctx)
     return templates.TemplateResponse(request=request, name=name, context=base, status_code=status_code)

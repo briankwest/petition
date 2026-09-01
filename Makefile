@@ -2,7 +2,7 @@
 PY ?= .venv/bin/python
 TRACKER ?= Petition Captain Master Tracker.xlsx
 
-.PHONY: venv docs docs-final check-docs xlsx xlsx-import check-xlsx fetch-precincts geocode map check-geo test check final freeze app-dev seed clean
+.PHONY: venv docs docs-final check-docs xlsx xlsx-import check-xlsx fetch-precincts geocode icons map check-geo test check final freeze app-dev seed clean
 
 venv:
 	python3 -m venv .venv && .venv/bin/pip install -U pip && .venv/bin/pip install -e ".[dev]"
@@ -25,6 +25,8 @@ fetch-precincts: ## refresh precinct/county/district GeoJSON from the OU CSA Arc
 	$(PY) -m toolkit.geo.fetch
 geocode:         ## fill lat/lon for signing locations via the Census geocoder
 	$(PY) -m toolkit.geo.geocode
+icons:           ## regenerate favicon set + Open Graph share image (app/static)
+	$(PY) -m toolkit.branding
 map:             ## standalone interactive map + legal-size wall map -> output/map
 	$(PY) -m toolkit.geo.build_map --out output/map
 check-geo:

@@ -85,6 +85,12 @@ def create_app(engine=None) -> FastAPI:
             request.state.session.pop("_dirty", None)
         return response
 
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon():
+        from fastapi.responses import FileResponse
+        return FileResponse(str(ROOT / "app" / "static" / "icons" / "favicon.ico"), media_type="image/x-icon",
+                            headers={"Cache-Control": "public, max-age=86400"})
+
     @app.get("/healthz")
     def healthz():
         return JSONResponse({"ok": True, "canonical_host": app.state.canonical_host})

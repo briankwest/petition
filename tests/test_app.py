@@ -289,3 +289,14 @@ def test_admin_documents_page(client, db, tmp_path, monkeypatch):
     dl = client.get("/admin/documents/file/01-petition-pamphlet.pdf?download=1"); assert "attachment" in dl.headers["content-disposition"]
     assert client.get("/admin/documents/file/../../pyproject.toml").status_code in (404, 400)
     assert client.get("/admin/documents/view/01-petition-pamphlet.pdf").status_code == 200
+
+
+def test_favicon_and_opengraph(client):
+    ico = client.get("/favicon.ico"); assert ico.status_code == 200 and ico.headers["content-type"].startswith("image/x-icon")
+    assert client.get("/static/icons/apple-touch-icon.png").status_code == 200
+    assert client.get("/static/og.png").status_code == 200
+    html = client.get("/sign").text
+    assert '<meta property="og:title" content="Where to sign · Referendum Petition">' in html
+    assert '<meta property="og:image" content="https://petition.mcalester.net/static/og.png">' in html
+    assert '<link rel="canonical" href="https://petition.mcalester.net/sign">' in html
+    assert '<meta name="twitter:card" content="summary_large_image">' in html and 'rel="manifest"' in html

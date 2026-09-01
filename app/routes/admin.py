@@ -90,6 +90,7 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
 SETTING_FIELDS = [
     ("site_title", "Site title (top of every page)", "text", "Shown in the header and the browser tab. Change it to reuse this site for another petition."),
     ("site_eyebrow", "Site eyebrow (small line above the title)", "text", None),
+    ("site_description", "Site description (search + social previews)", "textarea", "One or two sentences. Used for the meta description and Open Graph / Twitter cards."),
     ("adoption_date", "Resolution adoption date", "date", "Leave blank while the resolution is tabled. Sets the 30-day filing clock (62 O.S. § 868(B)(3))."),
     ("filing_deadline_override", "Filing deadline override", "date", "Only if the Election Board gives a different date in writing."),
     ("election_date", "Election date", "date", "Next general county election after filing (62 O.S. § 868(H)) — confirm with the Election Board."),
