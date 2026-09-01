@@ -1,5 +1,6 @@
 # 62 O.S. § 868 — Initiative and referendum (Local Development Act)
 # Source: https://www.oklegislature.gov/OK_Statutes/CompleteTitles/os62.pdf (pp. 567-569)
+# HTML: https://law.justia.com/codes/oklahoma/title-62/section-62-868/
 # Retrieved: 2026-09-01. Verbatim extract from the Oklahoma Legislature's complete Title 62 PDF.
 
 §62-868. Initiative and referendum.

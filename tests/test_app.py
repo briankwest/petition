@@ -305,3 +305,13 @@ def test_favicon_and_opengraph(client):
 def test_mobile_nav_toggle_present(client):
     html = client.get("/").text
     assert 'class="nav-toggle"' in html and 'aria-controls="site-nav"' in html and 'id="site-nav"' in html
+
+
+def test_share_bar_and_statute_html_links(client):
+    html = client.get("/").text
+    assert "facebook.com/sharer/sharer.php?u=https%3A%2F%2Fpetition.mcalester.net%2F" in html
+    assert "twitter.com/intent/tweet" in html and "nextdoor.com/sharekit" in html and "wa.me/?text=" in html and 'href="sms:' in html and 'href="mailto:' in html and 'data-copy="https://petition.mcalester.net/"' in html
+    from toolkit import statutes
+    assert statutes.html_url("62-868") == "https://law.justia.com/codes/oklahoma/title-62/section-62-868/"
+    assert statutes.html_url("34-6").startswith("https://www.oscn.net/")
+    assert "law.justia.com/codes/oklahoma/title-62/section-62-868" in client.get("/faq").text and "os62.pdf" not in client.get("/faq").text

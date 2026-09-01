@@ -17,6 +17,7 @@ def _read(sec: str) -> tuple[dict, str]:
     for line in txt.splitlines():
         if line.startswith("# ") and not body:
             if line.startswith("# Source:"): head["source"] = line[len("# Source:"):].strip()
+            elif line.startswith("# HTML:"): head["html"] = line[len("# HTML:"):].strip()
             elif line.startswith("# Retrieved:"): head["retrieved"] = line[len("# Retrieved:"):].strip()
             else: head["title"] = line[2:].strip()
         else:
@@ -37,6 +38,21 @@ def cite(sec: str) -> str:
 def cite_url(sec: str) -> str:
     src = header(sec).get("source", "")
     return src.split(" ")[0] if src else ""
+
+def html_url(sec: str) -> str:
+    """A human-readable web page for the section (OSCN for Title 34; Justia for § 868, whose
+    official text is only published as a PDF)."""
+    h = header(sec)
+    if h.get("html"):
+        return h["html"].split(" ")[0]
+    src = cite_url(sec)
+    return src if not src.lower().endswith(".pdf") else ""
+
+
+def official_url(sec: str) -> str:
+    """The official source we quoted from (may be a PDF)."""
+    return cite_url(sec)
+
 
 def available() -> list[str]:
     return sorted(p.stem for p in DIR.glob("*.txt"))

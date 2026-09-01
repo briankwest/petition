@@ -187,3 +187,11 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
   .tiles{grid-template-columns:1fr 1fr}
 }
 @media (max-width:400px){.tiles{grid-template-columns:1fr}}
+
+/* share bar (home) */
+.share{margin-top:36px;padding-top:24px;border-top:1px solid var(--rule)}.share h2{margin-top:0}
+.share-row{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+.share-btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:999px;padding:9px 16px 9px 12px;text-decoration:none;min-height:44px;cursor:pointer;transition:border-color .15s,background .15s}
+.share-btn:hover,.share-btn:focus-visible{border-color:var(--accent);background:var(--accent-soft)}
+.share-btn svg{width:20px;height:20px;fill:var(--accent);flex:none}
+@media (max-width:760px){.share-row{gap:8px}.share-btn{padding:8px 12px 8px 10px;font-size:14px}}

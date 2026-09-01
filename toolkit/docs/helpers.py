@@ -67,14 +67,17 @@ def source_notes(p: Petition) -> list[dict]:
     for sec in p.statutes:
         h = statutes.header(sec)
         out.append({"cite": h["cite"], "title": h.get("title", "").split("—", 1)[-1].strip(),
-                    "url": statutes.cite_url(sec), "retrieved": h.get("retrieved", "").split(" ")[0],
+                    "url": statutes.html_url(sec) or statutes.cite_url(sec), "official": statutes.official_url(sec),
+                    "retrieved": h.get("retrieved", "").split(" ")[0],
                     "summary": STATUTE_SUMMARY.get(sec, "")})
     return out
 
 
 def source_notes_html(p: Petition) -> str:
     items = "".join(f'<p class="note"><strong>{n["cite"]} — {n["title"]}.</strong> {n["summary"]} '
-                    f'<span class="url">{n["url"]}</span> (retrieved {n["retrieved"]})</p>' for n in source_notes(p))
+                    f'<span class="url">{n["url"]}</span>'
+                    + (f' · official text: <span class="url">{n["official"]}</span>' if n["official"] != n["url"] else "")
+                    + f' (retrieved {n["retrieved"]})</p>' for n in source_notes(p))
     return f'<div class="source-notes">{items}</div>'
 
 

@@ -63,7 +63,7 @@ def contact(request: Request, db: Session = Depends(get_db)):
 @router.get("/faq")
 def faq(request: Request, db: Session = Depends(get_db)):
     return render(request, "public/faq.html", s=Settings(db), exclusions=statutes.exclusions(),
-                  five=statutes.FIVE_DATA_POINTS, cites={k: statutes.cite_url(k) for k in ["62-868", "34-1", "34-3", "34-6", "34-6.1", "34-23"]})
+                  five=statutes.FIVE_DATA_POINTS, cites={k: (statutes.html_url(k) or statutes.cite_url(k)) for k in ["62-868", "34-1", "34-3", "34-6", "34-6.1", "34-23"]})
 
 
 # ---- volunteer sign-up: no CAPTCHA; honeypot + signed timestamp + per-IP limit ----
