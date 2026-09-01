@@ -145,5 +145,4 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
 .tabs{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 14px;font-size:14px}.tabs a{text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}.tabs a[aria-current=page]{border-bottom-color:var(--gold);font-weight:600}
 .inline-form{display:inline-block;margin:0 6px 6px 0}.actions-cell{white-space:nowrap}
 
-.site-nav a.nav-cta{color:var(--accent-deep);font-weight:600}
 .volunteer-callout{margin-top:32px}.volunteer-callout h2{margin-top:0}

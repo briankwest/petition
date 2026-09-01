@@ -31,7 +31,7 @@
       <a href="/registered" {% if path == '/registered' %}aria-current="page"{% endif %}>Am I registered?</a>
       <a href="/contact" {% if path == '/contact' %}aria-current="page"{% endif %}>Who to call</a>
       <a href="/faq" {% if path == '/faq' %}aria-current="page"{% endif %}>Questions</a>
-      <a href="/volunteer" class="nav-cta" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
+      <a href="/volunteer" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
     </nav>
   </div>
 </header>
