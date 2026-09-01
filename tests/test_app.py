@@ -311,6 +311,11 @@ def test_share_bar_and_statute_html_links(client):
     html = client.get("/").text
     assert "facebook.com/sharer/sharer.php?u=https%3A//petition.mcalester.net/" in html
     assert "twitter.com/intent/tweet" in html and "nextdoor.com/sharekit" in html and "wa.me/?text=" in html and 'href="sms:' in html and 'href="mailto:' in html and 'data-copy="https://petition.mcalester.net/"' in html
+    import re as _re
+    for net in ("twitter.com/intent/tweet", "nextdoor.com/sharekit", "wa.me/?text=", 'href="sms:', 'href="mailto:', "facebook.com/sharer"):
+        href = _re.search(r'href="([^"]*' + _re.escape(net.replace('href="', '')) + r'[^"]*)"', html).group(1)
+        assert "petition.mcalester.net%2Fvolunteer" in href or "petition.mcalester.net/volunteer" in href, net   # every share carries the volunteer CTA
+    assert 'class="share-btn share-volunteer" href="/volunteer"' in html
     from toolkit import statutes
     assert statutes.html_url("62-868") == "https://law.justia.com/codes/oklahoma/title-62/section-62-868/"
     assert statutes.html_url("34-6").startswith("https://www.oscn.net/")
