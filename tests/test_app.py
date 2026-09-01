@@ -526,12 +526,22 @@ def test_delete_build(client, db, monkeypatch):
     b3 = m.DocumentBuild(kind="draft", status="running", built_by="captain")
     db.add_all([b1, b2, b3]); db.flush()
     db.add(m.DocumentFile(build_id=b1.id, name="x.pdf", pages=1, bytes_len=3, sha256="0"*64, content=b"pdf")); db.commit()
+    id1, id2, id3 = b1.id, b2.id, b3.id
     page = client.get("/admin/documents").text
-    assert f"/admin/documents/build/{b1.id}/delete" in page and f"/admin/documents/build/{b2.id}/delete" not in page and f"/admin/documents/build/{b3.id}/delete" not in page
-    r = client.post(f"/admin/documents/build/{b1.id}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert f"/admin/documents/build/{id1}/delete" in page and f"/admin/documents/build/{id2}/delete" not in page and f"/admin/documents/build/{id3}/delete" not in page
+    r = client.post(f"/admin/documents/build/{id1}/delete", data={"csrf": tok}, follow_redirects=False)
     assert r.status_code == 303 and "deleted" in r.headers["location"]
-    assert db.get(m.DocumentBuild, b1.id) is None and db.query(m.DocumentFile).filter_by(build_id=b1.id).count() == 0
-    r = client.post(f"/admin/documents/build/{b2.id}/delete", data={"csrf": tok}, follow_redirects=False)
-    assert "FILED" in r.headers["location"] and db.get(m.DocumentBuild, b2.id) is not None
-    r = client.post(f"/admin/documents/build/{b3.id}/delete", data={"csrf": tok}, follow_redirects=False)
+    db.expire_all()
+    assert db.get(m.DocumentBuild, id1) is None and db.query(m.DocumentFile).filter_by(build_id=id1).count() == 0
+    r = client.post(f"/admin/documents/build/{id2}/delete", data={"csrf": tok}, follow_redirects=False)
+    assert "FILED" in r.headers["location"] and db.get(m.DocumentBuild, id2) is not None
+    r = client.post(f"/admin/documents/build/{id3}/delete", data={"csrf": tok}, follow_redirects=False)
     assert "running" in r.headers["location"]
+
+
+def test_build_page_inline_preview(client, db):
+    login(client, db)
+    b = m.DocumentBuild(kind="draft", status="ok", built_by="captain"); db.add(b); db.flush()
+    db.add(m.DocumentFile(build_id=b.id, name="01-petition-pamphlet.pdf", pages=1, bytes_len=3, sha256="0"*64, content=b"pdf")); db.commit()
+    page = client.get(f"/admin/documents/build/{b.id}").text
+    assert 'id="bpv"' in page and 'class="pdf-frame"' in page and f'data-src="/admin/documents/build/{b.id}/01-petition-pamphlet.pdf"' in page

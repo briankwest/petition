@@ -14,8 +14,19 @@
 {% if b.files %}
 <h2>Files</h2>
 <div class="tbl"><table><thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th>SHA-256</th><th></th></tr></thead>
-<tbody>{% for f in b.files %}<tr><td>{{ f.name }}</td><td class="num">{{ f.pages }}</td><td class="num">{{ (f.bytes_len/1024)|round|int }} KB</td><td class="mono small">{{ (f.sha256 or '')[:16] }}…</td>
-<td class="actions-cell"><a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}" target="_blank" rel="noopener">Preview</a> <a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}?download=1">Download</a></td></tr>{% endfor %}</tbody></table></div>
+<tbody>{% for f in b.files %}<tr><td><button class="linklike bpv-link" data-src="/admin/documents/build/{{ b.id }}/{{ f.name }}">{{ f.name }}</button></td><td class="num">{{ f.pages }}</td><td class="num">{{ (f.bytes_len/1024)|round|int }} KB</td><td class="mono small">{{ (f.sha256 or '')[:16] }}…</td>
+<td class="actions-cell"><button class="btn bpv-link" data-src="/admin/documents/build/{{ b.id }}/{{ f.name }}">Preview below</button> <a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}?download=1">Download</a></td></tr>{% endfor %}</tbody></table></div>
+{% if b.files %}
+<h2 id="preview-h">Preview: <span id="bpv-name" class="mono small"></span></h2>
+<iframe class="pdf-frame" id="bpv" title="Document preview"></iframe>
+<script>
+(function(){var fr=document.getElementById('bpv'),nm=document.getElementById('bpv-name');
+function show(src){fr.src=src+'#view=FitH';nm.textContent=src.split('/').pop();}
+document.querySelectorAll('.bpv-link').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.src);document.getElementById('preview-h').scrollIntoView({behavior:'smooth'});});});
+var first=document.querySelector('.bpv-link[data-src*="01-petition-pamphlet"]')||document.querySelector('.bpv-link');
+if(first)show(first.dataset.src);})();
+</script>
+{% endif %}
 {% endif %}
 {% if report %}
 <h2>Checks — {{ report|length - fails|length }} passed, {{ fails|length }} failed</h2>
