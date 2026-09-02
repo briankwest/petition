@@ -68,7 +68,7 @@ def faq(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/iren")
 def iren(request: Request, db: Session = Depends(get_db)):
-    """Unlisted dossier page — reachable only by direct link; nothing on the site links here."""
+    """The IREN File — company dossier; first item in the site nav."""
     return render(request, "public/iren.html", s=Settings(db))
 
 
