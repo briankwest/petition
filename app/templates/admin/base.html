@@ -6,7 +6,8 @@
 <div class="admin-shell">
   <aside class="admin-nav">
     <a class="brand" href="/admin"><span class="brand-eyebrow">Petition Master</span><span class="brand-name">{{ petition.county }} County</span></a>
-    <nav aria-label="Admin">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="admin-menu"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
+    <nav aria-label="Admin" id="admin-menu">
       {% set items = [('/admin','Dashboard'),('/admin/petition','Petition'),('/admin/pamphlets','Pamphlets'),('/admin/circulators','Volunteers'),('/admin/signups','Sign-ups'),('/admin/issues','Issues'),('/admin/events','Events'),('/admin/locations','Locations'),('/admin/contacts','Contacts'),('/admin/qa','Filing QA'),('/admin/records','Records log'),('/admin/documents','Documents'),('/admin/settings','Settings'),('/admin/import','Import / Export')] %}
       {% for href, label in items %}<a href="{{ href }}" {% if path == href or (href != '/admin' and path.startswith(href)) %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
       {% if user and user.role == 'admin' %}<a href="/admin/users" {% if path.startswith('/admin/users') %}aria-current="page"{% endif %}>Users</a>{% endif %}
@@ -19,5 +20,9 @@
     {% block content %}{% endblock %}
   </main>
 </div>
-<script>(function(){var a=document.querySelector('.admin-nav nav a[aria-current="page"]');if(a&&a.scrollIntoView)a.scrollIntoView({block:"nearest",inline:"center"});})();</script>
+<script>
+(function(){var b=document.querySelector('.admin-nav .nav-toggle'),h=document.querySelector('.admin-nav');if(!b||!h)return;
+b.addEventListener('click',function(){var open=h.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');b.lastChild.textContent=open?'Close':'Menu';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){h.classList.remove('open');b.setAttribute('aria-expanded','false');b.lastChild.textContent='Menu';b.focus();}});})();
+</script>
 {% endblock %}
