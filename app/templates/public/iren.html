@@ -1,0 +1,1415 @@
+{% extends "base.html" %}
+{% block title %}The IREN File · {{ site_title }}{% endblock %}
+{% block description %}A fully sourced dossier on IREN Limited — the company behind the proposed Pittsburg County data-center tax abatement: sites, board, voting control, the $9.7bn Microsoft contract and six years of results, drawn from its SEC filings.{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+{% raw %}.irenfile{
+  --paper:#F1F3EF;
+  --surface:#FBFCFA;
+  --surface-sunk:#E8EBE5;
+  --ink:#131A20;
+  --ink-soft:#3A444C;
+  --muted:#646E77;
+  --rule:#D6DBD3;
+  --rule-strong:#B9C0B6;
+  --copper:#A2542C;
+  --copper-wash:#EFE2D9;
+  --st-op:#2C7A66;
+  --st-con:#A9761C;
+  --st-dev:#4A6B8A;
+  --st-plan:#8A8F86;
+  --c-rev:#B0501F;
+  --c-ni:#00795E;
+  --grid:#DDE1DA;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+
+  --measure:66ch;
+  --wrap:1120px;
+}
+.irenfile{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.irenfile ::selection{background:var(--copper-wash);color:var(--ink)}
+.irenfile a{color:var(--copper);text-underline-offset:2px;text-decoration-thickness:1px}
+.irenfile a:focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:2px}
+
+.irenfile .doc{max-width:var(--wrap);margin:0 auto;padding:0 28px 96px}
+.irenfile .measure{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.irenfile .masthead{padding:68px 0 34px;border-bottom:2px solid var(--ink)}
+.irenfile .stamp{
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--copper);display:flex;flex-wrap:wrap;gap:10px 18px;margin:0 0 26px
+}
+.irenfile .stamp span{white-space:nowrap}
+.irenfile .stamp span+span{color:var(--muted)}
+.irenfile h1{
+  font-family:var(--f-display);font-weight:700;font-size:clamp(44px,7.4vw,82px);
+  line-height:.94;letter-spacing:-.028em;margin:0;text-wrap:balance
+}
+.irenfile h1 .sub{display:block;font-weight:500;font-size:clamp(17px,2.1vw,23px);letter-spacing:-.01em;color:var(--muted);margin-top:14px;line-height:1.3}
+.irenfile .dek{margin:26px 0 0;max-width:62ch;font-size:20px;line-height:1.55;color:var(--ink-soft)}
+
+.irenfile .vitals{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:34px
+}
+.irenfile .vital{background:var(--surface);padding:13px 15px 15px}
+.irenfile .vital dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.irenfile .vital dd{margin:0;font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+
+/* ---------- publication statement ---------- */
+.irenfile .disclose{margin-top:22px;border:1px dashed var(--copper);border-radius:2px;padding:14px 16px 6px;background:var(--surface)}
+.irenfile .disclose .d-h{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin:0 0 10px}
+.irenfile .disclose dl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 24px}
+.irenfile .disclose dl div{display:flex;flex-direction:column;gap:2px;padding-bottom:8px}
+.irenfile .disclose dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.irenfile .disclose dd{margin:0;font-size:14.5px;line-height:1.45}
+.irenfile .todo{font-family:var(--f-mono);font-size:12px;background:var(--copper-wash);color:var(--copper);padding:2px 6px;border-radius:2px}
+.irenfile footer h3{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.02em;color:var(--ink);margin:0 0 6px;text-transform:uppercase}
+.irenfile footer p+h3{margin-top:16px}
+
+/* ---------- sections ---------- */
+.irenfile section{padding-top:62px}
+.irenfile .sec-head{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--rule-strong);padding-bottom:10px;margin-bottom:26px;flex-wrap:wrap}
+.irenfile .sec-head .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);flex:none}
+.irenfile .sec-head h2{font-family:var(--f-display);font-weight:600;font-size:clamp(24px,3vw,31px);letter-spacing:-.022em;margin:0;line-height:1.15;text-wrap:balance}
+.irenfile .sec-head .note{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap}
+
+.irenfile p{margin:0 0 17px}
+.irenfile .lede-p{font-size:19px;color:var(--ink-soft)}
+.irenfile h3{font-family:var(--f-display);font-weight:600;font-size:17px;letter-spacing:-.008em;margin:34px 0 12px;color:var(--ink)}
+.irenfile h3:first-child{margin-top:0}
+.irenfile strong{font-weight:500;color:var(--ink)}
+.irenfile em.term{font-style:normal;font-family:var(--f-mono);font-size:.86em;background:var(--surface-sunk);padding:1px 5px;border-radius:2px}
+
+/* ---------- metric strip ---------- */
+.irenfile .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:26px 30px;margin:30px 0 6px}
+.irenfile .metric{border-top:2px solid var(--ink);padding-top:11px}
+.irenfile .metric .fig{font-family:var(--f-display);font-weight:700;font-size:31px;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;display:block}
+.irenfile .metric .fig .u{font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--muted);margin-left:2px}
+.irenfile .metric .cap{display:block;margin-top:8px;font-family:var(--f-mono);font-size:11px;line-height:1.45;letter-spacing:.03em;color:var(--muted)}
+.irenfile .metric.neg .fig{color:var(--copper)}
+
+/* ---------- tables ---------- */
+.irenfile .scroll{overflow-x:auto;margin:22px 0;border:1px solid var(--rule)}
+.irenfile table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
+.irenfile caption{text-align:left;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--muted);padding:0 0 9px}
+.irenfile th,.irenfile td{padding:10px 15px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.irenfile thead th{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);font-weight:400;background:var(--surface-sunk);white-space:nowrap
+}
+.irenfile tbody td{font-size:15.5px;line-height:1.5}
+.irenfile tbody tr:last-child td{border-bottom:0}
+.irenfile td.num,.irenfile th.num{text-align:right;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.irenfile tr.total td{border-top:2px solid var(--ink);font-weight:500;background:var(--surface-sunk)}
+.irenfile .key{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);letter-spacing:.02em;white-space:nowrap}
+
+/* ---------- capacity ladder ---------- */
+.irenfile .ladder{margin:8px 0 0;border-top:1px solid var(--rule)}
+.irenfile .grp{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);
+     display:flex;justify-content:space-between;gap:14px;padding:20px 0 8px;border-bottom:1px solid var(--rule)}
+.irenfile .grp .gsum{color:var(--muted);font-variant-numeric:tabular-nums}
+.irenfile .site{
+  display:grid;grid-template-columns:minmax(150px,1.15fr) minmax(120px,2.6fr) 82px 110px;
+  gap:16px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule)
+}
+.irenfile .site-name{font-family:var(--f-display);font-weight:600;font-size:15.5px;letter-spacing:-.01em;display:block}
+.irenfile .site-loc{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.irenfile .track{height:13px;background:var(--surface-sunk);position:relative;border-radius:1px}
+.irenfile .bar{position:absolute;inset:0 auto 0 0;min-width:3px;border-radius:1px}
+.irenfile .bar--op{background:var(--st-op)}
+.irenfile .bar--con{background:var(--st-con)}
+.irenfile .bar--dev{background:var(--st-dev)}
+.irenfile .bar--plan{background:var(--st-plan)}
+.irenfile .site-mw{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.irenfile .site-mw .u{color:var(--muted);font-size:11px;margin-left:3px}
+.irenfile .status{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        display:inline-block;padding:3px 7px;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
+.irenfile .s-op{color:var(--st-op)}
+.irenfile .s-con{color:var(--st-con)}
+.irenfile .s-dev{color:var(--st-dev)}
+.irenfile .s-plan{color:var(--st-plan)}
+.irenfile .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:20px 0 4px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.irenfile .legend b{display:inline-block;width:22px;height:9px;border-radius:1px;margin-right:7px;vertical-align:middle}
+
+/* ---------- chart ---------- */
+.irenfile .figure{margin:26px 0 6px;position:relative}
+.irenfile .figure .cap-t{font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:-.01em;margin:0 0 3px}
+.irenfile .figure .cap-s{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin:0 0 16px;letter-spacing:.02em}
+.irenfile .chart-wrap{overflow-x:auto}
+.irenfile svg.chart{display:block;width:100%;min-width:560px;height:auto}
+.irenfile svg.chart .gl{stroke:var(--grid);stroke-width:1}
+.irenfile svg.chart .g0{stroke:var(--ink-soft);stroke-width:1.5}
+.irenfile svg.chart .yl,.irenfile svg.chart .xl{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.irenfile svg.chart .xl{font-size:11px;fill:var(--ink-soft)}
+.irenfile svg.chart .dl{font-family:var(--f-mono);font-size:11px;fill:var(--ink);font-weight:500}
+.irenfile svg.chart .b{stroke:var(--surface);stroke-width:1}
+.irenfile svg.chart .b--rev{fill:var(--c-rev)}
+.irenfile svg.chart .b--ni{fill:var(--c-ni)}
+.irenfile svg.chart .b:hover{filter:brightness(1.12)}
+.irenfile .ckey{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 14px;font-family:var(--f-mono);font-size:11.5px;color:var(--ink-soft)}
+.irenfile .ckey b{display:inline-block;width:22px;height:10px;border-radius:2px;margin-right:8px;vertical-align:middle}
+.irenfile .tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-118%);
+  background:var(--ink);color:var(--paper);font-family:var(--f-mono);font-size:11px;line-height:1.5;
+  padding:6px 9px;border-radius:3px;white-space:nowrap;z-index:5;transition:opacity .12s
+}
+.irenfile .tip.on{opacity:1}
+
+/* ---------- roster ---------- */
+.irenfile .roster{border-top:2px solid var(--ink)}
+.irenfile .person{
+  display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,2.15fr);
+  gap:12px 34px;padding:24px 0;border-bottom:1px solid var(--rule)
+}
+.irenfile .person-id .nm{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em;line-height:1.15;margin:0 0 5px;text-wrap:balance}
+.irenfile .person-id .rl{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;color:var(--copper);line-height:1.5;display:block;margin-bottom:10px}
+.irenfile .facts{margin:0;font-family:var(--f-mono);font-size:11px;line-height:1.75;color:var(--muted)}
+.irenfile .facts div{display:flex;gap:8px}
+.irenfile .facts dt{flex:none;width:74px;letter-spacing:.06em;text-transform:uppercase;font-size:10px;padding-top:2px}
+.irenfile .facts dd{margin:0;color:var(--ink-soft)}
+.irenfile .person-bio p{font-size:15.5px;line-height:1.58;margin:0 0 11px}
+.irenfile .person-bio p:last-child{margin-bottom:0}
+.irenfile .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.irenfile .chip{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+      padding:3px 8px;border-radius:2px;background:var(--surface-sunk);color:var(--ink-soft)}
+.irenfile .chip.lead{background:var(--copper-wash);color:var(--copper)}
+
+/* ---------- callout ---------- */
+.irenfile .callout{
+  background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--copper);
+  padding:20px 22px;margin:26px 0
+}
+.irenfile .callout h3{margin-top:0}
+.irenfile .callout p:last-child{margin-bottom:0}
+.irenfile .callout .measure{max-width:64ch}
+
+.irenfile .checks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
+.irenfile .checks li{
+  display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;
+  font-size:15.5px;line-height:1.5
+}
+.irenfile .checks .mk{font-family:var(--f-mono);font-size:11px;color:var(--st-op);letter-spacing:.08em;padding-top:3px;white-space:nowrap}
+
+.irenfile ul.plain{margin:0 0 17px;padding-left:20px}
+.irenfile ul.plain li{margin-bottom:7px}
+
+/* ---------- citations ---------- */
+.irenfile sup.c{font-family:var(--f-mono);font-size:9.5px;font-weight:500;line-height:0;vertical-align:super;margin-left:2px;white-space:nowrap}
+.irenfile sup.c a{color:var(--copper);text-decoration:none;padding:0 1px;border-radius:2px}
+.irenfile sup.c a:hover{background:var(--copper-wash);text-decoration:underline}
+.irenfile sup.c a:focus-visible{outline:2px solid var(--copper);outline-offset:1px}
+.irenfile sup.c+sup.c::before{content:",";color:var(--copper);font-size:9.5px}
+.irenfile caption sup.c a,.irenfile th sup.c a{color:var(--muted)}
+
+/* ---------- references ---------- */
+.irenfile .refs{list-style:none;margin:6px 0 0;padding:0;counter-reset:none;border-top:2px solid var(--ink)}
+.irenfile .refs li{
+  display:grid;grid-template-columns:38px minmax(0,1fr);gap:4px 14px;
+  padding:13px 0;border-bottom:1px solid var(--rule)
+}
+.irenfile .refs li:target{background:var(--copper-wash);box-shadow:0 0 0 8px var(--copper-wash)}
+.irenfile .refs .n{font-family:var(--f-mono);font-size:12px;color:var(--copper);font-weight:500;padding-top:2px}
+.irenfile .refs .t{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:-.01em;margin:0 0 4px}
+.irenfile .refs .m{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);line-height:1.65;letter-spacing:.02em;margin:0 0 5px;word-break:break-word}
+.irenfile .refs .u{font-family:var(--f-mono);font-size:10.5px;line-height:1.5;word-break:break-all}
+.irenfile .refs .used{font-size:14px;line-height:1.5;color:var(--ink-soft);margin:0 0 5px}
+
+/* ---------- gaps ---------- */
+.irenfile .gaps{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--rule)}
+.irenfile .gaps li{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,2fr);gap:6px 26px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.irenfile .gaps .q{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:-.01em}
+.irenfile .gaps .a{font-size:15px;line-height:1.55;color:var(--ink-soft)}
+.irenfile .gaps .a em{font-style:normal;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:3px}
+
+/* ---------- sources ---------- */
+.irenfile .sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 30px;margin-top:6px}
+.irenfile .sources a{display:block;font-family:var(--f-mono);font-size:12px;line-height:1.5;padding:7px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.irenfile .sources a:hover{color:var(--ink)}
+.irenfile .sources a span{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;margin-top:3px}
+
+.irenfile footer{margin-top:60px;padding-top:22px;border-top:2px solid var(--ink);font-family:var(--f-mono);font-size:11px;line-height:1.7;color:var(--muted)}
+
+@media (max-width:720px){
+  .irenfile{font-size:16px}
+  .irenfile .doc{padding:0 18px 64px}
+  .irenfile .site{grid-template-columns:1fr auto;gap:6px 12px}
+  .irenfile .site .track{grid-column:1/-1;order:3}
+  .irenfile .site-mw{order:2;text-align:right}
+  .irenfile .site-status{order:4;grid-column:1/-1}
+  .irenfile .person{grid-template-columns:1fr;gap:16px}
+  .irenfile .facts dt{width:66px}
+  .irenfile .gaps li{grid-template-columns:1fr;gap:4px}
+  .irenfile .refs li{grid-template-columns:26px minmax(0,1fr);gap:4px 10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .irenfile *{animation:none!important;transition:none!important}
+}
+/* resets against site.css globals + fit inside main.wrap */
+.irenfile .bar{height:auto;background:none;border:0;margin:0;border-radius:1px;overflow:visible}
+.irenfile ul.plain{list-style:disc}
+.irenfile ul.plain li{padding:0;border-bottom:0}
+.irenfile .callout{border-radius:0}
+.irenfile .doc{padding:0 0 72px;max-width:none}
+.irenfile .masthead{padding-top:26px}
+{% endraw %}
+</style>
+{% endblock %}
+{% block content %}
+<div class="irenfile">
+{% raw %}<div class="doc">
+
+<header class="masthead">
+  <p class="stamp">
+    <span>Company Dossier</span>
+    <span>Compiled 2 September 2026</span>
+    <span>20 primary sources · 112 inline citations</span>
+  </p>
+  <h1>IREN Limited
+    <span class="sub">Nasdaq: IREN · formerly Iris Energy Limited · ACN 629 842 799</span>
+  </h1>
+  <p class="dek">An Australian-incorporated, Sydney-headquartered operator of grid-connected data centers, mid-way through converting a 23 EH/s bitcoin mining fleet into a vertically integrated AI cloud platform spanning four countries and roughly 5.6 gigawatts of announced power. This file covers the corporate record, the board, the site portfolio, six years of results, and a line-by-line test of the $9.7bn Microsoft contract against the executed agreement.</p>
+
+  <dl class="vitals">
+    <div class="vital"><dt>Incorporation</dt><dd>Australia</dd></div>
+    <div class="vital"><dt>Listed since</dt><dd>17 Nov 2021</dd></div>
+    <div class="vital"><dt>SEC CIK</dt><dd>0001878848</dd></div>
+    <div class="vital"><dt>Fiscal year end</dt><dd>30 June</dd></div>
+    <div class="vital"><dt>Employees</dt><dd>685</dd></div>
+    <div class="vital"><dt>Announced power</dt><dd>5,610 MW</dd></div>
+  </dl>
+
+  <div class="disclose">
+    <p class="d-h">Publication statement — complete every bracketed field before this document leaves your hands</p>
+    <dl>
+      <div><dt>Published by</dt><dd><span class="todo">[PUBLISHER / AUTHOR NAME]</span></dd></div>
+      <div><dt>Author's position in IREN securities</dt><dd><span class="todo">[NONE · LONG · SHORT — state one, and any intention to trade within 30 days]</span></dd></div>
+      <div><dt>Company invited to comment</dt><dd><span class="todo">[IREN was / was not contacted on DATE · response: ...]</span></dd></div>
+      <div><dt>Basis</dt><dd>Public SEC filings and company disclosures only, cited throughout. No non-public information was received or relied upon.</dd></div>
+      <div><dt>Data cut-off</dt><dd>2 September 2026 · FY2026 proxy not yet filed</dd></div>
+      <div><dt>Corrections</dt><dd><span class="todo">[CONTACT ADDRESS]</span> · errors of fact will be corrected and the correction noted</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section id="business">
+  <div class="sec-head">
+    <span class="tag">01 / Business</span>
+    <h2>What the company actually does</h2>
+    <span class="note">FY26 · year ended 30 Jun 2026</span>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">IREN describes itself as a vertically integrated AI Cloud Services platform that owns all three layers of the stack: the <strong>data center layer</strong> (land, power, substations, buildings, cooling), the <strong>compute layer</strong> (GPUs, CPUs, storage, servers, networking), and the <strong>software layer</strong> (managed services and enterprise support, acquired wholesale with Mirantis in August 2026).<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <p>The distinguishing structural choice is grid-connected power rather than behind-the-meter generation. IREN buys land and secures transmission interconnection directly — regulated tariffs from BC Hydro in British Columbia and Public Service Company of Oklahoma in Oklahoma, wholesale market exposure through ERCOT in Texas — and builds the substations itself. Every operating site has run on 100% renewable energy since commencement, roughly 98% from clean generation in British Columbia with the balance covered by renewable energy certificates.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <p>The company is simultaneously exiting the business that built it. As of 30 June 2026 installed bitcoin mining capacity was 23.2 EH/s occupying about <strong>380 MW</strong>, against just <strong>40 MW</strong> of operating AI cloud capacity. IREN began decommissioning miners during FY26 and aims to substantially complete the transition by 31 December 2026. It liquidates mined bitcoin daily and held none on its balance sheet at year end.<sup class="c"><a href="#r1">1</a></sup></p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <span class="fig">707.0<span class="u">m</span></span>
+      <span class="cap">Total revenue FY26<br>USD · from $501.0m in FY25</span>
+    </div>
+    <div class="metric">
+      <span class="fig">128.8<span class="u">m</span></span>
+      <span class="cap">AI Cloud revenue FY26<br>≈8× the $16.4m booked in FY25</span>
+    </div>
+    <div class="metric neg">
+      <span class="fig">(702.6)<span class="u">m</span></span>
+      <span class="cap">Net loss FY26<br>incl. $638.8m non-cash impairment</span>
+    </div>
+    <div class="metric">
+      <span class="fig">245.7<span class="u">m</span></span>
+      <span class="cap">Adjusted EBITDA FY26<br>non-GAAP · $269.7m in FY25</span>
+    </div>
+    <div class="metric">
+      <span class="fig">5.90<span class="u">bn</span></span>
+      <span class="cap">Cash &amp; equivalents<br>plus $1.72bn restricted cash</span>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Revenue mix and results, US$ millions, per the FY26 Form 10-K and results release<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup></caption>
+      <thead>
+        <tr><th>Line</th><th class="num">Q4 FY26</th><th class="num">Q3 FY26</th><th class="num">FY26</th><th class="num">FY25</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>AI Cloud Services revenue</td><td class="num">70.5</td><td class="num">33.6</td><td class="num">128.8</td><td class="num">16.4</td></tr>
+        <tr><td>Bitcoin mining revenue</td><td class="num">66.7</td><td class="num">111.2</td><td class="num">578.2</td><td class="num">484.6</td></tr>
+        <tr class="total"><td>Total revenue</td><td class="num">137.2</td><td class="num">144.8</td><td class="num">707.0</td><td class="num">501.0</td></tr>
+        <tr><td>Net income (loss)</td><td class="num">(684.0)</td><td class="num">(247.8)</td><td class="num">(702.6)</td><td class="num">86.9</td></tr>
+        <tr><td>Adjusted EBITDA <span class="key">non-GAAP</span></td><td class="num">19.2</td><td class="num">59.5</td><td class="num">245.7</td><td class="num">269.7</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure"><em class="term">Note</em> The FY26 loss is dominated by impairments on decommissioned mining hardware — $450.4m of the $638.8m full-year charge landed in Q4 alone — not by operating deterioration. Q4 Adjusted EBITDA also fell on hiring and platform investment running ahead of the AI revenue ramp.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup></p>
+</section>
+
+<section id="portfolio">
+  <div class="sec-head">
+    <span class="tag">02 / Sites</span>
+    <h2>The 5.6 GW portfolio, site by site</h2>
+    <span class="note">as of 30 Jun 2026</span>
+  </div>
+
+  <p class="measure">Nine announced data center projects across four countries, plus what the company calls a further multi-gigawatt development pipeline it has not yet named. Bars are scaled against the largest site, Kiowa at 1,600 MW gross.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r19">19</a></sup></p>
+
+  <div class="legend">
+    <span><b style="background:var(--st-op)"></b>Operating</span>
+    <span><b style="background:var(--st-con)"></b>Under construction</span>
+    <span><b style="background:var(--st-dev)"></b>In development</span>
+    <span><b style="background:var(--st-plan)"></b>Planned</span>
+  </div>
+
+  <div class="ladder">
+    <div class="grp"><span>Canada · British Columbia</span><span class="gsum">3 sites · 160 MW</span></div>
+
+    <div class="site">
+      <div class="site-id"><span class="site-name">Canal Flats</span><span class="site-loc">British Columbia</span></div>
+      <div class="track"><span class="bar bar--op" style="width:1.9%"></span></div>
+      <div class="site-mw">30<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-op">Operating</span></div>
+    </div>
+    <div class="site">
+      <div class="site-id"><span class="site-name">Prince George</span><span class="site-loc">British Columbia</span></div>
+      <div class="track"><span class="bar bar--op" style="width:3.1%"></span></div>
+      <div class="site-mw">50<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-op">Operating</span></div>
+    </div>
+    <div class="site">
+      <div class="site-id"><span class="site-name">Mackenzie</span><span class="site-loc">British Columbia</span></div>
+      <div class="track"><span class="bar bar--op" style="width:5.0%"></span></div>
+      <div class="site-mw">80<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-op">Operating</span></div>
+    </div>
+
+    <div class="grp"><span>United States · Texas &amp; Oklahoma</span><span class="gsum">4 sites · 4,350 MW</span></div>
+
+    <div class="site">
+      <div class="site-id"><span class="site-name">Childress</span><span class="site-loc">Texas · ERCOT</span></div>
+      <div class="track"><span class="bar bar--op" style="width:46.9%"></span></div>
+      <div class="site-mw">750<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-op">Operating</span></div>
+    </div>
+    <div class="site">
+      <div class="site-id"><span class="site-name">Sweetwater 1</span><span class="site-loc">Texas · ERCOT</span></div>
+      <div class="track"><span class="bar bar--con" style="width:87.5%"></span></div>
+      <div class="site-mw">1,400<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-con">Construction</span></div>
+    </div>
+    <div class="site">
+      <div class="site-id"><span class="site-name">Sweetwater 2</span><span class="site-loc">Texas · ERCOT</span></div>
+      <div class="track"><span class="bar bar--con" style="width:37.5%"></span></div>
+      <div class="site-mw">600<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-con">Construction</span></div>
+    </div>
+    <div class="site">
+      <div class="site-id"><span class="site-name">Kiowa</span><span class="site-loc">Oklahoma · PSO</span></div>
+      <div class="track"><span class="bar bar--dev" style="width:100%"></span></div>
+      <div class="site-mw">1,600<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-dev">Development</span></div>
+    </div>
+
+    <div class="grp"><span>Spain · Extremadura</span><span class="gsum">1 site · 300 MW</span></div>
+
+    <div class="site">
+      <div class="site-id"><span class="site-name">Badajoz</span><span class="site-loc">Extremadura</span></div>
+      <div class="track"><span class="bar bar--dev" style="width:18.8%"></span></div>
+      <div class="site-mw">300<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-dev">Development</span></div>
+    </div>
+
+    <div class="grp"><span>Australia · South Australia</span><span class="gsum">1 site · 800 MW</span></div>
+
+    <div class="site">
+      <div class="site-id"><span class="site-name">Bundey</span><span class="site-loc">South Australia</span></div>
+      <div class="track"><span class="bar bar--plan" style="width:50%"></span></div>
+      <div class="site-mw">800<span class="u">MW</span></div>
+      <div class="site-status"><span class="status s-plan">Planned</span></div>
+    </div>
+
+    <div class="grp" style="border-bottom:2px solid var(--ink);color:var(--ink)"><span>Total announced</span><span class="gsum" style="color:var(--ink)">9 sites · 5,610 MW</span></div>
+  </div>
+
+  <h3>Site notes</h3>
+  <div class="measure">
+    <ul class="plain">
+      <li><strong>Childress</strong> is the AI beachhead. It hosts the four "Horizon" liquid-cooled halls built for Microsoft, each 50 MW of critical IT load. Horizon 1 was delivered and accepted in August 2026; Horizon 2 is commissioning and Horizons 3–4 are in late-stage construction, targeting Q4 2026.</li>
+      <li><strong>Sweetwater</strong> is the largest build. Substation energization for Sweetwater 1 targeted April 2026; Sweetwater 2 targets late 2027.</li>
+      <li><strong>Badajoz</strong> arrived with the June 2026 acquisition of Nostrum Group (Ingenostrum, S.L.) and marks IREN's entry into Europe, along with local development, engineering and construction capability.</li>
+      <li>New liquid-cooled deployments are planned at <strong>Mackenzie, Canal Flats and Prince George</strong> during 2027 to use power headroom already secured at the operating British Columbia sites.</li>
+      <li>Delivery targets are cumulative <strong>0.3 GW IT in 2026</strong> and <strong>0.8 GW IT in 2027</strong> — a reminder that gross site megawatts and sellable IT load are different units.<sup class="c"><a href="#r4">4</a></sup></li>
+    </ul>
+  </div>
+</section>
+
+<section id="footprint">
+  <div class="sec-head">
+    <span class="tag">03 / Footprint</span>
+    <h2>Where the company is registered, and where it isn't</h2>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Corporate identity, per the FY26 Form 10-K cover, Exhibit 4.1 and EDGAR submissions data<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r3">3</a></sup><sup class="c"><a href="#r17">17</a></sup></caption>
+      <thead><tr><th>Attribute</th><th>Record</th></tr></thead>
+      <tbody>
+        <tr><td class="key">Legal name</td><td>IREN Limited</td></tr>
+        <tr><td class="key">Former names</td><td>Iris Energy Ltd (Sep 2021 – Nov 2024) · Iris Energy Pty Ltd (to Oct 2021)</td></tr>
+        <tr><td class="key">Place of incorporation</td><td>Australia — ACN 629 842 799 (SEC country code C3)</td></tr>
+        <tr><td class="key">Registered &amp; principal office</td><td>Level 5, 55 Market Street, Sydney NSW 2000, Australia</td></tr>
+        <tr><td class="key">Telephone</td><td>+61 2 7906 8301</td></tr>
+        <tr><td class="key">Listing</td><td>Nasdaq Global Select Market, "IREN", since 17 November 2021</td></tr>
+        <tr><td class="key">Commission file</td><td>001-41072 · CIK 0001878848 · SIC 6199</td></tr>
+        <tr><td class="key">Filer status</td><td>Large accelerated filer; converted from foreign private issuer forms (20-F/6-K) to domestic forms (10-K/8-K) during 2025</td></tr>
+        <tr><td class="key">Shares outstanding</td><td>394,058,648 Ordinary shares and 2 B Class shares, as of 14 August 2026</td></tr>
+        <tr><td class="key">Non-affiliate market value</td><td>≈$11.9 billion at 31 December 2025</td></tr>
+        <tr><td class="key">Auditor</td><td>KPMG LLP from 27 November 2025; previously Raymond Chabot Grant Thornton LLP (May 2023 – Nov 2025)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Significant subsidiaries</h3>
+  <p class="measure">Exhibit 21.1 to the FY26 10-K lists seven significant subsidiaries. The structure is compact and jurisdictionally uniform: <strong>every US entity is a Delaware corporation or LLC, and every Canadian entity is British Columbian</strong> — Delaware being the conventional domicile for US subsidiaries irrespective of where operations sit. The naming convention encodes function: <em class="term">Holdings</em> for asset-owning vehicles, <em class="term">Hardware</em> for the GPU-financing entities that carry the non-recourse debt.<sup class="c"><a href="#r2">2</a></sup></p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Entity</th><th>Jurisdiction</th></tr></thead>
+      <tbody>
+        <tr><td>IE US Holdings Inc.</td><td class="key">Delaware, United States</td></tr>
+        <tr><td>IE US Development Holdings 3 Inc.</td><td class="key">Delaware, United States</td></tr>
+        <tr><td>IE US Hardware 1 Inc.</td><td class="key">Delaware, United States</td></tr>
+        <tr><td>IE US Hardware 3 LLC</td><td class="key">Delaware, United States</td></tr>
+        <tr><td>IE US Hardware 3 Holdings LLC</td><td class="key">Delaware, United States</td></tr>
+        <tr><td>IE CA 5 Holdings Ltd.</td><td class="key">British Columbia, Canada</td></tr>
+        <tr><td>IE CA Leasing Ltd.</td><td class="key">British Columbia, Canada</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure">Two further wholly owned subsidiaries were added by acquisition after the subsidiary list's cut-off: <strong>Mirantis, Inc.</strong> (August 2026) and <strong>Ingenostrum, S.L.</strong>, trading as Nostrum Group (June 2026, Spain).<sup class="c"><a href="#r1">1</a></sup></p>
+
+  <h3>People, and where they sit</h3>
+  <div class="measure">
+    <p>Headcount was <strong>685 employees</strong> at 30 June 2026 — nearly tripled during FY26, including more than 60 who arrived with Nostrum. The Mirantis acquisition added roughly <strong>580 more</strong> in August 2026, taking the group past 1,250. Separately, about <strong>3,000 personnel</strong> including contractors and subcontractors were engaged across the US sites at year end. No employees are unionised.</p>
+    <p>The asset base tells the geographic story more honestly than the head office does: <strong>72% of non-current assets sit in the United States and 24% in Canada</strong>, while the registered office, the executive filing address and the fiscal calendar are all Australian.<sup class="c"><a href="#r1">1</a></sup></p>
+  </div>
+
+  <div class="callout">
+    <h3>Officer locations: what the record actually supports</h3>
+    <div class="measure">
+      <p>Every Section 16 insider — both Roberts brothers, Bartholomew, Alfred, Guzowski, Parasuraman, Lewis and Nucifora — files Forms 3, 4 and 144 from the same c/o address at 55 Market Street, Sydney. No individual residential address appears in any IREN filing, and none is required to.<sup class="c"><a href="#r13">13</a></sup></p>
+      <p>Individual locations are stated publicly for only two people: David Bartholomew is described as Australia-based, and Chris Parker was announced as Sydney-based on appointment.<sup class="c"><a href="#r5">5</a></sup><sup class="c"><a href="#r20">20</a></sup> Anything further would be inference rather than record.</p>
+    </div>
+  </div>
+</section>
+
+<section id="board">
+  <div class="sec-head">
+    <span class="tag">04 / Board</span>
+    <h2>Six directors, two of them brothers</h2>
+    <span class="note">per the 2025 proxy statement<sup class="c"><a href="#r5">5</a></sup></span>
+  </div>
+
+  <p class="measure">Four independent non-executives and the two founder Co-CEOs. All four independents sit on both standing committees; there is no standing nominating committee, and the independent directors collectively recommend nominees. Following constitutional amendments approved at the November 2025 AGM, directors now stand for election at every annual general meeting.<sup class="c"><a href="#r5">5</a></sup><sup class="c"><a href="#r9">9</a></sup></p>
+
+  <div class="roster">
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">David Bartholomew</h3>
+        <span class="rl">Independent Non-Executive Chair</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>64</dd></div>
+          <div><dt>Joined</dt><dd>2021</dd></div>
+          <div><dt>Held</dt><dd>136,064 ordinary shares (&lt;1%)</dd></div>
+          <div><dt>Based</dt><dd>Australia</dd></div>
+        </dl>
+        <div class="chips">
+          <span class="chip lead">Compensation — Chair</span>
+          <span class="chip">Audit &amp; Risk</span>
+          <span class="chip">Financial expert</span>
+        </div>
+      </div>
+      <div class="person-bio">
+        <p>An Australian infrastructure and energy executive. Former Chief Executive Officer of DUET Group, where he oversaw the transition to internalised management. Earlier career spans Boston Consulting Group, BHP Minerals, Hastings Funds Management and Lend Lease.</p>
+        <p>Board seats have included Vector Limited and the Power and Water Corporation of the Northern Territory, alongside a range of energy entities. Bachelor of Economics (Honours), Adelaide University; MBA, Australian Graduate School of Management.</p>
+      </div>
+    </article>
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">Daniel Roberts</h3>
+        <span class="rl">Co-Founder · Co-Chief Executive Officer · Executive Director</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>41</dd></div>
+          <div><dt>Joined</dt><dd>2018</dd></div>
+          <div><dt>Held</dt><dd>6,251,247 ordinary (2.3%) + 1 B Class</dd></div>
+          <div><dt>Votes</dt><dd>21.8% of total voting power</dd></div>
+        </dl>
+        <div class="chips"><span class="chip">Not independent</span><span class="chip">Brother of Will Roberts</span></div>
+      </div>
+      <div class="person-bio">
+        <p>Twenty years in finance, infrastructure and renewables. Previously an Executive Director and the second-largest individual shareholder at Palisade Investment Partners, a specialist infrastructure fund manager, after earlier roles at Macquarie Group and PricewaterhouseCoopers in London and Sydney.</p>
+        <p>Sits on the board of JOLT, the BlackRock-backed EV charging business, again as second-largest individual shareholder. Former directorships include Northern Territory Airports, Sunshine Coast Airport, Granville Harbour Wind Farm, Ross River Solar Farm, ANZ Terminals and the Tasmanian Gas Pipeline. Bachelor of Business, UTS; Master of Finance (Dean's List), INSEAD.</p>
+        <p>His shares are held through Awassi Capital Holdings 2 Pty Ltd as trustee for The Awassi Capital Trust #2.</p>
+      </div>
+    </article>
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">Will Roberts</h3>
+        <span class="rl">Co-Founder · Co-Chief Executive Officer · Executive Director</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>35</dd></div>
+          <div><dt>Joined</dt><dd>2018</dd></div>
+          <div><dt>Held</dt><dd>6,251,247 ordinary (2.3%) + 1 B Class</dd></div>
+          <div><dt>Votes</dt><dd>21.8% of total voting power</dd></div>
+        </dl>
+        <div class="chips"><span class="chip">Not independent</span><span class="chip">Brother of Daniel Roberts</span></div>
+      </div>
+      <div class="person-bio">
+        <p>Fourteen years in finance, real assets and commodities markets, covering debt financing, principal investment in resources projects and foreign exchange and commodity price risk management. Worked in accounting and banking, resources, commodities and real assets at Macquarie Group, Westpac and Brookfield Multiplex, and co-founded Macquarie's Digital Assets team.</p>
+        <p>Bachelor of Business (Distinction), UTS. Shares held through Awassi Capital Holdings 1 Pty Ltd as trustee for The Awassi Capital Trust #1.</p>
+      </div>
+    </article>
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">Sunita Parasuraman</h3>
+        <span class="rl">Independent Non-Executive Director</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>52</dd></div>
+          <div><dt>Joined</dt><dd>Jul 2023</dd></div>
+          <div><dt>Held</dt><dd>30,866 ordinary shares (&lt;1%)</dd></div>
+        </dl>
+        <div class="chips">
+          <span class="chip lead">Audit &amp; Risk — Chair</span>
+          <span class="chip">Compensation</span>
+          <span class="chip">Financial expert</span>
+        </div>
+      </div>
+      <div class="person-bio">
+        <p>A technology executive who built teams at Meta, VMware, Genentech and Apple. Most recently Head of Investments and New Product Experimentation at Meta, and before that Global Head of Treasury — where she also led Facebook's blockchain initiative, Libra.</p>
+        <p>Serves on the board of The Baldwin Group (Nasdaq: BWIN), on its Audit and Technology &amp; Cyber Risk committees, and chairs the Nomination &amp; Governance Committee of the IIT Bombay Heritage Foundation. BEng, IIT Bombay; MEng, University of Pennsylvania; MBA, Berkeley Haas. The only director to hold no board options.</p>
+      </div>
+    </article>
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">Michael Alfred</h3>
+        <span class="rl">Independent Non-Executive Director</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>44</dd></div>
+          <div><dt>Joined</dt><dd>Oct 2021</dd></div>
+          <div><dt>Held</dt><dd>841,753 ordinary shares (&lt;1%)</dd></div>
+        </dl>
+        <div class="chips"><span class="chip">Audit &amp; Risk</span><span class="chip">Compensation</span></div>
+      </div>
+      <div class="person-bio">
+        <p>A private investor and serial founder. Runs Alpine Fox LP, focused on value equities and bitcoin. Co-founded Digital Assets Data Inc. in January 2018 and served as CEO until its sale to New York Digital Investment Group in November 2020. Previously Managing Director and executive committee member at Strategic Insight (acquired by ISS in 2019), CEO of BrightScope (acquired October 2016), and co-founder of Alfred Capital Management.</p>
+        <p>Current boards: Crestone Group, Eaglebrook Advisors and Wealthie. BA in History, Stanford University. NYDIG, which bought Digital Assets Data in 2020, was separately the lender in the 2023 receivership of two IREN non-recourse subsidiaries, settled in August 2025. The Board has determined Mr Alfred independent under Nasdaq rules, and the proxy discloses no related-party transaction involving any director since July 2024.<sup class="c"><a href="#r5">5</a></sup></p>
+      </div>
+    </article>
+
+    <article class="person">
+      <div class="person-id">
+        <h3 class="nm">Chris Guzowski</h3>
+        <span class="rl">Independent Non-Executive Director</span>
+        <dl class="facts">
+          <div><dt>Age</dt><dd>40</dd></div>
+          <div><dt>Joined</dt><dd>Dec 2019</dd></div>
+          <div><dt>Held</dt><dd>57,351 ordinary shares (&lt;1%)</dd></div>
+        </dl>
+        <div class="chips"><span class="chip">Audit &amp; Risk</span><span class="chip">Compensation</span></div>
+      </div>
+      <div class="person-bio">
+        <p>Fifteen years developing renewable energy projects across Europe and Australia. Founded Baltic Wind, which develops large-scale European wind projects, and Mithra Energy, covering Polish wind, solar and battery storage. Previously Project Development Director for Photon Energy's Australian solar portfolio.</p>
+        <p>Founding director of ADCCA and co-founder of ABA Technology in 2014; an active angel investor in technology startups. Career began at PricewaterhouseCoopers. Bachelor of Business, UTS; MBA in Energy Management, Vienna University of Economics and Business.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="control">
+  <div class="sec-head">
+    <span class="tag">05 / Control</span>
+    <h2>Two unregistered shares hold 43.5% of the vote</h2>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">The most consequential governance fact about IREN is not in the ownership percentages. It is in the two <strong>B Class shares</strong>, held by the Roberts brothers' family trusts.</p>
+    <p>Under the constitution, each holder of a B Class share is entitled to <strong>15 votes per Ordinary share held by that holder</strong>. B Class shares carry no dividend rights and are unregistered. They must be redeemed on the earliest of: the holder ceasing to be a director through voluntary retirement, a transfer in breach of the constitution, liquidation, or <strong>17 November 2033</strong> — twelve years after listing.</p>
+    <p>The practical effect: Daniel and Will Roberts each hold 2.3% of ordinary shares but 21.8% of total voting power. Directors and executive officers together held 4.6% of the ordinary shares and <strong>43.5% of the vote</strong>. Constitutional amendments require 75% of votes cast.<sup class="c"><a href="#r3">3</a></sup><sup class="c"><a href="#r5">5</a></sup></p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Beneficial ownership as of 31 August 2025, against 271,980,494 ordinary shares then outstanding<sup class="c"><a href="#r5">5</a></sup></caption>
+      <thead>
+        <tr><th>Holder</th><th class="num">Ordinary shares</th><th class="num">% ordinary</th><th class="num">B Class</th><th class="num">% total vote</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Daniel Roberts</td><td class="num">6,251,247</td><td class="num">2.3%</td><td class="num">1</td><td class="num">21.8%</td></tr>
+        <tr><td>William Roberts</td><td class="num">6,251,247</td><td class="num">2.3%</td><td class="num">1</td><td class="num">21.8%</td></tr>
+        <tr><td>Michael Alfred</td><td class="num">841,753</td><td class="num">&lt;1%</td><td class="num">—</td><td class="num">&lt;1%</td></tr>
+        <tr><td>David Bartholomew</td><td class="num">136,064</td><td class="num">&lt;1%</td><td class="num">—</td><td class="num">&lt;1%</td></tr>
+        <tr><td>Belinda Nucifora <span class="key">former CFO</span></td><td class="num">94,164</td><td class="num">&lt;1%</td><td class="num">—</td><td class="num">&lt;1%</td></tr>
+        <tr><td>Chris Guzowski</td><td class="num">57,351</td><td class="num">&lt;1%</td><td class="num">—</td><td class="num">&lt;1%</td></tr>
+        <tr><td>Sunita Parasuraman</td><td class="num">30,866</td><td class="num">&lt;1%</td><td class="num">—</td><td class="num">&lt;1%</td></tr>
+        <tr class="total"><td>Directors and executive officers as a group</td><td class="num">13,662,692</td><td class="num">4.6%</td><td class="num">2</td><td class="num">43.5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p><strong>No holder of more than 5% of ordinary shares was reported</strong> in that proxy. Subsequent Schedule 13G filings are all passive institutional positions: Goldman Sachs Group and Bank of America (both filed August 2026), Susquehanna Securities, Jane Street Group, Citadel Securities, and HANSAINVEST of Hamburg. A single Schedule 13D exists, filed December 2022 by Everest Hill Group Inc. of Road Town, Tortola, BVI, and amended in September 2023.<sup class="c"><a href="#r18">18</a></sup></p>
+
+    <p>On 30 June 2026 the board granted each Co-CEO <strong>9,099,328 restricted stock units</strong> — vesting in four equal annual instalments, each tranche then locked by a two-year post-vesting holding period running to fiscal 2033. In exchange, neither Co-CEO receives a further equity grant until fiscal 2031. The independent directors approved the grants unanimously with an independent compensation consultant. The 2025 Omnibus Incentive Plan under which they were made drew the heaviest opposition of any AGM item: 29.3 million votes against, against 214.9 million for.<sup class="c"><a href="#r9">9</a></sup><sup class="c"><a href="#r10">10</a></sup></p>
+  </div>
+</section>
+
+<section id="leadership">
+  <div class="sec-head">
+    <span class="tag">06 / Leadership</span>
+    <h2>An executive team rebuilt in eighteen months</h2>
+  </div>
+
+  <p class="measure">Five C-suite appointments landed in 2026 alone, most of them hired out of hyperscalers and infrastructure operators rather than promoted from the mining business. The Chief Marketing Officer arrived through an acquisition of his own agency.</p>
+
+  <div class="scroll">
+    <table>
+      <caption>Executive leadership as of September 2026<sup class="c"><a href="#r19">19</a></sup><sup class="c"><a href="#r20">20</a></sup><sup class="c"><a href="#r12">12</a></sup></caption>
+      <thead><tr><th>Officer</th><th>Role</th><th>Appointed</th><th>Came from</th></tr></thead>
+      <tbody>
+        <tr><td>Daniel Roberts</td><td>Co-Founder &amp; Co-CEO</td><td class="key">2018</td><td>Palisade Investment Partners; Macquarie; PwC</td></tr>
+        <tr><td>Will Roberts</td><td>Co-Founder &amp; Co-CEO</td><td class="key">2018</td><td>Macquarie Digital Assets; Westpac; Brookfield Multiplex</td></tr>
+        <tr><td>Anthony Lewis</td><td>Chief Financial Officer</td><td class="key">Sep 2025</td><td>Co-Treasurer, Macquarie Group; IREN Chief Capital Officer</td></tr>
+        <tr><td>David Shaw</td><td>Chief Operating Officer</td><td class="key">—</td><td>—</td></tr>
+        <tr><td>Kent Draper</td><td>Chief Commercial Officer</td><td class="key">—</td><td>VP at First Solar; 19 years infrastructure &amp; power finance</td></tr>
+        <tr><td>Denis Skrinnikoff</td><td>Chief Technology Officer</td><td class="key">—</td><td>—</td></tr>
+        <tr><td>Cesilia Kim</td><td>Chief Legal Officer</td><td class="key">—</td><td>—</td></tr>
+        <tr><td>John Gross</td><td>Chief Innovation Officer</td><td class="key">Feb 2026</td><td>20 years data center engineering; Vice Chair, ASHRAE committees</td></tr>
+        <tr><td>Chris Parker</td><td>Chief Marketing Officer</td><td class="key">May 2026</td><td>Founder &amp; CEO of Awaken, acquired by IREN — Sydney-based</td></tr>
+        <tr><td>Kambiz Aghili</td><td>Chief Product Officer</td><td class="key">Jul 2026</td><td>VP Products, Oracle Cloud Infrastructure</td></tr>
+        <tr><td>Michael Nudelman</td><td>Chief Development Officer</td><td class="key">Jul 2026</td><td>Google; CyrusOne; Beale Infrastructure</td></tr>
+        <tr><td>Eric Hammersley</td><td>Chief Information Security Officer</td><td class="key">Jul 2026</td><td>VP Engineering &amp; Chief Product Security Officer, Nutanix; NVIDIA</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>Anthony Lewis, 49, became CFO on 8 September 2025 after ten weeks as Chief Capital Officer. He spent 2021–2024 as Co-Treasurer of Macquarie Group and before that led Capital and co-led Transactions and Structure within Group Treasury. Bachelor of Commerce and Bachelor of Laws (First Class Honours), University of Sydney. <strong>Belinda Nucifora</strong>, 52, ceased employment as CFO the same day.<sup class="c"><a href="#r12">12</a></sup><sup class="c"><a href="#r5">5</a></sup></p>
+    <p>Eric Hammersley's background is the most unusual on the list: before Nutanix and NVIDIA he held senior engineering posts in the US federal government and defence sector, including Chief Engineer supporting the Joint Chiefs of Staff.<sup class="c"><a href="#r20">20</a></sup></p>
+  </div>
+</section>
+
+<section id="pay">
+  <div class="sec-head">
+    <span class="tag">07 / Pay</span>
+    <h2>What management is paid, and what they have disposed of</h2>
+    <span class="note">FY2025 proxy · Section 16 filings</span>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">Co-CEO compensation rose roughly elevenfold in a single year. In FY2025 the two brothers were awarded <strong>$72,647,744 each</strong> — identical packages — against full-year net income of $86.9m. Their combined pay was <strong>167% of the company's only profitable year's earnings</strong>.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Summary Compensation Table, named executive officers, US$<sup class="c"><a href="#r5">5</a></sup></caption>
+      <thead><tr><th>Officer</th><th class="num">FY</th><th class="num">Salary</th><th class="num">Stock awards</th><th class="num">Incentive</th><th class="num">Total</th></tr></thead>
+      <tbody>
+        <tr><td>Daniel Roberts <span class="key">Co-CEO</span></td><td class="num">2025</td><td class="num">964,350</td><td class="num">69,695,744</td><td class="num">1,968,000</td><td class="num">72,647,744</td></tr>
+        <tr><td>Will Roberts <span class="key">Co-CEO</span></td><td class="num">2025</td><td class="num">964,350</td><td class="num">69,695,744</td><td class="num">1,968,000</td><td class="num">72,647,744</td></tr>
+        <tr><td>Each Co-CEO</td><td class="num">2024</td><td class="num">1,595,849</td><td class="num">3,800,010</td><td class="num">1,258,500</td><td class="num">6,672,353</td></tr>
+        <tr><td>Each Co-CEO</td><td class="num">2023</td><td class="num">2,426,711</td><td class="num">3,800,000</td><td class="num">529,229</td><td class="num">6,772,876</td></tr>
+        <tr><td>Belinda Nucifora <span class="key">former CFO</span></td><td class="num">2025</td><td class="num">303,363</td><td class="num">1,611,511</td><td class="num">387,216</td><td class="num">2,321,407</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>Salary actually fell — the increase is almost entirely equity. Note also that every equity award outstanding at 30 June 2025 — 29,604,388 securities issuable at a weighted-average exercise price of $47.07, with 9,870,552 remaining available — sat under plans that had not been put to a shareholder vote. That was lawful: as a foreign private issuer, IREN elected to follow Australian home-country practice in lieu of Nasdaq's shareholder-approval requirement for equity plans, and said so in its filings.<sup class="c"><a href="#r14">14</a></sup> The 2025 Omnibus Incentive Plan, approved that November after the move to domestic-filer status, was the first to go to a vote — and drew 29.3 million votes against.<sup class="c"><a href="#r5">5</a></sup><sup class="c"><a href="#r9">9</a></sup></p>
+
+    <h3>Then, in June 2026, another 18.2 million shares</h3>
+    <p>The board granted each Co-CEO <strong>9,099,328 RSUs</strong> on 30 June 2026 — together <strong>18,198,656 shares, about 4.6% of shares outstanding</strong>. Four-year vesting, each tranche locked by a further two-year holding period running to fiscal 2033, and no further equity grant to either until fiscal 2031. The 8-K disclosed no grant-date fair value. As an illustrative calculation only — the author's, not the company's — at the <strong>$36.32</strong> per-share price recorded in a same-day open-market Form 4 sale by a director, the two grants together would be worth roughly <strong>$661m</strong> before any discount for vesting and holding restrictions. The audited figure will appear in the FY2026 proxy, not yet filed.<sup class="c"><a href="#r10">10</a></sup><sup class="c"><a href="#r13">13</a></sup></p>
+
+    <h3>Non-employee director pay is modest by comparison</h3>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Director compensation, FY2025, US$ — programme: $60,000 base retainer, Chair +$60,000, Audit chair +$20,000, plus DRSUs<sup class="c"><a href="#r5">5</a></sup></caption>
+      <thead><tr><th>Director</th><th class="num">Cash</th><th class="num">Stock</th><th class="num">Other</th><th class="num">Total</th></tr></thead>
+      <tbody>
+        <tr><td>David Bartholomew <span class="key">Chair</span></td><td class="num">112,780</td><td class="num">202,509</td><td class="num">7,220</td><td class="num">322,509</td></tr>
+        <tr><td>Michael Alfred</td><td class="num">110,000</td><td class="num">135,006</td><td class="num">—</td><td class="num">245,006</td></tr>
+        <tr><td>Sunita Parasuraman <span class="key">Audit chair</span></td><td class="num">80,000</td><td class="num">135,006</td><td class="num">—</td><td class="num">215,006</td></tr>
+        <tr><td>Chris Guzowski</td><td class="num">60,000</td><td class="num">135,006</td><td class="num">—</td><td class="num">195,006</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h3>Section 16 dealings, September 2025</h3>
+    <div class="measure">
+      <p>Two separate disposals by each Co-CEO, in different classes of security. On 3 and 4 September 2025, each disposed of <strong>1,000,000 stock options</strong> — reported on the derivative table — at $25.49 and $23.51. Those options carried an exercise price of <strong>AUD $5.005</strong> and were due to expire on <strong>20 December 2025</strong>. Separately, on 11 September, each sold <strong>1,000,000 ordinary shares</strong> at $33.131, about <strong>$33.1m</strong> each.<sup class="c"><a href="#r13">13</a></sup></p>
+      <p>The option disposals have an evident and timing-independent explanation on the face of the filing: the options were within about fifteen weeks of expiry and would otherwise have lapsed. The Form 4s do <em>not</em> mark either disposal as made under a Rule 10b5-1 trading plan — the checkbox is unticked — and all were preceded by Form 144 notices and reported on Form 4 in the ordinary course. Nothing in the public record characterises any of these transactions as irregular, and this file makes no suggestion that they were.<sup class="c"><a href="#r13">13</a></sup></p>
+      <p style="margin-bottom:0">Other Section 16 activity is routine: grants on 1 July 2025 and 1 July 2026, and a single director sale of 11,958 ordinary shares at $36.32 on 1 July 2026. The only <em>ordinary share</em> prices in this file that come from a filed document rather than a market feed are $33.131 (11 September 2025) and $36.32 (1 July 2026); the $23.51 and $25.49 figures are option disposal prices and are not share prices.<sup class="c"><a href="#r13">13</a></sup></p>
+    </div>
+  </div>
+</section>
+
+<section id="commercial">
+  <div class="sec-head">
+    <span class="tag">08 / Contracts</span>
+    <h2>Customers, capital and counterparty risk</h2>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">IREN's revenue base flipped from one anonymous counterparty — the bitcoin network — to a handful of very large, very identifiable ones. The company acknowledges the concentration directly in its risk factors.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Announced AI cloud contracts<sup class="c"><a href="#r8">8</a></sup><sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup></caption>
+      <thead><tr><th>Counterparty</th><th>Signed</th><th class="num">Contract value</th><th>Terms</th></tr></thead>
+      <tbody>
+        <tr><td>Microsoft Corporation</td><td class="key">2 Nov 2025</td><td class="num">≈$9.7bn</td><td>Five-year average term through 2031; four Horizon tranches at Childress; 20% of each tranche prepaid</td></tr>
+        <tr><td>NVIDIA</td><td class="key">May 2026</td><td class="num">≈$3.4bn</td><td>Five-year contract for NVIDIA's own AI and research workloads</td></tr>
+        <tr><td>Prometheus, Perplexity, Together AI</td><td class="key">Jul 2026</td><td class="num">≈$2.8bn</td><td>Multi-year contracts, aggregate value</td></tr>
+        <tr><td>Undisclosed frontier AI lab</td><td class="key">Aug 2026</td><td class="num">not disclosed</td><td>Multi-year cloud services contract</td></tr>
+        <tr><td>Cohere, Figure AI, Fal AI, Higgsfield AI</td><td class="key">2026</td><td class="num">not disclosed</td><td>Named among recent signings and expansions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>Reported annualised run-rate revenue stands at <strong>$4bn contracted for 2026 capacity</strong>, of which <strong>$1bn was operating</strong> as of 26 August 2026. ARR is an operating metric, not GAAP revenue, and IREN says so explicitly. 2026 capacity is described as largely sold out; 2027 is in late-stage discussions. Recent three-year contracts price above <strong>$20m of revenue per MW of IT load</strong>, implying roughly a two-year payback, with active discussions at about $25m per MW.<sup class="c"><a href="#r4">4</a></sup></p>
+
+    <h3>The offsetting obligation: $5.8bn to Dell, guaranteed by the parent</h3>
+    <p>Signed the same day as the Microsoft agreement, 2 November 2025. Dell Marketing L.P. supplies the GPUs and ancillary equipment for the Horizon deployment in tranches from March 2026, for an aggregate purchase price of approximately <strong>$5.8 billion</strong>, payable within 30 days of each tranche shipping. Critically, and unlike the GPU financing: <strong>IREN Limited has agreed to unconditionally guarantee</strong> IE US Hardware 3's obligations under it. This is direct parent recourse, and it is the liability sitting opposite the $9.7bn of Microsoft revenue. The two documents should always be read together.<sup class="c"><a href="#r8">8</a></sup></p>
+
+    <h3>The NVIDIA relationship, three ways</h3>
+    <p>NVIDIA is simultaneously IREN's chip supplier, a cloud customer, a certifying body and a prospective shareholder. Under the May 2026 strategic partnership, NVIDIA holds the right to invest up to <strong>$2.1 billion</strong> in ordinary shares, contingent on delivery of up to 600,000 GPUs and regulatory conditions, supporting up to 5 GW of DSX-aligned infrastructure. IREN is an NVIDIA Cloud Partner, secured Preferred Partner status in FY26, and holds Exemplar Cloud status for HGX B300 and GB300 NVL72 — the latter awarded after NVIDIA tested the Horizon 1 deployment at Childress in August 2026.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>How the buildout is funded</h3>
+    <ul class="plain">
+      <li><strong>$3.6bn investment-grade GPU financing</strong> (May 2026) at a 6.0% weighted average rate against the Microsoft contract. With prepayments, it funds 96% of the associated GPU capex.</li>
+      <li><strong>$2.8bn of new GPU financings</strong> for non-investment-grade customer deployments, including <strong>$2.4bn led by Blue Owl and PIMCO</strong> at a 9.0% fixed rate for the Mackenzie air-cooled expansion — covering 90% of that GPU capex.</li>
+      <li>Customer prepayments now represent <strong>45–55% of GPU capex</strong> on recent contracts.</li>
+      <li>Total cash plus committed GPU financing and prepayments: <strong>$14bn</strong>.<sup class="c"><a href="#r4">4</a></sup></li>
+    </ul>
+
+    <h3>Acquisitions</h3>
+    <ul class="plain">
+      <li><strong>Mirantis, Inc.</strong> — completed 4 August 2026 for approximately $544m: 12.6 million ordinary shares plus cash and roughly $40m in RSUs. Brings the k0rdent AI platform, 1,500+ enterprise customers and about 580 people. This is the software layer.</li>
+      <li><strong>Nostrum Group (Ingenostrum, S.L.)</strong> — completed June 2026: 837,424 ordinary shares plus approximately €82m cash. Spanish grid-connected data center developer; brought the Badajoz site and European development capability.</li>
+      <li><strong>Awaken</strong> — May 2026. A creative and media agency; its founder Chris Parker became IREN's first global CMO, with media operations spun out.<sup class="c"><a href="#r20">20</a></sup></li>
+    </ul>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="sec-head">
+    <span class="tag">09 / Verification</span>
+    <h2>Is the $9.7bn real? Tracing it to the signed contract</h2>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">A headline contract value is only as good as the document behind it. This one has the document: the executed agreement is on the public record, and the number in it survives every cross-check available.</p>
+    <p>The <strong>Partner Statement of Work</strong> between Microsoft Corporation and IE US Hardware 3 Inc. was filed in full as Exhibit 10.3 to IREN's Form 10-Q for the quarter ended 31 December 2025. It carries the signature of <strong>Scott Guthrie, EVP Cloud + AI</strong>, dated 31 October 2025, countersigned by Kent Draper as authorized signatory and William Roberts as director on 2 November 2025.<sup class="c"><a href="#r6">6</a></sup><sup class="c"><a href="#r7">7</a></sup></p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Section 3.2 and Table 1 of the executed SOW — figures as they appear in the filed document<sup class="c"><a href="#r7">7</a></sup></caption>
+      <thead><tr><th>Contract term</th><th class="num">Amount (USD)</th></tr></thead>
+      <tbody>
+        <tr><td>Total contract value cap — "Service Fees will not exceed"</td><td class="num">9,666,845,337.60</td></tr>
+        <tr><td>Aggregate Tranche Value (Horizon 1–4)</td><td class="num">9,664,199,424.00</td></tr>
+        <tr><td>Aggregate Upfront Payment <span class="key">= 20.00% exactly</span></td><td class="num">1,932,839,884.80</td></tr>
+        <tr><td>Estimated monthly payment, months 1–24</td><td class="num">161,180,236.80</td></tr>
+        <tr><td>Estimated monthly payment, month 25 → Service End</td><td class="num">107,199,838.11</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <h3>The contract's own arithmetic closes</h3>
+    <p>Rebuild the total from the payment schedule: 24 months at $161,180,236.80, then 36 months at $107,199,838.11, plus the upfront, gives <strong>$9,660,359,740</strong> — within <strong>0.07%</strong> of the stated cap. The monthly step-down of $53,980,398.69 multiplied across the final 36 months returns $1.943bn, which is the upfront being credited back pro rata after month 24, exactly the mechanism described in the 8-K. The figures are internally consistent to the dollar.<sup class="c"><a href="#r7">7</a></sup><sup class="c"><a href="#r8">8</a></sup></p>
+
+    <h3>What is redacted, and what isn't</h3>
+    <p>83 passages are marked <em class="term">[***]</em> under the standard that the information "is not material and/or contains personal information." The redactions cover <strong>per-tranche values, GPU quantities, delivery dates, the price per GPU-hour, and site addresses</strong>. The aggregate economics — the numbers above — are not redacted. So the total is verifiable while the unit pricing is not.<sup class="c"><a href="#r7">7</a></sup></p>
+  </div>
+
+  <div class="callout">
+    <h3>The hardest corroboration: Microsoft's cash is already on the balance sheet</h3>
+    <div class="measure">
+      <p>Note 20 discloses <strong>$1,623,480 thousand of deferred lease revenue</strong> — advance payments received on capacity tranches that had not commenced as of 30 June 2026. Against a contractual aggregate upfront of $1,932,839,884.80, that is <strong>84% of the prepayment already received in cash</strong>, before a single tranche started earning.</p>
+      <p>One honest caveat: that line item may include prepayments from other lease-classified customers, so 84% is an upper bound on the share attributable to Microsoft. The direction is not in doubt — over $1.6bn of customer money has actually been wired.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r7">7</a></sup></p>
+    </div>
+  </div>
+
+  <div class="measure">
+    <h3>And the audited aggregate reconciles</h3>
+    <p>The FY26 accounts disclose <strong>$5.1bn of unsatisfied remaining performance obligations</strong> under ASC 606 plus <strong>$11.4bn of aggregate contracted lease value</strong> under ASC 842 — <strong>$16.6bn in total</strong>. Announced contracts sum to roughly $15.9bn (Microsoft $9.7bn, NVIDIA $3.4bn, the July trio $2.8bn) with several undisclosed deals on top. The public numbers and the audited number agree.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup><sup class="c"><a href="#r8">8</a></sup></p>
+
+    <h3>Why Microsoft sits outside the RPO figure</h3>
+    <p>An accounting point worth understanding before comparing IREN to peers. IREN determined that its GPU capacity contracts <strong>contain leases</strong> — of specified GPU equipment and dedicated data center space — and accounts for them as operating leases with itself as lessor under ASC 842. That places the Microsoft value in the $11.4bn lease bucket rather than in the $5.1bn ASC 606 RPO. Anyone reading RPO alone as "the backlog" will understate it by roughly two-thirds.<sup class="c"><a href="#r1">1</a></sup></p>
+  </div>
+
+  <div class="callout">
+    <h3>The caveat that matters most: none of it is revenue yet</h3>
+    <div class="measure">
+      <p>The accounts state plainly that <strong>"No lease revenue was recognized during the periods presented"</strong>, and that all FY26 AI Cloud Services revenue was generated in <strong>Canada</strong>. Microsoft contributed <strong>zero</strong> to the $128.8m of FY26 AI Cloud revenue — that figure comes entirely from the older British Columbia deployments.</p>
+      <p>Revenue begins only on customer acceptance. Horizon 1 was accepted in August 2026, which falls in FY27. Of the ASC 606 RPO, only <strong>$0.9bn</strong> is expected to be recognized in the twelve months to 30 June 2027 and $1.3bn in the year after.<sup class="c"><a href="#r1">1</a></sup></p>
+      <p style="margin-bottom:0"><strong>Verdict:</strong> the $9.7bn is real as an executed contract and substantially real as cash in the bank. It is not yet real as revenue, and the gap between those two states is where the execution risk lives.</p>
+    </div>
+  </div>
+</section>
+
+<section id="position">
+  <div class="sec-head">
+    <span class="tag">10 / Position</span>
+    <h2>The business does not fund its own expansion</h2>
+    <span class="note">FY26 · US$ millions</span>
+  </div>
+
+  <div class="measure">
+    <p class="lede-p">IREN is solvent, unlevered on a net basis and in no near-term danger. But the buildout is financed by issuing paper, not by operations, and the headline operating cash flow does not mean what it appears to mean.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Cash flows, year ended 30 June 2026<sup class="c"><a href="#r1">1</a></sup></caption>
+      <thead><tr><th>Flow</th><th class="num">US$m</th></tr></thead>
+      <tbody>
+        <tr><td>Net cash from operating activities</td><td class="num">2,100.4</td></tr>
+        <tr><td>— of which increase in deferred revenue (customer prepayments)</td><td class="num">1,841.7</td></tr>
+        <tr class="total"><td>Operating cash flow excluding prepayments</td><td class="num">258.8</td></tr>
+        <tr><td>Payments for property, plant and equipment</td><td class="num">(2,998.0)</td></tr>
+        <tr><td>Payments for computer hardware (GPUs)</td><td class="num">(1,335.1)</td></tr>
+        <tr><td>Net cash used in investing activities</td><td class="num">(4,723.0)</td></tr>
+        <tr><td>Proceeds from issuance of Ordinary shares</td><td class="num">4,742.8</td></tr>
+        <tr><td>Proceeds from convertible notes</td><td class="num">6,299.6</td></tr>
+        <tr><td>Net cash from financing activities</td><td class="num">9,680.1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>That $2.1bn operating inflow is <strong>88% customer prepayments</strong> — a liability that must be worked off by delivering service, not earned margin. Strip it out and the business generated <strong>$259m of operating cash against $4.72bn of capex</strong>. Free cash flow was −$2.62bn as reported and <strong>−$4.46bn</strong> underlying. The gap was closed by raising <strong>$11.0bn of equity and convertible notes in twelve months</strong>, roughly 43× the underlying operating cash flow.<sup class="c"><a href="#r1">1</a></sup></p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <span class="fig">13.81<span class="u">bn</span></span>
+      <span class="cap">Capital commitments<br>from $368.8m a year earlier — 37×</span>
+    </div>
+    <div class="metric">
+      <span class="fig">5.90<span class="u">bn</span></span>
+      <span class="cap">Unrestricted cash<br>a further $1.72bn is ring-fenced in the financing SPV</span>
+    </div>
+    <div class="metric neg">
+      <span class="fig">5.21<span class="u">bn</span></span>
+      <span class="cap">Coverage shortfall<br>vs unrestricted cash + $2.71bn undrawn, before future prepayments</span>
+    </div>
+    <div class="metric">
+      <span class="fig">3.50<span class="u">bn</span></span>
+      <span class="cap">Remaining ATM capacity<br>$6.0bn shelf less ~$2.5bn issued</span>
+    </div>
+  </div>
+
+  <p class="measure">On the looser reading — counting restricted cash — the gap is $3.48bn against $3.50bn of remaining ATM capacity, which line up almost exactly. On the stricter reading below, the gap is wider. Either way the arithmetic says the buildout is planned to be closed with further equity issuance.<sup class="c"><a href="#r1">1</a></sup></p>
+
+  <div class="scroll">
+    <table>
+      <caption>Balance sheet, US$ millions<sup class="c"><a href="#r1">1</a></sup></caption>
+      <thead><tr><th>Item</th><th class="num">30 Jun 2026</th><th class="num">30 Jun 2025</th></tr></thead>
+      <tbody>
+        <tr><td>Cash and cash equivalents</td><td class="num">5,895.6</td><td class="num">564.5</td></tr>
+        <tr><td>Restricted cash</td><td class="num">1,723.9</td><td class="num">—</td></tr>
+        <tr><td>Property, plant and equipment, net</td><td class="num">6,753.2</td><td class="num">1,930.6</td></tr>
+        <tr><td>Total assets</td><td class="num">15,790.0</td><td class="num">2,940.3</td></tr>
+        <tr><td>Total debt</td><td class="num">7,592.9</td><td class="num">962.8</td></tr>
+        <tr class="total"><td>Net debt <span class="key">less total cash / less unrestricted cash</span></td><td class="num">(26.6) / 1,697.3</td><td class="num">398.3</td></tr>
+        <tr><td>Deferred revenue</td><td class="num">1,842.5</td><td class="num">0.9</td></tr>
+        <tr><td>Accounts payable and accrued expenses</td><td class="num">1,825.4</td><td class="num">144.1</td></tr>
+        <tr><td>Total liabilities</td><td class="num">11,604.4</td><td class="num">1,122.8</td></tr>
+        <tr><td>Stockholders' equity</td><td class="num">4,185.6</td><td class="num">1,817.5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h3>Correction to the obvious reading: $1.72bn of that cash is not the group's to spend</h3>
+    <div class="measure">
+      <p>Note 26 consolidates a variable interest entity — <strong>IE US Hardware 3, LLC</strong>, the GPU financing subsidiary. Essentially all of the restricted cash sits inside it, along with the assets the Microsoft deployment runs on:</p>
+      <ul class="plain">
+        <li>Restricted cash <strong>$1,670.3m current + $53.7m non-current</strong> — the whole restricted balance</li>
+        <li>Property and equipment, net <strong>$1,487.1m</strong>, pledged as collateral</li>
+        <li>Deferred revenue <strong>$1,013.1m</strong> — a large share of the Microsoft prepayment</li>
+        <li>Accounts payable and accrued <strong>$1,127.7m</strong>; debt <strong>$918.2m</strong></li>
+      </ul>
+      <p style="margin-bottom:0">These assets "may be used only to settle obligations of IE US Hardware 3, LLC and are not available to satisfy claims of the general creditors of IREN Limited or any of its other subsidiaries" until the facility is repaid. So the group's genuinely unrestricted cash is <strong>$5,895.6m</strong>, not $7,619.5m — and the coverage shortfall against $13.81bn of commitments is nearer <strong>$5.2bn</strong> than the $3.5bn a simple reading gives. The structure cuts both ways: the SPV's debt is non-recourse, so the ring-fence protects the parent as well as constraining it.<sup class="c"><a href="#r1">1</a></sup></p>
+    </div>
+  </div>
+
+  <div class="measure">
+    <h3>Where the assets actually are</h3>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Property, plant and equipment, gross, US$ thousands<sup class="c"><a href="#r1">1</a></sup></caption>
+      <thead><tr><th>Class</th><th class="num">30 Jun 2026</th><th class="num">30 Jun 2025</th></tr></thead>
+      <tbody>
+        <tr><td>Construction in progress</td><td class="num">3,657,072</td><td class="num">237,734</td></tr>
+        <tr><td>GPU hardware</td><td class="num">2,034,811</td><td class="num">76,001</td></tr>
+        <tr><td>Buildings</td><td class="num">864,255</td><td class="num">639,750</td></tr>
+        <tr><td>Mining hardware</td><td class="num">596,988</td><td class="num">1,135,584</td></tr>
+        <tr><td>Right-of-use assets — finance lease</td><td class="num">301,848</td><td class="num">—</td></tr>
+        <tr><td>Land</td><td class="num">139,074</td><td class="num">13,086</td></tr>
+        <tr><td>Other</td><td class="num">69,269</td><td class="num">10,045</td></tr>
+        <tr class="total"><td>Gross, before depreciation and impairment</td><td class="num">7,663,316</td><td class="num">2,112,200</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure">Construction in progress grew fifteenfold to <strong>$3.66bn</strong> — more than half the gross asset base is not yet earning. Mining hardware fell by nearly half as it was decommissioned. Accumulated impairment stands at $484.5m. GPUs are depreciated <strong>straight-line over an estimated five-year life</strong>, which is the single most consequential accounting judgment in these accounts: the company has just written off $638.8m of the previous hardware generation, and the FY26 fleet is being depreciated on the same kind of estimate.<sup class="c"><a href="#r1">1</a></sup></p>
+
+  <div class="measure">
+    <h3>Two things a headline reading misses</h3>
+    <p>First, the FY26 loss would have been materially worse without <strong>$558.5m of unrealized gains on financial instruments</strong> — chiefly fair-value movements on the company's own capped call and prepaid forward transactions. That is a derivative gain on IREN's own share price, not operating performance. Strip it out and the pre-tax loss approaches $1.27bn.</p>
+    <p>Second, the loss is entirely offshore. Income before tax splits <strong>+$210.2m in Australia against −$918.8m foreign</strong>. The Australian parent is profitable; the US and Canadian operations carry the losses, which is why the valuation allowance against foreign deferred tax assets jumped to $209.4m.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>Dilution overhang</h3>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Potentially dilutive securities excluded from FY26 diluted EPS as anti-dilutive, weighted average<sup class="c"><a href="#r1">1</a></sup></caption>
+      <thead><tr><th>Instrument</th><th class="num">Shares</th></tr></thead>
+      <tbody>
+        <tr><td>Convertible notes</td><td class="num">71,831,847</td></tr>
+        <tr><td>Capped call transactions <span class="key">offsetting</span></td><td class="num">32,114,455</td></tr>
+        <tr><td>Restricted stock units</td><td class="num">23,250,808</td></tr>
+        <tr><td>Prepaid forward transactions <span class="key">offsetting</span></td><td class="num">8,910,354</td></tr>
+        <tr><td>Stock options</td><td class="num">5,504,194</td></tr>
+        <tr><td>Investment Rights <span class="key">NVIDIA</span></td><td class="num">4,520,548</td></tr>
+        <tr class="total"><td>Total</td><td class="num">146,132,206</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure">Against 394.1m shares outstanding, the genuinely dilutive instruments — converts, RSUs, options and the NVIDIA investment rights — total <strong>105.1m shares, a 27% overhang</strong> on top of the 53% dilution already taken. The capped calls and prepaid forwards work the other way, which is what IREN spent $448.9m buying. Basic and diluted loss per share was <strong>$(2.22)</strong> in FY26, against $0.41 and $0.39 of earnings in FY25.<sup class="c"><a href="#r1">1</a></sup></p>
+
+  <div class="measure">
+    <h3>The debt is unusually cheap — leverage is not the constraint</h3>
+    <p>The $6,745.7m of convertible notes carries roughly <strong>$59.5m of annual coupon — about 0.88% blended</strong> — and matures across 2029 to 2033, with the bulk in 2031 and later. Cash interest paid in FY26 was just $42.6m. The GPU facilities add about $56m a year on drawn amounts, at 5.96% fixed on the USPP notes and SOFR + 2.25% on the term loan, hedged with $1.5bn notional of swaps at roughly 3.80% fixed. Counting all cash, the company carries <strong>no net debt</strong> — $7.59bn of borrowings against $7.62bn of cash; counting only unrestricted cash it is about <strong>$1.70bn net debt</strong>.<sup class="c"><a href="#r1">1</a></sup></p>
+    <p>The cost is borne by shareholders instead. Shares outstanding went from <strong>258.1m to 380.2m during FY26</strong>, and to 394.1m by 14 August 2026 — <strong>53% dilution in roughly one year</strong>. The company also spent $1,623.5m of cash plus 39.7m shares to induce conversion of $544.3m of older notes, booking a $111.8m inducement expense.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>Costs are inflating faster than revenue</h3>
+    <ul class="plain">
+      <li>Selling, general and administrative: <strong>$136.5m → $449.1m</strong> (+229%), of which stock-based compensation alone went $42.6m → <strong>$205.0m</strong></li>
+      <li>Depreciation and amortization: <strong>$181.1m → $417.7m</strong>, and rising sharply as the GPU fleet lands</li>
+      <li>Accounts payable and accrued expenses grew <strong>$1.68bn</strong>, a working-capital source that supports the year-end cash position<sup class="c"><a href="#r1">1</a></sup></li>
+    </ul>
+  </div>
+</section>
+
+<section id="record">
+  <div class="sec-head">
+    <span class="tag">11 / Record</span>
+    <h2>Six years: one profitable, four flagged by auditors</h2>
+  </div>
+
+  <p class="measure">Context for the FY26 loss. This is not a company with a long record of compounding earnings — it is a company whose audit opinion carried going-concern language in four of its six public years, before one profitable year and the pivot recorded above.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r14">14</a></sup><sup class="c"><a href="#r15">15</a></sup><sup class="c"><a href="#r16">16</a></sup></p>
+
+  <div class="figure">
+    <p class="cap-t">Revenue against net income, FY2021–FY2026</p>
+    <p class="cap-s">US$ millions · IFRS through FY2023, US GAAP from FY2024 · fiscal year ends 30 June</p>
+    <div class="ckey">
+      <span><b style="background:var(--c-rev)"></b>Total revenue</span>
+      <span><b style="background:var(--c-ni)"></b>Net income (loss)</span>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart" viewBox="0 0 780 366" role="img" aria-label="Grouped column chart of IREN total revenue and net income by fiscal year, 2021 to 2026, in US dollars millions.">
+        <line class="gl" x1="64" x2="744" y1="332.0" y2="332.0"/>
+        <text class="yl" x="54" y="335.5" text-anchor="end">-750</text>
+        <line class="gl" x1="64" x2="744" y1="280.3" y2="280.3"/>
+        <text class="yl" x="54" y="283.8" text-anchor="end">-500</text>
+        <line class="gl" x1="64" x2="744" y1="228.7" y2="228.7"/>
+        <text class="yl" x="54" y="232.2" text-anchor="end">-250</text>
+        <line class="gl" x1="64" x2="744" y1="125.3" y2="125.3"/>
+        <text class="yl" x="54" y="128.8" text-anchor="end">250</text>
+        <line class="gl" x1="64" x2="744" y1="73.7" y2="73.7"/>
+        <text class="yl" x="54" y="77.2" text-anchor="end">500</text>
+        <line class="gl" x1="64" x2="744" y1="22.0" y2="22.0"/>
+        <text class="yl" x="54" y="25.5" text-anchor="end">750</text>
+
+        <rect class="b b--rev" x="85.7" y="175.4" width="34" height="2.0" rx="1.0" data-y="FY2021" data-s="Revenue" data-v="7.9"/>
+        <rect class="b b--ni" x="121.7" y="177.0" width="34" height="12.5" rx="4.0" data-y="FY2021" data-s="Net income (loss)" data-v="-60.4"/>
+        <text class="xl" x="120.7" y="352" text-anchor="middle">FY21</text>
+        <rect class="b b--rev" x="199.0" y="164.8" width="34" height="12.2" rx="4.0" data-y="FY2022" data-s="Revenue" data-v="59.0"/>
+        <rect class="b b--ni" x="235.0" y="177.0" width="34" height="86.8" rx="4.0" data-y="FY2022" data-s="Net income (loss)" data-v="-419.8"/>
+        <text class="xl" x="234.0" y="352" text-anchor="middle">FY22</text>
+        <rect class="b b--rev" x="312.3" y="161.4" width="34" height="15.6" rx="4.0" data-y="FY2023" data-s="Revenue" data-v="75.5"/>
+        <rect class="b b--ni" x="348.3" y="177.0" width="34" height="35.5" rx="4.0" data-y="FY2023" data-s="Net income (loss)" data-v="-171.9"/>
+        <text class="xl" x="347.3" y="352" text-anchor="middle">FY23</text>
+        <rect class="b b--rev" x="425.7" y="138.3" width="34" height="38.7" rx="4.0" data-y="FY2024" data-s="Revenue" data-v="187.2"/>
+        <rect class="b b--ni" x="461.7" y="177.0" width="34" height="6.0" rx="3.0" data-y="FY2024" data-s="Net income (loss)" data-v="-28.9"/>
+        <text class="xl" x="460.7" y="352" text-anchor="middle">FY24</text>
+        <rect class="b b--rev" x="539.0" y="73.5" width="34" height="103.5" rx="4.0" data-y="FY2025" data-s="Revenue" data-v="501.0"/>
+        <rect class="b b--ni" x="575.0" y="159.0" width="34" height="18.0" rx="4.0" data-y="FY2025" data-s="Net income (loss)" data-v="86.9"/>
+        <text class="xl" x="574.0" y="352" text-anchor="middle">FY25</text>
+        <rect class="b b--rev" x="652.3" y="30.9" width="34" height="146.1" rx="4.0" data-y="FY2026" data-s="Revenue" data-v="707.0"/>
+        <rect class="b b--ni" x="688.3" y="177.0" width="34" height="145.2" rx="4.0" data-y="FY2026" data-s="Net income (loss)" data-v="-702.6"/>
+        <text class="xl" x="687.3" y="352" text-anchor="middle">FY26</text>
+
+        <line class="g0" x1="64" x2="744" y1="177.0" y2="177.0"/>
+        <text class="yl" x="54" y="180.5" text-anchor="end">0</text>
+
+        <text class="dl" x="669.3" y="24" text-anchor="middle">707.0</text>
+        <text class="dl" x="705.3" y="332" text-anchor="middle">(702.6)</text>
+        <text class="dl" x="592.0" y="153" text-anchor="middle">86.9</text>
+      </svg>
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Full series, with the auditor's flag for each year<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r14">14</a></sup><sup class="c"><a href="#r15">15</a></sup><sup class="c"><a href="#r16">16</a></sup></caption>
+      <thead>
+        <tr><th>Fiscal year</th><th class="num">Revenue</th><th class="num">Net income (loss)</th><th class="num">Adj. EBITDA</th><th>Audit report</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>FY2021</td><td class="num">7.9</td><td class="num">(60.4)</td><td class="num">1.4</td><td class="key">Going concern</td></tr>
+        <tr><td>FY2022</td><td class="num">59.0</td><td class="num">(419.8)</td><td class="num">26.2</td><td class="key">Going concern</td></tr>
+        <tr><td>FY2023</td><td class="num">75.5</td><td class="num">(171.9)</td><td class="num">1.4</td><td class="key">Going concern; NYDIG receivership</td></tr>
+        <tr><td>FY2024</td><td class="num">187.2</td><td class="num">(28.9)</td><td class="num">—</td><td class="key">Going concern; material weakness</td></tr>
+        <tr><td>FY2025</td><td class="num">501.0</td><td class="num">86.9</td><td class="num">269.7</td><td class="key">Clean</td></tr>
+        <tr><td>FY2026</td><td class="num">707.0</td><td class="num">(702.6)</td><td class="num">245.7</td><td class="key">Clean</td></tr>
+        <tr class="total"><td>Cumulative</td><td class="num">1,537.6</td><td class="num">(1,296.7)</td><td class="num">—</td><td class="key">accumulated deficit $1,298.8m</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>The cumulative net loss of $1,296.7m reconciles to the $1,298.8m accumulated deficit on the FY26 balance sheet — the series is complete. <strong>FY2025 is the only profitable year in the company's public life</strong>, and even that was helped by unrealized gains on financial instruments.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>The going-concern language is the same language, four times</h3>
+    <p>Armanino LLP's audit report covering FY2020, FY2021 and FY2022 carried a Going Concern Uncertainty paragraph: <em>"significant uncertainties exist about the Group's ability to generate positive free cash flow and raise sufficient capital to fund outstanding purchase commitments."</em> Raymond Chabot Grant Thornton repeated substantively the same finding in its FY2023 opinion, citing the $172m net loss, and again for FY2024, citing the $29.6m net loss — each time naming the same inability to fund outstanding purchase commitments. FY2023 was also the year two subsidiaries were in receivership.<sup class="c"><a href="#r11">11</a></sup><sup class="c"><a href="#r14">14</a></sup><sup class="c"><a href="#r15">15</a></sup><sup class="c"><a href="#r16">16</a></sup></p>
+    <p style="margin-bottom:0">That phrase — <strong>funding outstanding purchase commitments</strong> — is precisely the pressure point today, at a scale 37 times larger. FY2025 and FY2026 opinions are clean and the balance sheet is vastly stronger, so this is history rather than a current qualification. But it establishes that the failure mode is not hypothetical: the company's auditors raised it in four consecutive years, FY2021 through FY2024, before the FY2025 opinion came in clean.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r14">14</a></sup></p>
+  </div>
+</section>
+
+<section id="legal">
+  <div class="sec-head">
+    <span class="tag">12 / Exposure</span>
+    <h2>Litigation, tax and audit history</h2>
+  </div>
+
+  <div class="measure">
+    <h3>NYDIG receivership — settled</h3>
+    <p>In February 2023 PricewaterhouseCoopers was appointed receiver to two IREN non-recourse SPVs at the instance of lender NYDIG, spawning parallel proceedings in the Supreme Court of British Columbia, the BC Court of Appeal and the Federal Court of Australia. The BC Supreme Court initially declared certain hashpower transactions fraudulent conveyances; the Court of Appeal set that declaration aside in June 2024 while upholding dismissal of NYDIG's substantive consolidation claim. All claims were resolved by a settlement agreement dated 12 August 2025 under which IREN paid <strong>$20 million</strong>. The Canadian receivership concluded September 2025, the Australian recognition proceedings terminated October 2025, and the Canadian bankruptcy proceedings concluded on 24 December 2025.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>Securities class action — dismissed, on appeal</h3>
+    <p>A putative class action filed 14 December 2022 in the District of New Jersey alleged misstatements in the IPO registration statement and in the period to 1 November 2022. After two rounds of amendment, the court <strong>granted IREN's motion to dismiss in full and with prejudice on 18 February 2026</strong>. The lead plaintiffs noticed an appeal to the Third Circuit on 13 March 2026; briefing has not yet been scheduled.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>Canada Revenue Agency — open</h3>
+    <p>IREN filed a Notice of Appeal in the Tax Court of Canada on 23 June 2025 disputing the CRA's determination that the company has a permanent establishment in Canada, and the related GST assessment. The Crown replied in November 2025. No hearing timetable is set.<sup class="c"><a href="#r1">1</a></sup></p>
+
+    <h3>Audit trail</h3>
+    <p>Raymond Chabot Grant Thornton served from May 2023 until dismissal on 26 November 2025, replaced by KPMG LLP the following day. There were no disagreements — but RCGT's FY2024 report carried a <strong>going-concern explanatory paragraph</strong>, and RCGT reported a <strong>material weakness in internal control over financial reporting</strong> disclosed in the FY2024 Form 20-F. Both are historical; the FY2026 10-K reports management's assessment with auditor attestation under Section 404(b).<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r11">11</a></sup><sup class="c"><a href="#r14">14</a></sup></p>
+  </div>
+</section>
+
+<section id="gaps">
+  <div class="sec-head">
+    <span class="tag">13 / Gaps</span>
+    <h2>What this file does not establish</h2>
+  </div>
+
+  <p class="measure">Stated plainly, so nobody mistakes an absence of data for an absence of risk. Each item below is a real limit on the analysis above.</p>
+
+  <ul class="gaps">
+    <li><span class="q">FY2026 proxy not yet filed</span><span class="a"><em>Due by late October 2026</em>All compensation and ownership figures here are from the FY2025 proxy, dated 31 August 2025 — a year before the current share count. FY2026 named-officer pay, updated beneficial ownership, and the audited grant-date fair value of the June 2026 RSU grants are not yet public.<sup class="c"><a href="#r5">5</a></sup></span></li>
+    <li><span class="q">Per-tranche Microsoft economics</span><span class="a"><em>Redacted</em>GPU quantities per tranche, individual tranche values, delivery dates and the price per GPU-hour are all withheld as immaterial or commercially sensitive. The aggregate is verifiable; the unit economics are not.<sup class="c"><a href="#r7">7</a></sup></span></li>
+    <li><span class="q">Customer concentration is not quantified</span><span class="a"><em>Not disclosed</em>The 10-K states repeatedly that customer contracts "are concentrated" and names it a principal risk, but discloses no percentage of revenue or receivables by customer. The concentration can be inferred from contract values; it cannot be measured from the accounts.<sup class="c"><a href="#r1">1</a></sup></span></li>
+    <li><span class="q">Three executives have no filed biography</span><span class="a"><em>Not Section 16 officers</em>David Shaw (COO), Denis Skrinnikoff (CTO) and Cesilia Kim (CLO) appear on the company's leadership page but file no Section 16 reports and have no proxy biography. Appointment dates and backgrounds for them are absent from this file by choice rather than oversight.<sup class="c"><a href="#r19">19</a></sup></span></li>
+    <li><span class="q">The 85% tax abatement figure</span><span class="a"><em>Not in any filing</em>IREN confirms property tax abatements and sales and use tax exemptions, in Texas among other places, sometimes in exchange for payments in lieu. It never quantifies them. Any specific percentage would come from a county-level abatement agreement, not from the SEC record.<sup class="c"><a href="#r1">1</a></sup></span></li>
+    <li><span class="q">Share price and market capitalisation</span><span class="a"><em>Point observations only</em>The only ordinary share prices in this file come from filed documents: $33.131 in September 2025 and $36.32 in July 2026, plus an aggregate non-affiliate market value of about $11.9bn at 31 December 2025. The $23.51 and $25.49 September figures are option disposal prices, not share prices. This file carries no live market data.<sup class="c"><a href="#r13">13</a></sup><sup class="c"><a href="#r1">1</a></sup></span></li>
+    <li><span class="q">Site-level capital cost and returns</span><span class="a"><em>Not disclosed</em>Capital expenditure, power cost and contracted revenue are reported group-wide. Nothing in the filings allows a per-site or per-megawatt return to be calculated independently of management's own summary figures.<sup class="c"><a href="#r1">1</a></sup></span></li>
+    <li><span class="q">Sweetwater 1 energisation</span><span class="a"><em>Unconfirmed</em>Substation energisation was targeted for April 2026. The FY26 10-K, filed four months later, does not state whether that milestone was met. Treat the construction timeline as management guidance, not established fact.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup></span></li>
+    <li><span class="q">Headcount by geography and function</span><span class="a"><em>Not disclosed</em>685 employees at 30 June 2026 plus roughly 580 from Mirantis and about 3,000 contractor personnel across US sites — but no split by country, site or function, and no attrition data.<sup class="c"><a href="#r1">1</a></sup></span></li>
+    <li><span class="q">Post-30 June 2026 events</span><span class="a"><em>Outside the reporting period</em>The Mirantis close, the Horizon 1 acceptance, the July contract signings and the frontier-lab contract all fall after the balance sheet date. They are disclosed but not yet reflected in any audited figure in this file.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r4">4</a></sup></span></li>
+  </ul>
+</section>
+
+<section id="sources">
+  <div class="sec-head">
+    <span class="tag">14 / References</span>
+    <h2>Every source, and what it supports</h2>
+    <span class="note">20 documents · all primary unless noted</span>
+  </div>
+
+  <p class="measure">Numbered markers throughout this file link here. Every figure is traceable to a filed document or a company disclosure; nothing is drawn from analyst estimates, market data feeds or secondary reporting except where reference 20 is cited.</p>
+
+  <ol class="refs">
+    <li id="r1">
+      <span class="n">[1]</span>
+      <div>
+        <p class="t">Annual Report on Form 10-K, fiscal year ended 30 June 2026</p>
+        <p class="m">Filed 27 Aug 2026 · accession 0001878848-26-000052 · IREN Limited (CIK 0001878848)</p>
+        <p class="used">Business and strategy; site portfolio and Item 2 Properties; employees; MD&amp;A and liquidity; contractual commitments; legal proceedings; full audited financial statements and Notes 4, 14, 15, 19, 20, 22, 23, 26, 27 and 28.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm</a></p>
+      </div>
+    </li>
+    <li id="r2">
+      <span class="n">[2]</span>
+      <div>
+        <p class="t">Exhibit 21.1 — List of significant subsidiaries</p>
+        <p class="m">Filed with [1], 27 Aug 2026</p>
+        <p class="used">The seven significant subsidiaries and their jurisdictions of organization.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630xex211.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630xex211.htm</a></p>
+      </div>
+    </li>
+    <li id="r3">
+      <span class="n">[3]</span>
+      <div>
+        <p class="t">Exhibit 4.1 — Description of securities</p>
+        <p class="m">Filed with [1], 27 Aug 2026</p>
+        <p class="used">B Class share voting rights (15 votes per Ordinary share held), dividend exclusion and redemption triggers; constitution provisions on director appointment and the 75% special-resolution threshold.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/a41descriptionofsecurities.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/a41descriptionofsecurities.htm</a></p>
+      </div>
+    </li>
+    <li id="r4">
+      <span class="n">[4]</span>
+      <div>
+        <p class="t">Form 8-K and Exhibit 99.1 — FY26 results release</p>
+        <p class="m">Filed 27 Aug 2026 · accession 0001878848-26-000051</p>
+        <p class="used">Quarterly revenue split; contracted and operating ARR; pricing per MW of IT load; prepayment percentages; the Blue Owl and PIMCO financing; delivery targets for 2026 and 2027.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000051/irenreportsfy26results.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000051/irenreportsfy26results.htm</a></p>
+      </div>
+    </li>
+    <li id="r5">
+      <span class="n">[5]</span>
+      <div>
+        <p class="t">Definitive Proxy Statement (DEF 14A) for the 2025 Annual General Meeting</p>
+        <p class="m">Filed 6 Oct 2025 · accession 0001140361-25-037383</p>
+        <p class="used">Director biographies, ages, appointment dates, committee composition and independence; beneficial ownership as at 31 Aug 2025; Summary Compensation Table; director compensation; equity compensation plan information.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036125037383/ny20053824x2_def14a.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036125037383/ny20053824x2_def14a.htm</a></p>
+      </div>
+    </li>
+    <li id="r6">
+      <span class="n">[6]</span>
+      <div>
+        <p class="t">Quarterly Report on Form 10-Q, quarter ended 31 December 2025</p>
+        <p class="m">Filed 5 Feb 2026 · accession 0001878848-26-000015</p>
+        <p class="used">The filing that carries the executed Microsoft and Dell agreements as exhibits.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000015/iren-20251231.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000015/iren-20251231.htm</a></p>
+      </div>
+    </li>
+    <li id="r7">
+      <span class="n">[7]</span>
+      <div>
+        <p class="t">Exhibit 10.3 — Microsoft Partner Statement of Work</p>
+        <p class="m">Filed with [6], 5 Feb 2026 · executed 31 Oct – 2 Nov 2025</p>
+        <p class="used">The executed contract. Signatures of Scott Guthrie for Microsoft and Kent Draper and William Roberts for IE US Hardware 3 Inc.; Section 3.2 total contract value cap; Table 1 aggregate tranche value, upfront payment and estimated monthly payments; Horizon 1–4 locations; NVIDIA GB300 specification; Service End Dates in 2031.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000015/exhibit103-partnerstatem.htm">https://www.sec.gov/Archives/edgar/data/1878848/000187884826000015/exhibit103-partnerstatem.htm</a></p>
+      </div>
+    </li>
+    <li id="r8">
+      <span class="n">[8]</span>
+      <div>
+        <p class="t">Form 8-K — Microsoft and Dell commercial agreements</p>
+        <p class="m">Filed 3 Nov 2025 · accession 0001140361-25-040072</p>
+        <p class="used">Announcement of the ~$9.7bn Microsoft total contract value, the 20% per-tranche prepayment mechanism, the 200MW combined IT load, and the ~$5.8bn Dell Purchase Agreement with IREN Limited's unconditional parent guarantee.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036125040072/ef20058139_8k.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036125040072/ef20058139_8k.htm</a></p>
+      </div>
+    </li>
+    <li id="r9">
+      <span class="n">[9]</span>
+      <div>
+        <p class="t">Form 8-K — 2025 Annual General Meeting results</p>
+        <p class="m">Filed 24 Nov 2025 · accession 0001140361-25-043142</p>
+        <p class="used">Constitution amendments including annual director elections and the forum selection provision; approval of the 2025 Omnibus Incentive Plan and the full vote tallies.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036125043142/ef20059594_8k.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036125043142/ef20059594_8k.htm</a></p>
+      </div>
+    </li>
+    <li id="r10">
+      <span class="n">[10]</span>
+      <div>
+        <p class="t">Form 8-K — Co-CEO equity grants</p>
+        <p class="m">Filed 1 Jul 2026 · accession 0001140361-26-027202</p>
+        <p class="used">The 9,099,328 RSUs granted to each Co-CEO on 30 June 2026; four-year vesting with a two-year post-vesting holding period; no further equity grant until fiscal 2031.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036126027202/ef20077190_8k.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036126027202/ef20077190_8k.htm</a></p>
+      </div>
+    </li>
+    <li id="r11">
+      <span class="n">[11]</span>
+      <div>
+        <p class="t">Form 8-K — Change in certifying accountant</p>
+        <p class="m">Filed 28 Nov 2025 · accession 0001140361-25-043599</p>
+        <p class="used">Dismissal of Raymond Chabot Grant Thornton and appointment of KPMG LLP; confirmation that the FY2024 audit report carried a going-concern explanatory paragraph and that a material weakness was reported in the FY2024 Form 20-F.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036125043599/ef20060170_8k.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036125043599/ef20060170_8k.htm</a></p>
+      </div>
+    </li>
+    <li id="r12">
+      <span class="n">[12]</span>
+      <div>
+        <p class="t">Form 8-K — Chief Financial Officer transition</p>
+        <p class="m">Filed 8 Sep 2025 · accession 0001140361-25-034232</p>
+        <p class="used">Appointment of Anthony Lewis as CFO with age and career history; departure of Belinda Nucifora.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036125034232/ef20055281_form8k.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036125034232/ef20055281_form8k.htm</a></p>
+      </div>
+    </li>
+    <li id="r13">
+      <span class="n">[13]</span>
+      <div>
+        <p class="t">Section 16 filings — Forms 3, 4 and 144, 2024–2026</p>
+        <p class="m">26 ownership filings by IREN insiders</p>
+        <p class="used">Officer and director filing addresses (all c/o Sydney); the September 2025 Co-CEO share sales with dates, volumes and prices; the July 2025 and July 2026 grants; the July 2026 director sale at $36.32.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000095010326009958/ownership.xml">https://www.sec.gov/Archives/edgar/data/1878848/000095010326009958/ownership.xml</a></p>
+      </div>
+    </li>
+    <li id="r14">
+      <span class="n">[14]</span>
+      <div>
+        <p class="t">Annual Report on Form 20-F, fiscal year 2024</p>
+        <p class="m">Filed 28 Aug 2024 · accession 0001628280-24-038677</p>
+        <p class="used">FY2024 going-concern opinion citing the $29.6m net loss and inability to fund outstanding purchase commitments; material weakness disclosure.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000162828024038677/iren-20240630.htm">https://www.sec.gov/Archives/edgar/data/1878848/000162828024038677/iren-20240630.htm</a></p>
+      </div>
+    </li>
+    <li id="r15">
+      <span class="n">[15]</span>
+      <div>
+        <p class="t">Annual Report on Form 20-F, fiscal year 2023</p>
+        <p class="m">Filed 13 Sep 2023 · accession 0001140361-23-043816</p>
+        <p class="used">FY2023 and FY2022 revenue, loss after income tax and Adjusted EBITDA on an IFRS basis; substantial-doubt risk factor during the NYDIG receivership; Armanino LLP audit report covering FY2020–FY2022.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036123043816/brhc20058647_20f.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036123043816/brhc20058647_20f.htm</a></p>
+      </div>
+    </li>
+    <li id="r16">
+      <span class="n">[16]</span>
+      <div>
+        <p class="t">Annual Report on Form 20-F, fiscal year 2022</p>
+        <p class="m">Filed 13 Sep 2022 · accession 0001140361-22-033208</p>
+        <p class="used">FY2022 and FY2021 revenue and loss; the Going Concern Uncertainty paragraph and its wording.</p>
+        <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000114036122033208/brhc10041484_20f.htm">https://www.sec.gov/Archives/edgar/data/1878848/000114036122033208/brhc10041484_20f.htm</a></p>
+      </div>
+    </li>
+    <li id="r17">
+      <span class="n">[17]</span>
+      <div>
+        <p class="t">EDGAR submissions record, CIK 0001878848</p>
+        <p class="m">data.sec.gov · retrieved 2 Sep 2026</p>
+        <p class="used">Filing history; registered office and mailing addresses; former names and the dates they changed; filer status and fiscal year end.</p>
+        <p class="u"><a href="https://data.sec.gov/submissions/CIK0001878848.json">https://data.sec.gov/submissions/CIK0001878848.json</a></p>
+      </div>
+    </li>
+    <li id="r18">
+      <span class="n">[18]</span>
+      <div>
+        <p class="t">Schedules 13D and 13G filed on IREN securities</p>
+        <p class="m">2022–2026, various filers</p>
+        <p class="used">The institutional holder list and each filer's principal address: Goldman Sachs, Bank of America, Susquehanna, Jane Street, Citadel Securities, HANSAINVEST, and the Everest Hill Group 13D.</p>
+        <p class="u"><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001878848&type=SC+13&dateb=&owner=include&count=40">https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001878848&type=SC+13&dateb=&owner=include&count=40</a></p>
+      </div>
+    </li>
+    <li id="r19">
+      <span class="n">[19]</span>
+      <div>
+        <p class="t">IREN corporate website — data centres, board and leadership pages</p>
+        <p class="m">Retrieved 2 Sep 2026</p>
+        <p class="used">Site status labels (operating, under construction, in development, planned); the current executive roster including officers who are not Section 16 filers.</p>
+        <p class="u"><a href="https://iren.com/data-centers">https://iren.com/data-centers</a></p>
+      </div>
+    </li>
+    <li id="r20">
+      <span class="n">[20]</span>
+      <div>
+        <p class="t">IREN executive appointment announcements</p>
+        <p class="m">GlobeNewswire releases, Feb–Jul 2026</p>
+        <p class="used">Appointment dates and prior employers for John Gross, Chris Parker, Kambiz Aghili, Michael Nudelman and Eric Hammersley; the Awaken acquisition.</p>
+        <p class="u"><a href="https://www.globenewswire.com/news-release/2026/07/02/3321225/0/en/IREN-Appoints-Chief-Product-Officer-and-Chief-Development-Officer.html">https://www.globenewswire.com/news-release/2026/07/02/3321225/0/en/IREN-Appoints-Chief-Product-Officer-and-Chief-Development-Officer.html</a></p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<footer>
+  <h3>Basis of preparation</h3>
+  <p>This document is compiled solely from public filings with the United States Securities and Exchange Commission, the company's own published materials and its press releases, each cited by number in section 14. The author holds no non-public information concerning IREN Limited and has relied on none. Statements of fact are drawn from those sources as they stood at the data cut-off of 2 September 2026. Statements of analysis, characterisation and opinion are the author's own, are presented as such, and are honestly held on the basis of the cited material.</p>
+  <h3>Figures</h3>
+  <p>Financial figures are as reported; non-GAAP measures are labelled where used. FY2021–FY2023 figures are IFRS as originally reported and FY2024–FY2026 are US GAAP, so the six-year series is not perfectly like-for-like across the basis change. Ownership figures date from 31 August 2025, the most recent proxy statement; share counts from 14 August 2026. Site capacities are announced gross megawatts, not contracted IT load. Contract values are total contract value, not recognised revenue. Where the author has performed a calculation from filed figures — the coverage shortfall, the contract-arithmetic check, the illustrative value of the June 2026 RSU grants — the text says so, and the result is the author's, not the company's.</p>
+  <h3>Named individuals</h3>
+  <p>Information about directors and officers is confined to disclosures those individuals or the company were required by law to make, and to their conduct in a corporate capacity. Nothing in this document alleges, or is intended to imply, wrongdoing by any person. Where the sequence of disclosed events might invite inference, the document states the innocent explanation that appears on the face of the filing.</p>
+  <h3>Not advice</h3>
+  <p>Nothing in this document is investment, legal, tax or financial advice; it is not a recommendation, and it is not an offer or solicitation in respect of any security. It is a general publication, not personalised to any reader, and no reader should act on it without independent professional advice. The author accepts corrections: errors of fact notified to the address in the publication statement above will be corrected and the correction noted.</p>
+</footer>
+
+<script>
+(function(){
+  var tip=document.getElementById('tip'); if(!tip) return;
+  var fig=tip.parentNode;
+  function fmt(v){var n=Math.abs(v).toFixed(1);return v<0?'('+n+')':n;}
+  fig.querySelectorAll('svg.chart .b').forEach(function(bar){
+    bar.addEventListener('mouseenter',function(){
+      var r=bar.getBoundingClientRect(), f=fig.getBoundingClientRect();
+      tip.textContent=bar.dataset.y+' · '+bar.dataset.s+' · US$'+fmt(parseFloat(bar.dataset.v))+'m';
+      tip.style.left=(r.left-f.left+r.width/2)+'px';
+      tip.style.top=(r.top-f.top)+'px';
+      tip.classList.add('on');
+    });
+    bar.addEventListener('mouseleave',function(){tip.classList.remove('on');});
+  });
+})();
+</script>
+
+</div>
+{% endraw %}
+</div>
+{% set iren_url = "https://" ~ canonical_host ~ "/iren" %}
+{% set iren_text = "The IREN File — a fully sourced dossier on the company behind the proposed Pittsburg County data-center tax abatement, from its SEC filings." %}
+<section class="share" aria-labelledby="share-iren-h">
+  <h2 id="share-iren-h">Share this file</h2>
+  <p class="small">This page is not linked from the rest of the site — it travels only by this link.</p>
+  <ul class="share-row">
+    <li><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ iren_url|urlencode }}&quote={{ iren_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg><span>Facebook</span></a></li>
+    <li><a class="share-btn" href="https://twitter.com/intent/tweet?url={{ iren_url|urlencode }}&text={{ iren_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 3h3l-6.8 7.8L21.7 21h-6.2l-4.9-6.3L5 21H2l7.3-8.4L1.7 3h6.4l4.4 5.8L17.5 3zm-1.1 16h1.7L7 4.7H5.2L16.4 19z"/></svg><span>X</span></a></li>
+    <li><a class="share-btn" href="https://nextdoor.com/sharekit/?source={{ canonical_host|urlencode }}&body={{ (iren_text ~ ' ' ~ iren_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Nextdoor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.3 14.5h-2.6v-4.2c0-1.2-.6-1.8-1.6-1.8s-1.7.7-1.7 1.9v4.1H7.8v-5.6c-1.2-.2-2-1-2.2-2.4h2.3c.1.5.4.8.9.8.5-1.2 1.6-1.9 3-1.9 2.6 0 4.5 1.6 4.5 4.6v4.5z"/></svg><span>Nextdoor</span></a></li>
+    <li><a class="share-btn" href="https://wa.me/?text={{ (iren_text ~ ' ' ~ iren_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 22l5.2-1.4A9.8 9.8 0 1 0 12 2.2zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.1 8.1 0 1 1 12 20.1zm4.5-6c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.2z"/></svg><span>WhatsApp</span></a></li>
+    <li><a class="share-btn" href="sms:?&body={{ (iren_text ~ ' ' ~ iren_url)|urlencode }}" aria-label="Share by text message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm3 5v2h10V8H7zm0 4v2h7v-2H7z"/></svg><span>Text</span></a></li>
+    <li><a class="share-btn" href="mailto:?subject={{ 'The IREN File'|urlencode }}&body={{ iren_text|urlencode }}%0A%0A{{ iren_url|urlencode }}" aria-label="Share by email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V17h16V7.5l-8 5-8-5zM4.6 7l7.4 4.6L19.4 7H4.6z"/></svg><span>Email</span></a></li>
+    <li><button class="share-btn" type="button" data-copy="{{ iren_url }}" aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a3 3 0 0 1 4.2 4.2l-1.6 1.6-1.4-1.4 1.6-1.6a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0zm2.8-2.8a1 1 0 0 1 0 1.4L10 15.4a3 3 0 0 1-4.2-4.2l1.6-1.6 1.4 1.4-1.6 1.6a1 1 0 0 0 1.4 1.4l3.4-3.4a1 1 0 0 1 1.4 0z"/></svg><span class="copy-label">Copy link</span></button></li>
+  </ul>
+</section>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+  var done=function(){var l=b.querySelector('.copy-label');l.textContent='Copied';setTimeout(function(){l.textContent='Copy link';},1800);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done);}
+  else{var t=document.createElement('textarea');t.value=b.dataset.copy;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(t);}
+});});
+</script>
+{% endblock %}

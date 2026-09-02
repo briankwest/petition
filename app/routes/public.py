@@ -66,6 +66,12 @@ def faq(request: Request, db: Session = Depends(get_db)):
                   five=statutes.FIVE_DATA_POINTS, cites={k: (statutes.html_url(k) or statutes.cite_url(k)) for k in ["62-868", "34-1", "34-3", "34-6", "34-6.1", "34-23"]})
 
 
+@router.get("/iren")
+def iren(request: Request, db: Session = Depends(get_db)):
+    """Unlisted dossier page — reachable only by direct link; nothing on the site links here."""
+    return render(request, "public/iren.html", s=Settings(db))
+
+
 # ---- volunteer sign-up: no CAPTCHA; honeypot + signed timestamp + per-IP limit ----
 def _signup_serializer() -> URLSafeTimedSerializer:
     return URLSafeTimedSerializer(secret_key(), salt="volunteer-signup")

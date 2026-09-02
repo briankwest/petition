@@ -63,7 +63,7 @@ def test_host_redirect(client):
 
 
 def test_public_pages_and_banner(client):
-    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer"]:
+    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren"]:
         r = client.get(path)
         assert r.status_code == 200, path
         assert "tabled" in r.text, path
