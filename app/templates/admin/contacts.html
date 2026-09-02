@@ -2,6 +2,6 @@
 {% block atitle %}Contacts{% endblock %}
 {% block content %}
 <h1>Contacts <a class="btn primary" href="/admin/contacts/new">Add contact</a></h1>
-<div class="tbl"><table><thead><tr><th>Role</th><th>Name</th><th>Phone</th><th>Email</th><th>Public</th><th class="num">Order</th></tr></thead>
-<tbody>{% for c in rows %}<tr><td><a href="/admin/contacts/{{ c.id }}">{{ c.role }}</a></td><td>{{ c.name or '' }}</td><td>{{ c.phone or '' }}</td><td>{{ c.email or '' }}</td><td>{{ 'yes' if c.public else 'hidden' }}</td><td class="num">{{ c.sort_order }}</td></tr>{% else %}<tr><td colspan="6">No contacts.</td></tr>{% endfor %}</tbody></table></div>
+<div class="tbl rt"><table><thead><tr><th>Role</th><th>Name</th><th>Phone</th><th>Email</th><th>Public</th><th class="num">Order</th></tr></thead>
+<tbody>{% for c in rows %}<tr><td data-th=""><a href="/admin/contacts/{{ c.id }}">{{ c.role }}</a></td><td data-th="Name">{{ c.name or '' }}</td><td data-th="Phone">{{ c.phone or '' }}</td><td data-th="Email">{{ c.email or '' }}</td><td data-th="Public">{{ 'yes' if c.public else 'hidden' }}</td><td class="num" data-th="Order">{{ c.sort_order }}</td></tr>{% else %}<tr><td colspan="6">No contacts.</td></tr>{% endfor %}</tbody></table></div>
 {% endblock %}

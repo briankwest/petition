@@ -16,23 +16,23 @@
 </div>
 {% if running %}<p class="small">A build is running — this page refreshes automatically.</p>{% endif %}
 <h2>Builds (stored in the database)</h2>
-<div class="tbl"><table>
+<div class="tbl rt"><table>
 <thead><tr><th>#</th><th>When (UTC)</th><th>Kind</th><th>By</th><th>Status</th><th>Checks</th><th>Vs. filed</th><th></th></tr></thead>
 <tbody>{% for b in builds %}<tr>
-<td class="num"><a href="/admin/documents/build/{{ b.id }}">{{ b.id }}</a>{% if b.filed %} <span class="pill ok">FILED</span>{% endif %}</td>
-<td class="num">{{ b.built_at|date }}</td><td>{{ b.kind }}</td><td>{{ b.built_by }}</td>
-<td>{% if b.status == 'ok' %}<span class="pill ok">ok</span>{% elif b.status == 'running' %}<span class="pill warn">running…</span>{% else %}<span class="pill critical">failed</span>{% endif %}</td>
-<td>{% if b.status == 'ok' %}{% if b.checks_failed %}<span class="pill critical">{{ b.checks_failed }} failed</span>{% else %}<span class="pill ok">all pass</span>{% endif %}{% endif %}</td>
-<td>{% if filed_fp and b.pamphlet_fingerprint %}{% if b.pamphlet_fingerprint == filed_fp %}<span class="pill ok">matches filed</span>{% else %}<span class="pill critical">DIFFERS — do not print</span>{% endif %}{% endif %}</td>
+<td class="num" data-th=""><a href="/admin/documents/build/{{ b.id }}">{{ b.id }}</a>{% if b.filed %} <span class="pill ok">FILED</span>{% endif %}</td>
+<td class="num dt" data-th="When">{{ b.built_at|date }}</td><td data-th="Kind">{{ b.kind }}</td><td data-th="By">{{ b.built_by }}</td>
+<td data-th="Status">{% if b.status == 'ok' %}<span class="pill ok">ok</span>{% elif b.status == 'running' %}<span class="pill warn">running…</span>{% else %}<span class="pill critical">failed</span>{% endif %}</td>
+<td data-th="Checks">{% if b.status == 'ok' %}{% if b.checks_failed %}<span class="pill critical">{{ b.checks_failed }} failed</span>{% else %}<span class="pill ok">all pass</span>{% endif %}{% endif %}</td>
+<td data-th="Vs. filed">{% if filed_fp and b.pamphlet_fingerprint %}{% if b.pamphlet_fingerprint == filed_fp %}<span class="pill ok">matches filed</span>{% else %}<span class="pill critical">DIFFERS — do not print</span>{% endif %}{% endif %}</td>
 <td class="actions-cell"><a class="btn" href="/admin/documents/build/{{ b.id }}">Open</a>{% if user.role == 'admin' and not b.filed and b.status != 'running' %} <form class="inline-form" method="post" action="/admin/documents/build/{{ b.id }}/delete" onsubmit="return confirm('Delete build #{{ b.id }} and its PDFs? This cannot be undone.')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn danger">Delete</button></form>{% endif %}</td>
 </tr>{% else %}<tr><td colspan="8">No server builds yet — Generate one above.</td></tr>{% endfor %}</tbody></table></div>
 <h2>Built at deploy (fallback)</h2>
 <p class="small">Rendered from <code>config/petition.yaml</code> when this version was deployed. Use a database build above for current data.</p>
-<div class="tbl"><table>
+<div class="tbl rt"><table>
 <thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th></th></tr></thead>
 <tbody>{% for f in files %}<tr>
-<td><a href="/admin/documents/view/{{ f.name }}">{{ f.name }}</a> <span class="small muted">{{ f.title }}</span></td>
-<td class="num">{{ f.pages if f.pages is not none else '—' }}</td><td class="num">{{ (f.bytes/1024)|round|int }} KB</td>
+<td data-th=""><a href="/admin/documents/view/{{ f.name }}">{{ f.name }}</a> <span class="small muted">{{ f.title }}</span></td>
+<td class="num" data-th="Pages">{{ f.pages if f.pages is not none else '—' }}</td><td class="num" data-th="Size">{{ (f.bytes/1024)|round|int }} KB</td>
 <td class="actions-cell"><a class="btn" href="/admin/documents/view/{{ f.name }}">Preview</a> <a class="btn" href="/admin/documents/file/{{ f.name }}?download=1">Download</a></td>
 </tr>{% else %}<tr><td colspan="4">Nothing found in {{ dirs|join(', ') or 'dist/' }}.</td></tr>{% endfor %}</tbody></table></div>
 {% endblock %}

@@ -2,9 +2,19 @@
 {% block atitle %}Filing QA{% endblock %}
 {% block content %}
 <h1>Filing QA checklist</h1>
-<div class="tbl"><table><thead><tr><th>Task</th><th>Status</th><th>Owner</th><th>Notes</th><th></th></tr></thead>
-<tbody>{% for t in rows %}<tr><form method="post" action="/admin/qa/{{ t.id }}"><input type="hidden" name="csrf" value="{{ csrf }}">
-<td>{{ t.task }}</td><td><select name="status">{% for st in statuses %}<option {% if st == t.status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></td><td><input name="owner" value="{{ t.owner or '' }}" style="width:9em"></td><td><input name="notes" value="{{ t.notes or '' }}"></td><td><button class="btn">Save</button></td></form></tr>{% endfor %}</tbody></table></div>
+<ul class="qa-list">
+{% for t in rows %}
+<li class="qa-card">
+  <p class="task">{{ t.task }}</p>
+  <form method="post" action="/admin/qa/{{ t.id }}" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}">
+    <label>Status<select name="status">{% for st in statuses %}<option {% if st == t.status %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></label>
+    <label>Owner<input name="owner" value="{{ t.owner or '' }}" style="width:9em"></label>
+    <label>Notes<input name="notes" value="{{ t.notes or '' }}"></label>
+    <button class="btn">Save</button>
+  </form>
+</li>
+{% else %}<li class="qa-card"><p class="task">No tasks yet — add one below.</p></li>{% endfor %}
+</ul>
 <h2>Add task</h2>
-<form method="post" action="/admin/qa/new" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input name="task" placeholder="Task" required style="min-width:20em"><input name="owner" placeholder="Owner"><input type="number" name="sort_order" value="500" style="width:5em"><button class="btn primary">Add</button></form>
+<form method="post" action="/admin/qa/new" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><input name="task" placeholder="Task" required style="min-width:16em"><input name="owner" placeholder="Owner"><input type="number" name="sort_order" value="500" style="width:5em"><button class="btn primary">Add</button></form>
 {% endblock %}

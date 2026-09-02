@@ -13,6 +13,6 @@
 <div class="field span2"><label>Documents</label><input name="documents"></div>
 <div class="field"><label>Notes</label><input name="notes"></div>
 </div><div class="actions"><button class="btn primary">Log it</button></div></form>
-<div class="tbl"><table><thead><tr><th>When</th><th>Item</th><th>Office</th><th>Person</th><th>Receipt</th><th>Documents</th><th>Notes</th></tr></thead>
-<tbody>{% for r in rows %}<tr><td>{{ r.occurred_at|date('') }}</td><td>{{ r.item }}</td><td>{{ r.office or '' }}</td><td>{{ r.person or '' }}</td><td>{{ '✓' if r.receipt_obtained else '' }}</td><td>{{ r.documents or '' }}</td><td>{{ r.notes or '' }}</td></tr>{% else %}<tr><td colspan="7">Nothing logged yet.</td></tr>{% endfor %}</tbody></table></div>
+<div class="tbl rt"><table><thead><tr><th>When</th><th>Item</th><th>Office</th><th>Person</th><th>Receipt</th><th>Documents</th><th>Notes</th></tr></thead>
+<tbody>{% for r in rows %}<tr><td data-th="When" class="dt">{{ r.occurred_at|date('') }}</td><td data-th="Item">{{ r.item }}</td><td data-th="Office">{{ r.office or '' }}</td><td data-th="Person">{{ r.person or '' }}</td><td data-th="Receipt">{{ '✓' if r.receipt_obtained else '' }}</td><td data-th="Documents">{{ r.documents or '' }}</td><td data-th="Notes">{{ r.notes or '' }}</td></tr>{% else %}<tr><td colspan="7">Nothing logged yet.</td></tr>{% endfor %}</tbody></table></div>
 {% endblock %}

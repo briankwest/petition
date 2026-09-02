@@ -13,8 +13,8 @@
 {% if snap %}<p class="small">Snapshot: Resolution {{ snap.resolution_number }} · adopted {{ snap.adoption_date }} · deadline {{ snap.filing_deadline }} · election {{ snap.election_date }} · voters {{ snap.registered_voters }} · minimum {{ snap.legal_minimum }} · target {{ snap.target }} · {{ snap.rows_per_sheet }}×{{ snap.sheets_per_pamphlet }}{% if snap.placeholders %} · <strong>{{ snap.placeholders|length }} placeholders</strong>{% endif %}</p>{% endif %}
 {% if b.files %}
 <h2>Files</h2>
-<div class="tbl"><table><thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th>SHA-256</th><th></th></tr></thead>
-<tbody>{% for f in b.files %}<tr><td><button class="linklike bpv-link" data-src="/admin/documents/build/{{ b.id }}/{{ f.name }}">{{ f.name }}</button></td><td class="num">{{ f.pages }}</td><td class="num">{{ (f.bytes_len/1024)|round|int }} KB</td><td class="mono small">{{ (f.sha256 or '')[:16] }}…</td>
+<div class="tbl rt"><table><thead><tr><th>File</th><th class="num">Pages</th><th class="num">Size</th><th>SHA-256</th><th></th></tr></thead>
+<tbody>{% for f in b.files %}<tr><td data-th=""><button class="linklike bpv-link" data-src="/admin/documents/build/{{ b.id }}/{{ f.name }}">{{ f.name }}</button></td><td class="num" data-th="Pages">{{ f.pages }}</td><td class="num" data-th="Size">{{ (f.bytes_len/1024)|round|int }} KB</td><td class="mono small" data-th="SHA-256">{{ (f.sha256 or '')[:16] }}…</td>
 <td class="actions-cell"><button class="btn bpv-link" data-src="/admin/documents/build/{{ b.id }}/{{ f.name }}">Preview below</button> <a class="btn" href="/admin/documents/build/{{ b.id }}/{{ f.name }}?download=1">Download</a></td></tr>{% endfor %}</tbody></table></div>
 {% if b.files %}
 <h2 id="preview-h">Preview: <span id="bpv-name" class="mono small"></span></h2>
@@ -30,8 +30,8 @@ if(first)show(first.dataset.src);})();
 {% endif %}
 {% if report %}
 <h2>Checks — {{ report|length - fails|length }} passed, {{ fails|length }} failed</h2>
-<div class="tbl"><table><thead><tr><th></th><th>Document</th><th>Check</th><th>Detail</th></tr></thead>
-<tbody>{% for r in report %}<tr {% if not r.ok %}style="background:var(--danger-soft)"{% endif %}><td>{% if r.ok %}✓{% else %}<strong>✗</strong>{% endif %}</td><td class="small">{{ r.doc }}</td><td>{{ r.check }}</td><td class="small">{{ r.detail }}</td></tr>{% endfor %}</tbody></table></div>
+<div class="tbl rt"><table><thead><tr><th></th><th>Document</th><th>Check</th><th>Detail</th></tr></thead>
+<tbody>{% for r in report %}<tr {% if not r.ok %}style="background:var(--danger-soft)"{% endif %}><td data-th="">{% if r.ok %}✓{% else %}<strong>✗</strong>{% endif %}</td><td class="small" data-th="Doc">{{ r.doc }}</td><td data-th="Check">{{ r.check }}</td><td class="small" data-th="Detail">{{ r.detail }}</td></tr>{% endfor %}</tbody></table></div>
 {% endif %}
 {% if b.kind == 'final' and b.status == 'ok' and not b.checks_failed and not frozen and user and user.role == 'admin' %}
 <h2>Freeze — record the filing</h2>
