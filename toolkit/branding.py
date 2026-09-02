@@ -48,7 +48,8 @@ def _font(bold: bool, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default()
 
 
-def draw_og(title: str, eyebrow: str, tagline: str) -> Image.Image:
+def draw_og(title: str, eyebrow: str, tagline: str,
+            footer: str = "Where to sign · Am I registered? · Who to call") -> Image.Image:
     W, H = 1200, 630
     im = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(im)
@@ -79,7 +80,7 @@ def draw_og(title: str, eyebrow: str, tagline: str) -> Image.Image:
     tag_y = max(300, y + 40)
     d.multiline_text((80, tag_y), tagline, font=_font(False, 44), fill=NAVY, spacing=12)
     d.rectangle((80, 520, 200, 528), fill=BLUE)
-    d.text((80, 548), "Where to sign · Am I registered? · Who to call", font=_font(False, 28), fill=MUTED)
+    d.text((80, 548), footer, font=_font(False, 28), fill=MUTED)
     return im
 
 

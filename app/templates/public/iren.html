@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}The IREN File · {{ site_title }}{% endblock %}
+{% block og_title %}The IREN File{% endblock %}
+{% block og_image %}/static/og-iren.png{% endblock %}
+{% block og_image_alt %}The IREN File — a sourced dossier on IREN Limited, the company behind the proposed Pittsburg County data-center tax abatement{% endblock %}
 {% block description %}A fully sourced dossier on IREN Limited — the company behind the proposed Pittsburg County data-center tax abatement: sites, board, voting control, the $9.7bn Microsoft contract and six years of results, drawn from its SEC filings.{% endblock %}
 {% block head %}
 <style>
@@ -103,7 +106,7 @@
 /* ---------- tables ---------- */
 .irenfile .scroll{overflow-x:auto;margin:22px 0;border:1px solid var(--rule)}
 .irenfile table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
-.irenfile caption{text-align:left;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);padding:0 0 9px}
+.irenfile caption{text-align:left;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);padding:10px 15px 9px}
 .irenfile th,.irenfile td{padding:10px 15px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
 .irenfile thead th{
   font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
