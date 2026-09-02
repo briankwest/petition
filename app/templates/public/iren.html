@@ -10,7 +10,7 @@
   --surface-sunk:#E8EBE5;
   --ink:#131A20;
   --ink-soft:#3A444C;
-  --muted:#646E77;
+  --muted:#525B63;
   --rule:#D6DBD3;
   --rule-strong:#B9C0B6;
   --copper:#A2542C;
@@ -34,7 +34,7 @@
   background:var(--paper);
   color:var(--ink);
   font-family:var(--f-body);
-  font-size:17px;
+  font-size:18px;
   line-height:1.62;
   -webkit-font-smoothing:antialiased;
 }
@@ -43,12 +43,12 @@
 .irenfile a:focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:2px}
 
 .irenfile .doc{max-width:var(--wrap);margin:0 auto;padding:0 28px 96px}
-.irenfile .measure{max-width:var(--measure)}
+.irenfile .measure{max-width:none}
 
 /* ---------- masthead ---------- */
 .irenfile .masthead{padding:68px 0 34px;border-bottom:2px solid var(--ink)}
 .irenfile .stamp{
-  font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--copper);display:flex;flex-wrap:wrap;gap:10px 18px;margin:0 0 26px
 }
 .irenfile .stamp span{white-space:nowrap}
@@ -58,14 +58,14 @@
   line-height:.94;letter-spacing:-.028em;margin:0;text-wrap:balance
 }
 .irenfile h1 .sub{display:block;font-weight:500;font-size:clamp(17px,2.1vw,23px);letter-spacing:-.01em;color:var(--muted);margin-top:14px;line-height:1.3}
-.irenfile .dek{margin:26px 0 0;max-width:62ch;font-size:20px;line-height:1.55;color:var(--ink-soft)}
+.irenfile .dek{margin:26px 0 0;max-width:none;font-size:20px;line-height:1.55;color:var(--ink-soft)}
 
 .irenfile .vitals{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
   gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:34px
 }
 .irenfile .vital{background:var(--surface);padding:13px 15px 15px}
-.irenfile .vital dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.irenfile .vital dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
 .irenfile .vital dd{margin:0;font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 
 /* ---------- publication statement ---------- */
@@ -73,7 +73,7 @@
 .irenfile .disclose .d-h{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin:0 0 10px}
 .irenfile .disclose dl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 24px}
 .irenfile .disclose dl div{display:flex;flex-direction:column;gap:2px;padding-bottom:8px}
-.irenfile .disclose dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.irenfile .disclose dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .irenfile .disclose dd{margin:0;font-size:14.5px;line-height:1.45}
 .irenfile .todo{font-family:var(--f-mono);font-size:12px;background:var(--copper-wash);color:var(--copper);padding:2px 6px;border-radius:2px}
 .irenfile footer h3{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.02em;color:var(--ink);margin:0 0 6px;text-transform:uppercase}
@@ -82,9 +82,9 @@
 /* ---------- sections ---------- */
 .irenfile section{padding-top:62px}
 .irenfile .sec-head{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--rule-strong);padding-bottom:10px;margin-bottom:26px;flex-wrap:wrap}
-.irenfile .sec-head .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);flex:none}
+.irenfile .sec-head .tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);flex:none}
 .irenfile .sec-head h2{font-family:var(--f-display);font-weight:600;font-size:clamp(24px,3vw,31px);letter-spacing:-.022em;margin:0;line-height:1.15;text-wrap:balance}
-.irenfile .sec-head .note{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.irenfile .sec-head .note{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap}
 
 .irenfile p{margin:0 0 17px}
 .irenfile .lede-p{font-size:19px;color:var(--ink-soft)}
@@ -98,27 +98,27 @@
 .irenfile .metric{border-top:2px solid var(--ink);padding-top:11px}
 .irenfile .metric .fig{font-family:var(--f-display);font-weight:700;font-size:31px;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;display:block}
 .irenfile .metric .fig .u{font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--muted);margin-left:2px}
-.irenfile .metric .cap{display:block;margin-top:8px;font-family:var(--f-mono);font-size:11px;line-height:1.45;letter-spacing:.03em;color:var(--muted)}
+.irenfile .metric .cap{display:block;margin-top:8px;font-family:var(--f-mono);font-size:12px;line-height:1.5;letter-spacing:.03em;color:var(--muted)}
 .irenfile .metric.neg .fig{color:var(--copper)}
 
 /* ---------- tables ---------- */
 .irenfile .scroll{overflow-x:auto;margin:22px 0;border:1px solid var(--rule)}
 .irenfile table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
-.irenfile caption{text-align:left;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--muted);padding:0 0 9px}
+.irenfile caption{text-align:left;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);padding:0 0 9px}
 .irenfile th,.irenfile td{padding:10px 15px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
 .irenfile thead th{
-  font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--muted);font-weight:400;background:var(--surface-sunk);white-space:nowrap
 }
-.irenfile tbody td{font-size:15.5px;line-height:1.5}
+.irenfile tbody td{font-size:16px;line-height:1.5}
 .irenfile tbody tr:last-child td{border-bottom:0}
-.irenfile td.num,.irenfile th.num{text-align:right;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.irenfile td.num,.irenfile th.num{text-align:right;font-family:var(--f-mono);font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .irenfile tr.total td{border-top:2px solid var(--ink);font-weight:500;background:var(--surface-sunk)}
 .irenfile .key{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);letter-spacing:.02em;white-space:nowrap}
 
 /* ---------- capacity ladder ---------- */
 .irenfile .ladder{margin:8px 0 0;border-top:1px solid var(--rule)}
-.irenfile .grp{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);
+.irenfile .grp{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);
      display:flex;justify-content:space-between;gap:14px;padding:20px 0 8px;border-bottom:1px solid var(--rule)}
 .irenfile .grp .gsum{color:var(--muted);font-variant-numeric:tabular-nums}
 .irenfile .site{
@@ -126,7 +126,7 @@
   gap:16px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule)
 }
 .irenfile .site-name{font-family:var(--f-display);font-weight:600;font-size:15.5px;letter-spacing:-.01em;display:block}
-.irenfile .site-loc{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.irenfile .site-loc{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);letter-spacing:.02em}
 .irenfile .track{height:13px;background:var(--surface-sunk);position:relative;border-radius:1px}
 .irenfile .bar{position:absolute;inset:0 auto 0 0;min-width:3px;border-radius:1px}
 .irenfile .bar--op{background:var(--st-op)}
@@ -135,19 +135,19 @@
 .irenfile .bar--plan{background:var(--st-plan)}
 .irenfile .site-mw{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .irenfile .site-mw .u{color:var(--muted);font-size:11px;margin-left:3px}
-.irenfile .status{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+.irenfile .status{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
         display:inline-block;padding:3px 7px;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
 .irenfile .s-op{color:var(--st-op)}
 .irenfile .s-con{color:var(--st-con)}
 .irenfile .s-dev{color:var(--st-dev)}
 .irenfile .s-plan{color:var(--st-plan)}
-.irenfile .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:20px 0 4px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.irenfile .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:20px 0 4px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .irenfile .legend b{display:inline-block;width:22px;height:9px;border-radius:1px;margin-right:7px;vertical-align:middle}
 
 /* ---------- chart ---------- */
 .irenfile .figure{margin:26px 0 6px;position:relative}
 .irenfile .figure .cap-t{font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:-.01em;margin:0 0 3px}
-.irenfile .figure .cap-s{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin:0 0 16px;letter-spacing:.02em}
+.irenfile .figure .cap-s{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:0 0 16px;letter-spacing:.02em}
 .irenfile .chart-wrap{overflow-x:auto}
 .irenfile svg.chart{display:block;width:100%;min-width:560px;height:auto}
 .irenfile svg.chart .gl{stroke:var(--grid);stroke-width:1}
@@ -176,7 +176,7 @@
 }
 .irenfile .person-id .nm{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em;line-height:1.15;margin:0 0 5px;text-wrap:balance}
 .irenfile .person-id .rl{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;color:var(--copper);line-height:1.5;display:block;margin-bottom:10px}
-.irenfile .facts{margin:0;font-family:var(--f-mono);font-size:11px;line-height:1.75;color:var(--muted)}
+.irenfile .facts{margin:0;font-family:var(--f-mono);font-size:12px;line-height:1.7;color:var(--muted)}
 .irenfile .facts div{display:flex;gap:8px}
 .irenfile .facts dt{flex:none;width:74px;letter-spacing:.06em;text-transform:uppercase;font-size:10px;padding-top:2px}
 .irenfile .facts dd{margin:0;color:var(--ink-soft)}
@@ -194,7 +194,7 @@
 }
 .irenfile .callout h3{margin-top:0}
 .irenfile .callout p:last-child{margin-bottom:0}
-.irenfile .callout .measure{max-width:64ch}
+.irenfile .callout .measure{max-width:none}
 
 .irenfile .checks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
 .irenfile .checks li{
@@ -223,8 +223,8 @@
 .irenfile .refs li:target{background:var(--copper-wash);box-shadow:0 0 0 8px var(--copper-wash)}
 .irenfile .refs .n{font-family:var(--f-mono);font-size:12px;color:var(--copper);font-weight:500;padding-top:2px}
 .irenfile .refs .t{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:-.01em;margin:0 0 4px}
-.irenfile .refs .m{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);line-height:1.65;letter-spacing:.02em;margin:0 0 5px;word-break:break-word}
-.irenfile .refs .u{font-family:var(--f-mono);font-size:10.5px;line-height:1.5;word-break:break-all}
+.irenfile .refs .m{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;margin:0 0 5px;word-break:break-word}
+.irenfile .refs .u{font-family:var(--f-mono);font-size:11.5px;line-height:1.5;word-break:break-all}
 .irenfile .refs .used{font-size:14px;line-height:1.5;color:var(--ink-soft);margin:0 0 5px}
 
 /* ---------- gaps ---------- */
@@ -258,12 +258,20 @@
   .irenfile *{animation:none!important;transition:none!important}
 }
 /* resets against site.css globals + fit inside main.wrap */
-.irenfile .bar{height:auto;background:none;border:0;margin:0;border-radius:1px;overflow:visible}
+.irenfile .bar{height:auto;border:0;margin:0;border-radius:1px;overflow:visible}
 .irenfile ul.plain{list-style:disc}
 .irenfile ul.plain li{padding:0;border-bottom:0}
 .irenfile .callout{border-radius:0}
-.irenfile .doc{padding:0 0 72px;max-width:none}
+.irenfile .doc{padding:0 0 72px;max-width:880px;margin:0 auto}
 .irenfile .masthead{padding-top:26px}
+/* grids sized so no row is left ragged at the 880px column */
+.irenfile .vitals{grid-template-columns:repeat(3,1fr)}
+.irenfile .metrics{grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:24px}
+.irenfile .metric .fig{font-size:29px}
+@media (max-width:620px){
+  .irenfile .vitals{grid-template-columns:repeat(2,1fr)}
+  .irenfile .metrics{grid-template-columns:repeat(2,1fr)}
+}
 {% endraw %}
 </style>
 {% endblock %}
@@ -1392,7 +1400,7 @@
 </div>
 {% set iren_url = "https://" ~ canonical_host ~ "/iren" %}
 {% set iren_text = "The IREN File — a fully sourced dossier on the company behind the proposed Pittsburg County data-center tax abatement, from its SEC filings." %}
-<section class="share" aria-labelledby="share-iren-h">
+<section class="share" aria-labelledby="share-iren-h" style="max-width:880px;margin-left:auto;margin-right:auto">
   <h2 id="share-iren-h">Share this file</h2>
   <p class="small">Send neighbors straight to the sourced record on the company behind the abatement.</p>
   <ul class="share-row">
