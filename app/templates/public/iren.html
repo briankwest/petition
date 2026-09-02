@@ -268,6 +268,21 @@
 .irenfile .vitals{grid-template-columns:repeat(3,1fr)}
 .irenfile .metrics{grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:24px}
 .irenfile .metric .fig{font-size:29px}
+/* table of contents */
+.irenfile .toc{margin-top:34px;border:1px solid var(--rule);background:var(--surface);padding:18px 20px 12px}
+.irenfile .toc-h{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin:0 0 10px}
+.irenfile .toc-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 30px}
+.irenfile .toc-list a{display:flex;gap:11px;align-items:baseline;padding:7px 2px;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--rule)}
+.irenfile .toc-list li:nth-last-child(-n+2) a{border-bottom:0}
+.irenfile .toc-list a:hover .toc-t,.irenfile .toc-list a:focus-visible .toc-t{color:var(--copper)}
+.irenfile .toc-n{font-family:var(--f-mono);font-size:11px;color:var(--copper);flex:none}
+.irenfile .toc-t{font-family:var(--f-display);font-weight:600;font-size:14.5px;letter-spacing:-.01em;line-height:1.35}
+.irenfile section{scroll-margin-top:16px}
+@media (max-width:620px){
+  .irenfile .toc-list{grid-template-columns:1fr}
+  .irenfile .toc-list li:nth-last-child(2) a{border-bottom:1px solid var(--rule)}
+  .irenfile .toc-list li:last-child a{border-bottom:0}
+}
 @media (max-width:620px){
   .irenfile .vitals{grid-template-columns:repeat(2,1fr)}
   .irenfile .metrics{grid-template-columns:repeat(2,1fr)}
@@ -311,6 +326,26 @@
     </dl>
   </div>
 </header>
+
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol class="toc-list">
+    <li><a href="#business"><span class="toc-n">01</span><span class="toc-t">What the company actually does</span></a></li>
+    <li><a href="#portfolio"><span class="toc-n">02</span><span class="toc-t">The 5.6 GW portfolio, site by site</span></a></li>
+    <li><a href="#footprint"><span class="toc-n">03</span><span class="toc-t">Where the company is registered, and where it isn't</span></a></li>
+    <li><a href="#board"><span class="toc-n">04</span><span class="toc-t">Six directors, two of them brothers</span></a></li>
+    <li><a href="#control"><span class="toc-n">05</span><span class="toc-t">Two unregistered shares hold 43.5% of the vote</span></a></li>
+    <li><a href="#leadership"><span class="toc-n">06</span><span class="toc-t">An executive team rebuilt in eighteen months</span></a></li>
+    <li><a href="#pay"><span class="toc-n">07</span><span class="toc-t">What management is paid, and what they have disposed of</span></a></li>
+    <li><a href="#commercial"><span class="toc-n">08</span><span class="toc-t">Customers, capital and counterparty risk</span></a></li>
+    <li><a href="#proof"><span class="toc-n">09</span><span class="toc-t">Is the $9.7bn real? Tracing it to the signed contract</span></a></li>
+    <li><a href="#position"><span class="toc-n">10</span><span class="toc-t">The business does not fund its own expansion</span></a></li>
+    <li><a href="#record"><span class="toc-n">11</span><span class="toc-t">Six years: one profitable, four flagged by auditors</span></a></li>
+    <li><a href="#legal"><span class="toc-n">12</span><span class="toc-t">Litigation, tax and audit history</span></a></li>
+    <li><a href="#gaps"><span class="toc-n">13</span><span class="toc-t">What this file does not establish</span></a></li>
+    <li><a href="#sources"><span class="toc-n">14</span><span class="toc-t">Every source, and what it supports</span></a></li>
+  </ol>
+</nav>
 
 <section id="business">
   <div class="sec-head">
