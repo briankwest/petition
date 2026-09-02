@@ -2,7 +2,6 @@
 {% block title %}The IREN File · {{ site_title }}{% endblock %}
 {% block description %}A fully sourced dossier on IREN Limited — the company behind the proposed Pittsburg County data-center tax abatement: sites, board, voting control, the $9.7bn Microsoft contract and six years of results, drawn from its SEC filings.{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
 <style>
 {% raw %}.irenfile{
   --paper:#FFFCF5;
@@ -23,8 +22,8 @@
   --c-ni:#00795E;
   --grid:#EAE5D6;
 
-  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-display:"Zilla Slab",Georgia,"Times New Roman",serif;
+  --f-body:"Libre Franklin",system-ui,"Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
 
   --measure:66ch;
@@ -34,8 +33,8 @@
   background:var(--paper);
   color:var(--ink);
   font-family:var(--f-body);
-  font-size:18px;
-  line-height:1.62;
+  font-size:17px;
+  line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
 .irenfile ::selection{background:var(--copper-wash);color:var(--ink)}
