@@ -30,7 +30,6 @@
   --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
 
   --measure:66ch;
-  --wrap:1120px;
 }
 .irenfile{
   background:var(--paper);
@@ -44,8 +43,10 @@
 .irenfile a{color:var(--copper);text-underline-offset:2px;text-decoration-thickness:1px}
 .irenfile a:focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:2px}
 
-.irenfile .doc{max-width:var(--wrap);margin:0 auto;padding:0 28px 96px}
-.irenfile .measure{max-width:none}
+/* the column is main.wrap's (1100px, 20px gutters) so the dossier lines up with
+   the site header, banner and footer; prose is held to --measure inside it. */
+.irenfile .doc{max-width:none;margin:0;padding:0 0 24px}
+.irenfile .measure{max-width:var(--measure)}
 
 /* ---------- masthead ---------- */
 .irenfile .masthead{padding:68px 0 34px;border-bottom:2px solid var(--ink)}
@@ -60,7 +61,7 @@
   line-height:.94;letter-spacing:-.028em;margin:0;text-wrap:balance
 }
 .irenfile h1 .sub{display:block;font-weight:500;font-size:clamp(17px,2.1vw,23px);letter-spacing:-.01em;color:var(--muted);margin-top:14px;line-height:1.3}
-.irenfile .dek{margin:26px 0 0;max-width:none;font-size:20px;line-height:1.55;color:var(--ink-soft)}
+.irenfile .dek{margin:26px 0 0;max-width:56ch;font-size:20px;line-height:1.55;color:var(--ink-soft)}
 
 .irenfile .vitals{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
@@ -246,7 +247,6 @@
 
 @media (max-width:720px){
   .irenfile{font-size:16px}
-  .irenfile .doc{padding:0 18px 64px}
   .irenfile .site{grid-template-columns:1fr auto;gap:6px 12px}
   .irenfile .site .track{grid-column:1/-1;order:3}
   .irenfile .site-mw{order:2;text-align:right}
@@ -264,10 +264,10 @@
 .irenfile ul.plain{list-style:disc}
 .irenfile ul.plain li{padding:0;border-bottom:0}
 .irenfile .callout{border-radius:0}
-.irenfile .doc{padding:0 0 72px;max-width:880px;margin:0 auto}
 .irenfile .masthead{padding-top:26px}
-/* grids sized so no row is left ragged at the 880px column */
-.irenfile .vitals{grid-template-columns:repeat(3,1fr)}
+/* 6 vitals: 6/3/2 columns so no row is ever left ragged */
+.irenfile .vitals{grid-template-columns:repeat(6,1fr)}
+@media (max-width:980px){.irenfile .vitals{grid-template-columns:repeat(3,1fr)}}
 .irenfile .metrics{grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:24px}
 .irenfile .metric .fig{font-size:29px}
 /* table of contents */
@@ -288,6 +288,9 @@
 @media (max-width:620px){
   .irenfile .vitals{grid-template-columns:repeat(2,1fr)}
   .irenfile .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:420px){
+  .irenfile .stamp span{white-space:normal}
 }
 {% endraw %}
 </style>
