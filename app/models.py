@@ -314,3 +314,16 @@ class PetitionAttachment(Base):
     sha256: Mapped[str | None] = mapped_column(String(64))
     uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     uploaded_by: Mapped[str | None] = mapped_column(String(64))
+
+
+class MarketQuote(Base):
+    """Cache for the public market data shown on /iren — nothing more.
+
+    Not part of the petition record: the row is a copy of somebody else's feed
+    (Nasdaq's public quote API), it is safe to drop at any time, and no page may
+    depend on it being present. `payload` is the normalized quote as JSON."""
+    __tablename__ = "market_quotes"
+    symbol: Mapped[str] = mapped_column(String(16), primary_key=True)
+    payload: Mapped[str] = mapped_column(Text)
+    source: Mapped[str | None] = mapped_column(String(32))
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

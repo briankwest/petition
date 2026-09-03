@@ -14,6 +14,7 @@ from ..models import Location, Event, Contact, VolunteerSignup, SIGNUP_ROLES
 from ..settings import Settings
 from ..stats import signature_stats
 from ..auth import current_user, secret_key
+from .. import market
 from .. import forms as F
 from . import render
 from toolkit import statutes
@@ -69,7 +70,10 @@ def faq(request: Request, db: Session = Depends(get_db)):
 @router.get("/iren")
 def iren(request: Request, db: Session = Depends(get_db)):
     """The IREN File — company dossier; first item in the site nav."""
-    return render(request, "public/iren.html", s=Settings(db))
+    s = Settings(db)
+    show = s.bool("public_show_market")
+    q = market.get_quote(db) if show else None    # cache only: the page never waits on the feed
+    return render(request, "public/iren.html", s=s, show_market=show, quote=q, q=market.display(q))
 
 
 # ---- volunteer sign-up: no CAPTCHA; honeypot + signed timestamp + per-IP limit ----

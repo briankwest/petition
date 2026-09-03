@@ -84,6 +84,7 @@
 
 /* ---------- sections ---------- */
 .irenfile section{padding-top:62px}
+.irenfile section.pre{padding-top:30px}
 .irenfile .sec-head{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--rule-strong);padding-bottom:10px;margin-bottom:26px;flex-wrap:wrap}
 .irenfile .sec-head .tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);flex:none}
 .irenfile .sec-head h2{font-family:var(--f-display);font-weight:600;font-size:clamp(24px,3vw,31px);letter-spacing:-.022em;margin:0;line-height:1.15;text-wrap:balance}
@@ -331,6 +332,25 @@
     </dl>
   </div>
 </header>
+
+{% endraw %}
+{% if show_market %}
+<section id="market" class="pre">
+  <div class="sec-head">
+    <span class="tag">Market</span>
+    <h2>What the market says today</h2>
+    <span class="note">live · not part of the cut-off</span>
+  </div>
+
+  <p class="measure">Every figure in the rest of this file is fixed at the 2 September 2026 cut-off and tied to a
+  filing. This one is not. It is a live quote from Nasdaq, the exchange IREN lists on, and it moves while you read
+  it. It is here because no filing can stay current on the number the market revises continuously: what it thinks
+  the whole company is worth today.</p>
+
+  {% include "public/_ticker.html" %}
+</section>
+{% endif %}
+{% raw %}
 
 <nav class="toc" aria-label="Contents">
   <p class="toc-h">Contents</p>

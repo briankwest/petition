@@ -101,6 +101,8 @@ SETTING_FIELDS = [
     ("banner", "Public banner", "textarea", "Shown at the top of every public page."),
     ("public_show_counts", "Show live counts publicly", "checkbox", None),
     ("public_show_progress", "Show progress bar publicly", "checkbox", None),
+    ("public_show_market", "Show the live IREN quote on /iren", "checkbox",
+     "The market panel at the top of The IREN File. Data comes from Nasdaq's public feed; uncheck to hide it."),
     ("captain_name", "Petition Captain name", "text", None),
     ("captain_phone", "Petition Captain phone", "text", None),
     ("volunteer_form_url", "External volunteer form URL (optional)", "text", "Leave blank to use the built-in sign-up form, which feeds the Sign-ups queue for your approval."),

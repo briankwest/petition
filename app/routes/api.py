@@ -11,6 +11,7 @@ from ..db import get_db
 from ..models import Location, Event
 from ..settings import Settings
 from ..stats import signature_stats
+from .. import market
 
 router = APIRouter(prefix="/api")
 _hits: dict[str, deque] = defaultdict(deque)
@@ -96,3 +97,16 @@ def precinct(request: Request, address: str = "", db: Session = Depends(get_db))
     except Exception as e:  # upstream geocoder problems should not 500
         raise HTTPException(status_code=502, detail=f"Lookup failed: {e}")
     return JSONResponse(result)
+
+
+@router.get("/quote.json")
+def quote(request: Request, db: Session = Depends(get_db)):
+    """Live IREN quote for the ticker on /iren. Public feed, cached server-side; the page
+    renders from the cache and calls this to refresh, so this one may wait on the network."""
+    _rate_limit(request)
+    q = market.get_quote(db, block=True) if Settings(db).bool("public_show_market") else None
+    if q is None:
+        return JSONResponse({"ok": False, "symbol": market.SYMBOL}, status_code=503,
+                            headers={"Cache-Control": "no-store"})
+    return JSONResponse({"ok": True, "display": market.display(q), "spark": q.spark},
+                        headers={"Cache-Control": "public, max-age=60"})

@@ -1,0 +1,164 @@
+{# Live IREN quote. Server-renders from the cache (so it works with no JavaScript) and then
+   refreshes itself from /api/quote.json. `quote` is the market.Quote; `q` is
+   market.display(quote) — every figure already formatted, so nothing is formatted twice.
+
+   Two states, both in the DOM: the figures, and a notice for when the feed has not answered.
+   The cache is cold for the first few seconds after a deploy, so the script has to be able to
+   fill in a panel the server rendered empty.
+
+   Headline = the regular session (the close, once the bell has rung); the extended-hours line
+   appears only when there is a later print. Those two swap over the course of a day, so the
+   headline nodes are marked data-tk-main and the script picks the field to read. #}
+{% set ext = q.extended_hours %}
+{% set sp = quote.spark if quote else None %}
+{%- macro band(key, pos) -%}
+<span class="tk-band" aria-hidden="true"><i data-tk-band="{{ key }}"{% if pos is none %} hidden{% endif %} style="left:{{ pos if pos is not none else 0 }}%"></i></span>
+{%- endmacro %}
+<div class="ticker{% if not q %} ticker--empty{% endif %}" id="ticker" data-quote-url="/api/quote.json">
+  <div data-tk-body {% if not q %}hidden{% endif %}>
+    <div class="tk-top">
+      <div class="tk-id">
+        <p class="tk-sym"><span class="tk-tick">{{ q.symbol or 'IREN' }}</span><span class="tk-mkt" data-q="exchange">{{ q.exchange or 'NASDAQ' }}</span></p>
+
+        <p class="tk-price">
+          <span class="tk-last" data-tk-main="price">{{ (q.close_price if ext else q.price) or '—' }}</span>
+          <span class="tk-chg tk-{{ (q.close_direction if ext else q.direction) or 'flat' }}" data-tk-main-dir>
+            <span class="tk-arrow" aria-hidden="true"></span>
+            <span data-tk-main="change">{{ (q.close_change if ext else q.change) or '' }}</span>
+            <span data-tk-main="change_pct">{{ (q.close_change_pct if ext else q.change_pct) or '' }}</span>
+          </span>
+        </p>
+
+        <p class="tk-when">
+          <span class="tk-pill" data-q="headline_label">{{ q.headline_label or 'Quote' }}</span>
+          <span data-tk-main="as_of">{{ (q.close_as_of if ext else q.as_of) or '' }}</span>
+        </p>
+
+        <p class="tk-ext" data-tk-ext {% if not ext %}hidden{% endif %}>
+          <span class="tk-ext-h" data-q="ext_label">{{ q.ext_label or 'After hours' }}</span>
+          <span data-q="price">{{ q.price or '—' }}</span>
+          <span class="tk-chg tk-{{ q.direction or 'flat' }}" data-q-dir="direction">
+            <span class="tk-arrow" aria-hidden="true"></span>
+            <span data-q="change">{{ q.change or '' }}</span>
+            <span data-q="change_pct">{{ q.change_pct or '' }}</span>
+          </span>
+          <span class="tk-ext-t" data-q="as_of">{{ q.as_of or '' }}</span>
+        </p>
+      </div>
+
+      <figure class="tk-spark tk-{{ sp.direction if sp else 'flat' }}" data-tk-spark>
+        <svg viewBox="0 0 {{ sp.w if sp else 640 }} {{ sp.h if sp else 96 }}" preserveAspectRatio="none"
+             role="img" aria-label="One-year daily closing price for IREN{% if sp %}, {{ sp['from'] }} to {{ sp['to'] }}{% endif %}.">
+          <path class="tk-area" data-tk-area d="{{ sp.area if sp else '' }}"/>
+          <polyline class="tk-line" data-tk-line vector-effect="non-scaling-stroke" points="{{ sp.points if sp else '' }}"/>
+          <circle class="tk-dot" data-tk-dot r="3" vector-effect="non-scaling-stroke" {% if not sp %}hidden{% endif %}
+                  cx="{{ sp.last_x if sp else 0 }}" cy="{{ sp.last_y if sp else 0 }}"/>
+        </svg>
+        <figcaption>
+          <span data-tk-from>{{ sp['from'] if sp else '' }}</span>
+          <b data-tk-spark-chg>
+            {%- if sp and sp.change_pct is not none %}{{ '+' if sp.change_pct > 0 else '−' }}{{ '%.1f'|format(sp.change_pct|abs) }}% in 12 months{% else %}One-year daily closes{% endif -%}
+          </b>
+          <span data-tk-to>{{ sp['to'] if sp else '' }}</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <dl class="tk-stats">
+      <div><dt>Market capitalisation</dt><dd data-q="market_cap">{{ q.market_cap or '—' }}</dd></div>
+      <div><dt>Previous close</dt><dd data-q="previous_close">{{ q.previous_close or '—' }}</dd></div>
+      <div><dt>Shares traded today</dt>
+        <dd><span data-q="volume">{{ q.volume or '—' }}</span>
+          <span class="tk-sub">vs <span data-q="avg_volume">{{ q.avg_volume or '—' }}</span> average</span></dd></div>
+      <div><dt>Analyst 1-year target <span class="tk-sub">(consensus)</span></dt>
+        <dd data-q="one_year_target">{{ q.one_year_target or '—' }}</dd></div>
+      <div class="tk-wide"><dt>Day range</dt>
+        <dd><span data-q="day_range">{{ q.day_range or '—' }}</span>
+          {{ band('day_pos', q.get('day_pos') if q else none) }}</dd></div>
+      <div class="tk-wide"><dt>52-week range <span class="tk-sub">(<span data-q="off_52w_high">{{ q.off_52w_high or '—' }}</span> from the high)</span></dt>
+        <dd><span data-q="week52_range">{{ q.week52_range or '—' }}</span>
+          {{ band('week52_pos', q.get('week52_pos') if q else none) }}</dd></div>
+    </dl>
+  </div>
+
+  <p class="tk-none" data-tk-none {% if q %}hidden{% endif %}>
+    <span class="tk-tick">IREN</span> is listed on Nasdaq, but its public quote feed has not answered.
+    <a href="https://www.nasdaq.com/market-activity/stocks/iren" rel="noopener" target="_blank">See the quote on Nasdaq</a>.
+  </p>
+
+  <p class="tk-foot">
+    <span data-tk-status>{% if q and q.stale %}This quote is old; the feed has not answered recently. {% endif %}</span>Live
+    market data comes from <a data-tk-src href="{{ q.source_url or 'https://www.nasdaq.com/market-activity/stocks/iren' }}" rel="noopener" target="_blank">{{ q.source or 'Nasdaq' }}</a>,
+    the listing venue's own public feed, cached for up to five minutes and refreshed while this page is open.
+    Prices are not part of the sourced record below and were not used in compiling it. Nothing here is investment advice.
+  </p>
+</div>
+<script>
+(function(){
+  var el = document.getElementById('ticker');
+  if (!el || !window.fetch) return;
+  var DIRS = ['tk-up','tk-down','tk-flat'], POLL = 60000, timer = null;
+
+  function text(node, v){ if (node && v != null && v !== '') node.textContent = v; }
+  // a field missing from the response must never downgrade what the server rendered
+  function dir(node, d){ if (!node || !d) return; DIRS.forEach(function(c){ node.classList.remove(c); });
+                         node.classList.add('tk-' + d); }
+  function show(sel, on){ var n = el.querySelector(sel); if (n) n.hidden = !on; }
+
+  function apply(d, sp){
+    var pre = d.extended_hours ? 'close_' : '';
+    el.querySelectorAll('[data-tk-main]').forEach(function(n){ text(n, d[pre + n.dataset.tkMain]); });
+    dir(el.querySelector('[data-tk-main-dir]'), d[pre + 'direction']);
+    show('[data-tk-ext]', !!d.extended_hours);
+
+    el.querySelectorAll('[data-q]').forEach(function(n){ text(n, d[n.dataset.q]); });
+    el.querySelectorAll('[data-q-dir]').forEach(function(n){ dir(n, d[n.dataset.qDir]); });
+    el.querySelectorAll('[data-tk-band]').forEach(function(n){
+      var v = d[n.dataset.tkBand];
+      n.hidden = (v == null);
+      if (v != null) n.style.left = v + '%';
+    });
+
+    var src = el.querySelector('[data-tk-src]');
+    if (src && d.source){ src.textContent = d.source; if (d.source_url) src.href = d.source_url; }
+    var status = el.querySelector('[data-tk-status]');
+    if (status) status.textContent = d.stale ? 'This quote is old; the feed has not answered recently. ' : '';
+
+    if (sp){
+      var svg = el.querySelector('.tk-spark svg');
+      if (svg) svg.setAttribute('viewBox', '0 0 ' + sp.w + ' ' + sp.h);
+      var line = el.querySelector('[data-tk-line]'); if (line) line.setAttribute('points', sp.points);
+      var area = el.querySelector('[data-tk-area]'); if (area) area.setAttribute('d', sp.area);
+      var dot = el.querySelector('[data-tk-dot]');
+      if (dot){ dot.setAttribute('cx', sp.last_x); dot.setAttribute('cy', sp.last_y); dot.hidden = false; }
+      dir(el.querySelector('[data-tk-spark]'), sp.direction);
+      text(el.querySelector('[data-tk-from]'), sp.from);
+      text(el.querySelector('[data-tk-to]'), sp.to);
+      var chg = el.querySelector('[data-tk-spark-chg]');
+      if (chg && sp.change_pct != null){
+        chg.textContent = (sp.change_pct > 0 ? '+' : sp.change_pct < 0 ? '−' : '')
+          + Math.abs(sp.change_pct).toFixed(1) + '% in 12 months';
+      }
+    }
+
+    show('[data-tk-body]', true);          // the figures replace the "no answer" notice
+    show('[data-tk-none]', false);
+    el.classList.remove('ticker--empty');
+  }
+
+  function load(){
+    fetch(el.dataset.quoteUrl, {headers: {'Accept': 'application/json'}})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.ok) apply(j.display, j.spark); })
+      .catch(function(){});
+  }
+
+  // poll only while the tab is actually being looked at
+  function start(){ if (!timer) timer = setInterval(load, POLL); }
+  function stop(){ if (timer){ clearInterval(timer); timer = null; } }
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) stop(); else { load(); start(); }
+  });
+  load(); start();
+})();
+</script>

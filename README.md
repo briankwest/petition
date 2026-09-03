@@ -22,6 +22,7 @@ quoted statutes; `reference/statutes/` holds the verbatim text.
 | `reference/source-docs/` | The original five Google-Docs exports (unchanged). |
 | `toolkit/` | Python package: `config`, `statutes`, `docs` (WeasyPrint PDFs + checks), `xlsx` (export/import), `geo` (precincts, map, lookup), `freeze`. |
 | `app/` | FastAPI site + Petition Captain admin (`petition.mcalester.net`, Dokku + Postgres). The database is the system of record for the Petition Master list. |
+| `app/market.py` | Live IREN quote for the `/iren` dossier: Nasdaq's public feed (Yahoo fallback), cached in `market_quotes`. Cache only — never part of the petition record. |
 | `data/` | Precinct GeoJSON (38 precincts, OU CSA / State Election Board), polling places, seed YAML for locations/events/contacts. |
 | `output/` | Generated artifacts (git-ignored except `output/filed/`). |
 
@@ -51,6 +52,22 @@ make freeze          # hash + tag the filed pamphlet
 ```
 
 Deployment to Dokku: see `DEPLOY.md`.
+
+### The live IREN quote on `/iren`
+
+The dossier opens with a live price panel for **Nasdaq: IREN**, fed by Nasdaq's own public
+quote API (no key, no account) with Yahoo Finance as a fallback. `app/market.py` caches the
+quote in the `market_quotes` table for five minutes and a year of daily closes for six hours,
+so the page itself never waits on the market feed: it renders the last figure we got and
+`/api/quote.json` refreshes it while the page is open. If both feeds go quiet the panel says
+so and links to Nasdaq rather than showing a stale number as current.
+
+- Hide the panel: admin → Settings → **Show the live IREN quote on /iren**.
+- Turn the fetching off entirely (tests do this): `MARKET_DATA=off`.
+- Check it after a deploy: `curl -s https://petition.mcalester.net/api/quote.json | head -c 200`.
+
+Nothing about the quote touches the petition documents — it is not part of the dossier's data
+cut-off and is labelled as such on the page.
 
 ## Rules that never change
 

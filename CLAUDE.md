@@ -54,6 +54,14 @@ Always activate the venv first: `. .venv/bin/activate` (Python 3.14; WeasyPrint 
 - `app/` FastAPI: host-redirect middleware (anything but `CANONICAL_HOST` → 301 to
   `https://petition.mcalester.net`), public pages, `/admin` (session auth, CSRF), JSON APIs, seed.
   Deployed with `Dockerfile` on Dokku; Postgres via `DATABASE_URL` (scheme rewritten in `app/db.py`).
+- `app/market.py` — the live IREN quote on `/iren` (Nasdaq's public quote API, Yahoo fallback).
+  Cache in front of somebody else's feed and nothing more: normalized into `Quote`, stored in
+  `market_quotes`, formatted once in `market.display()` so the server-rendered panel and
+  `/api/quote.json` cannot drift. Pages call `get_quote(db)` — non-blocking, cache-only, with
+  the refresh behind the request; only `/api/quote.json` waits on the network. A failed fetch
+  serves the last good quote with its own timestamp; nothing here is ever presented as part of
+  the dossier's sourced record or its data cut-off. `MARKET_DATA=off` disables fetching (tests
+  set this in `tests/conftest.py`); admin's `public_show_market` hides the panel.
 - `toolkit/xlsx/` — export (DB → workbook keeping the original tracker's sheet/column layout and
   live formulas) and import (old tracker → DB). `toolkit/geo/` — ArcGIS fetch, `PrecinctIndex`
   (point-in-polygon + Census geocoder), map builder, `app/static/map.js` (`initPetitionMap`).

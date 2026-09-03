@@ -16,7 +16,7 @@ DEFAULTS = {
     "est_valid_rate": "0.85", "overcollect_fraction": None,
     "banner": "The County Commissioners tabled the resolution. No adoption date has been set. "
               "No signatures can be collected until the resolution is adopted and a true copy of the petition is filed.",
-    "public_show_counts": "false", "public_show_progress": "false",
+    "public_show_counts": "false", "public_show_progress": "false", "public_show_market": "true",
     "captain_name": None, "captain_phone": None, "site_status": "pre-adoption",
     "resolution_number": None, "resolution_title": None, "measure_text": None,
     "return_location": None, "daily_return_deadline": None, "districts": None, "abatement_percent": None,
