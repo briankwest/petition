@@ -1,0 +1,38 @@
+{
+ "model": "Emerald ProjectCo \u2014 with and without the abatement",
+ "inputs_all_from_project_plan": {
+  "abatement_pct_over_550MW": 0.85,
+  "term_years": 25,
+  "life_of_district_per_phase_sec_12_4": {
+   "Kiowa Public Schools": 204000000.0,
+   "Pittsburg County": 70000000.0,
+   "Kiamichi Technology Center": 60600000.0,
+   "Southern Oklahoma Public Library System": 20000000.0,
+   "Pittsburg County Health Department": 12600000.0,
+   "total": 367200000.0
+  },
+  "illustrative_annual_dispersion_sec_12_1": 20000000.0,
+  "community_betterment_payment_over_550MW": 5000000.0,
+  "illustrative_min_required_payment_per_phase_stabilized": 15000000.0
+ },
+ "both_phases_25yr": {
+  "modelA_from_12_4": {
+   "butfor": 4896000000.0,
+   "received": 734400000.0,
+   "abated": 4161600000.0000005,
+   "total_with_CBP": 859400000.0,
+   "forgone": 4036600000.0
+  },
+  "modelB_from_12_1": {
+   "butfor": 6666700000.0,
+   "received": 1000000000.0,
+   "abated": 5666700000.0,
+   "total_with_CBP": 1125000000.0,
+   "forgone": 5541700000.0
+  },
+  "CBP_25yr_one_payment": 125000000.0
+ },
+ "consistency_check": "Model A implies $34m/yr to the entities; the plan's own illustrative floor is $30m/phase-pair + $5m CBP = $35m/yr. Agreement within 3%.",
+ "caveat": "'Without abatement' measures what the abatement is worth, not what the county would otherwise collect. The Review Committee found the investment would more likely than not not occur without the districts; this file questions that finding but does not assume it away.",
+ "unresolved": "The plan defines Required Payment as 'the amount determined by applying the Abatement Percentage to the But-For Tax Liability', which literally reads as 85% of but-for rather than the 15% the abatement scale implies. The model uses 15%, consistent with \u00a78.6, and the ambiguity is itself a question for the county."
+}
