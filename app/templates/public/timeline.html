@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+{% block title %}Timeline · {{ site_title }}{% endblock %}
+{% block og_title %}When it actually started: the Emerald timeline{% endblock %}
+{% block og_image %}/static/og-timeline.png{% endblock %}
+{% block og_image_alt %}The dated record of the IREN / Emerald ProjectCo data center in Pittsburg County, from deposits on IREN's books in June 2025 to the tabled vote, every line sourced{% endblock %}
+{% block description %}The IREN data center did not start with the county's public hearings. IREN had money down in Oklahoma by June 2025, an intermediary was asking McAlester for six million gallons of water a day in July, and the county's committee met five times before residents knew. Every date on this page is pinned to a filed document.{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/dossier.css?v={{ asset_v }}">
+<script src="/static/dossier.js?v={{ asset_v }}" defer></script>
+<style>
+/* --- page-specific: the ledger. Class names must not collide with dossier.css (.site, .track, .status, .bar are taken). --- */
+.irenfile .brief{list-style:none;counter-reset:b;margin:0;padding:0;border-top:2px solid var(--ink)}
+.irenfile .brief li{counter-increment:b;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:13px 0;border-bottom:1px solid var(--rule);font-size:16.5px;line-height:1.5;max-width:calc(var(--measure) + 58px)}
+.irenfile .brief li::before{content:counter(b,decimal-leading-zero);font-family:var(--f-mono);font-size:12px;color:var(--copper);padding-top:4px}
+.irenfile td.d{font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.irenfile td.who{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.irenfile td.who.county{color:var(--copper)} .irenfile td.who.company{color:var(--st-op)} .irenfile td.who.city{color:var(--ink-soft)} .irenfile td.who.state{color:var(--muted)} .irenfile td.who.here{color:var(--muted)}
+.irenfile .ledger td{vertical-align:top}
+.irenfile .ledger td.ev{min-width:34ch}
+.irenfile .ledger td.ev strong{color:var(--ink)}
+.irenfile .ledger tr.first td{border-top:2px solid var(--copper)}
+.irenfile .ledger caption{caption-side:top}
+.irenfile .gaps{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.irenfile .gaps li{padding:13px 0;border-bottom:1px solid var(--rule);font-size:16px;line-height:1.5;max-width:var(--measure)}
+.irenfile .gaps li .k{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:4px}
+.irenfile .cast{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:18px}
+.irenfile .cast .who-card{background:var(--surface);padding:14px 16px 16px;font-size:14.5px;line-height:1.5}
+.irenfile .cast .who-card .n{font-family:var(--f-display);font-weight:600;font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
+.irenfile .cast .who-card .r{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin:0 0 8px}
+.irenfile .cast .who-card p{margin:0 0 4px;max-width:none}
+@media print{
+  .irenfile td.d,.irenfile td.who{white-space:normal}
+  .irenfile .ledger tr{break-inside:avoid}
+  .irenfile .refs .u{display:none}
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="irenfile">
+<div class="doc">
+
+<header class="masthead">
+  <p class="stamp">
+    <span>Timeline</span>
+    <span>Compiled 4 September 2026</span>
+    <span>every date pinned to a filed document</span>
+  </p>
+  <h1>When it actually started
+    <span class="sub">The IREN / Emerald ProjectCo data center, Pittsburg County, Oklahoma &middot; the dated record from the first deposit to the tabled vote</span>
+  </h1>
+  <p class="dek">The public heard about this project at two hearings in June 2026. The paper says it began a year earlier. IREN had money on deposit for an Oklahoma expansion by the end of June 2025; a battery-storage company was asking McAlester for six million gallons of water a day in July; the county&rsquo;s review committee met five times before a resident attended. This page lays the dates out in order, each with its source, and says plainly where the record goes quiet.</p>
+
+  <dl class="vitals">
+    <div class="vital"><dt>First trace on the record</dt><dd>by 30 Jun 2025</dd></div>
+    <div class="vital"><dt>First public word, county</dt><dd>7 Nov 2025</dd></div>
+    <div class="vital"><dt>IREN&rsquo;s announcement</dt><dd>5 Feb 2026</dd></div>
+    <div class="vital"><dt>First public hearing</dt><dd>8 Jun 2026</dd></div>
+    <div class="vital"><dt>From deposit to hearing</dt><dd>11+ months</dd></div>
+    <div class="vital"><dt>Committee meetings before the public came</dt><dd>five</dd></div>
+  </dl>
+
+  <div class="disclose">
+    <p class="d-h">Publication statement</p>
+    <dl>
+      <div><dt>Published by</dt><dd>Brian West</dd></div>
+      <div><dt>Author's position</dt><dd>IREN does not need our tax incentives to build and operate.</dd></div>
+      <div><dt>Status of the measure</dt><dd>Tabled by the Board of County Commissioners on 22 June 2026. Not adopted. No resolution number, adoption date, filing deadline or election date exists.</dd></div>
+      <div><dt>Basis</dt><dd>The county&rsquo;s own agendas and minutes as posted at pittsburg.okcounties.org, the McAlester City Council&rsquo;s agenda packets, IREN Limited&rsquo;s filings with the SEC, the Delaware and Oklahoma corporate registries, and local reporting cited by outlet and date. Where a fact comes from a reporter rather than a document, the line says so. No non-public information was received or relied upon.</dd></div>
+      <div><dt>What the minutes are</dt><dd>The county&rsquo;s minutes are a clerk&rsquo;s summary, not a transcript. Where this page quotes them, it quotes them as written, spelling included.</dd></div>
+      <div><dt>Corrections</dt><dd><a href="mailto:brian@mcalester.net">brian@mcalester.net</a> &middot; errors of fact will be corrected and the correction noted</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol class="toc-list">
+    <li><a href="#brief"><span class="toc-n">01</span><span class="toc-t">The short version</span></a></li>
+    <li><a href="#ledger"><span class="toc-n">02</span><span class="toc-t">The record, in order</span></a></li>
+    <li><a href="#gaps"><span class="toc-n">03</span><span class="toc-t">Where the record goes quiet</span></a></li>
+    <li><a href="#cast"><span class="toc-n">04</span><span class="toc-t">Who is who</span></a></li>
+    <li><a href="#sources"><span class="toc-n">05</span><span class="toc-t">Sources</span></a></li>
+  </ol>
+</nav>
+
+<section id="brief">
+  <div class="sec-head">
+    <span class="tag">01 / The short version</span>
+    <h2>Eight lines</h2>
+    <span class="note">every line carries its source</span>
+  </div>
+  <ol class="brief">
+    <li><span>IREN&rsquo;s balance sheet at <strong>30 June 2025</strong> already carried security deposits &ldquo;for expansion projects in British Columbia, Canada, Oklahoma, USA and West Texas, USA.&rdquo; The company said so in November. Its annual report, filed in August, does not contain the word Oklahoma.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r2">2</a></sup></span></li>
+    <li><span><strong>Emerald ProjectCo Inc.</strong> was incorporated in Delaware on 29 July 2025. The next day, 30 July, Black Mountain Energy Storage wrote to the City of McAlester asking for six million gallons of raw water a day to cool &ldquo;the proposed IREN data center.&rdquo; The council voted to negotiate on 12 August.<sup class="c"><a href="#r6">6</a></sup><sup class="c"><a href="#r7">7</a></sup><sup class="c"><a href="#r8">8</a></sup></span></li>
+    <li><span>Between October and December 2025 IREN bought <strong>land purchase options and a 1,600 MW connection right from PSO</strong> in Oklahoma for $112.0 million, $105.1 million of it for the power. That is on its books before the county&rsquo;s committee had met.<sup class="c"><a href="#r3">3</a></sup><sup class="c"><a href="#r5">5</a></sup></span></li>
+    <li><span>The county&rsquo;s first public word is an agenda item posted on <strong>7 November 2025</strong>: a resolution to appoint members to &ldquo;the Iren Data Center TID-TIF Committee.&rdquo; The Board postponed it three times, once because &ldquo;the names are needed by December 1st,&rdquo; and adopted it on 1 December.<sup class="c"><a href="#r11">11</a></sup><sup class="c"><a href="#r12">12</a></sup><sup class="c"><a href="#r13">13</a></sup><sup class="c"><a href="#r14">14</a></sup></span></li>
+    <li><span>The committee first met on <strong>8 December 2025</strong> with the county&rsquo;s outside counsel on the phone and six IREN representatives in the room. Asked about attorney fees, IREN&rsquo;s representative said &ldquo;Iren would reimburse for the all expenses.&rdquo; Emerald ProjectCo qualified to do business in Oklahoma eight days later.<sup class="c"><a href="#r16">16</a></sup><sup class="c"><a href="#r6">6</a></sup></span></li>
+    <li><span>On 17 December IREN told the committee this is &ldquo;their first project outside of Texas.&rdquo; On 3 February 2026 the land was &ldquo;under option o purchase&rdquo; and the ask was &ldquo;85% abatement or reimbursement, whatever the taxing entities prefer.&rdquo; On 2 March IREN had &ldquo;closed on the 1st property.&rdquo; IREN&rsquo;s first public announcement of an Oklahoma campus came on 5 February, between those meetings.<sup class="c"><a href="#r17">17</a></sup><sup class="c"><a href="#r19">19</a></sup><sup class="c"><a href="#r20">20</a></sup><sup class="c"><a href="#r4">4</a></sup></span></li>
+    <li><span>The first meeting a member of the public attended was the sixth, on <strong>7 April 2026</strong>. Asked whether any non-disclosure agreement was in place, PSO&rsquo;s representative said &ldquo;PSO may have one.&rdquo; The motion to recommend the plan died for lack of a second; two weeks later it passed unanimously.<sup class="c"><a href="#r21">21</a></sup><sup class="c"><a href="#r22">22</a></sup></span></li>
+    <li><span>The public hearings were on 8 and 22 June 2026. By then IREN had been on the ground for a year, the county&rsquo;s counsel had been drafting for four months, and the state had passed a law requiring data-center developers to notify county commissioners within sixty days of buying land. It took effect on 1 July, after the land here had changed hands.<sup class="c"><a href="#r24">24</a></sup><sup class="c"><a href="#r27">27</a></sup><sup class="c"><a href="#r10">10</a></sup></span></li>
+  </ol>
+</section>
+
+<section id="ledger">
+  <div class="sec-head">
+    <span class="tag">02 / The record, in order</span>
+    <h2>The record, in order</h2>
+    <span class="note">who moved, when, on what paper</span>
+  </div>
+  <p class="lede-p measure">Company lines come from IREN&rsquo;s SEC filings and the state registries. County lines come from the agendas and minutes the county posts, and quote them as written. City lines come from McAlester&rsquo;s council packets and reporting on them. Nothing below rests on anything the author was told privately, because the author was told nothing.</p>
+  <div class="scroll">
+    <table class="ledger">
+      <caption>Dated events, 30 June 2025 to 4 September 2026</caption>
+      <thead><tr><th>Date</th><th>Who</th><th>What the record shows</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr class="first"><td class="d">by 30 Jun 2025</td><td class="who company">IREN</td><td class="ev">IREN&rsquo;s books carry security deposits &ldquo;for expansion projects in British Columbia, Canada, Oklahoma, USA and West Texas, USA&rdquo; at 30 June 2025. The disclosure is made on 6 November 2025 in the quarterly report for the period to 30 September.</td><td><sup class="c"><a href="#r1">1</a></sup></td></tr>
+        <tr><td class="d">29 Jul 2025</td><td class="who company">Emerald</td><td class="ev"><strong>Emerald ProjectCo Inc.</strong> is incorporated in Delaware, file 10276559, with Corporation Service Company as agent.</td><td><sup class="c"><a href="#r6">6</a></sup></td></tr>
+        <tr><td class="d">30 Jul 2025</td><td class="who company">Black Mountain</td><td class="ev">Black Mountain Energy Storage, an Austin, Texas battery-storage developer, writes to the City of McAlester&rsquo;s assistant city manager proposing to buy six million gallons of raw water a day to cool the proposed IREN data center south of Kiowa.</td><td><sup class="c"><a href="#r7">7</a></sup><sup class="c"><a href="#r10">10</a></sup><sup class="c"><a href="#r28">28</a></sup></td></tr>
+        <tr><td class="d">12 Aug 2025</td><td class="who city">McAlester</td><td class="ev">The McAlester City Council authorizes negotiation of a raw-water purchase agreement with Black Mountain Energy Storage for about 6,000,000 gallons a day. Caroline O&rsquo;Brien of Black Mountain presents; City Manager Dave Hargrove says any agreement will return to the council for approval.</td><td><sup class="c"><a href="#r7">7</a></sup><sup class="c"><a href="#r8">8</a></sup></td></tr>
+        <tr><td class="d">28 Aug 2025</td><td class="who company">IREN</td><td class="ev">IREN files its annual report for the year to 30 June 2025. The word &ldquo;Oklahoma&rdquo; does not appear in it.</td><td><sup class="c"><a href="#r2">2</a></sup></td></tr>
+        <tr><td class="d">Oct&ndash;Dec 2025</td><td class="who company">IREN &middot; PSO</td><td class="ev">IREN &ldquo;acquired contractual rights to acquire land parcels and secured connection rights for electricity in Oklahoma&rdquo; for a total of $112.0 million: $105.1 million for a twelve-year electricity connection right with Public Service Company of Oklahoma and $2.5 million of land purchase options.</td><td><sup class="c"><a href="#r3">3</a></sup><sup class="c"><a href="#r5">5</a></sup></td></tr>
+        <tr><td class="d">6 Nov 2025</td><td class="who company">IREN</td><td class="ev">First mention of Oklahoma in any IREN filing: the quarterly report&rsquo;s note on security deposits, above.</td><td><sup class="c"><a href="#r1">1</a></sup></td></tr>
+        <tr><td class="d">7 Nov 2025</td><td class="who county">County</td><td class="ev">First public word from the county. The Board of County Commissioners&rsquo; agenda for 10 November is file-stamped at 8:28 AM with item 9.K, &ldquo;Resolution 26-121 to Appoint Representative and Alternate Representative to the Iren Data Center TID-TIF Committee.&rdquo;</td><td><sup class="c"><a href="#r11">11</a></sup></td></tr>
+        <tr><td class="d">10 Nov 2025</td><td class="who county">County</td><td class="ev">The Board postpones Resolution 26-121 to 17 November.</td><td><sup class="c"><a href="#r11">11</a></sup></td></tr>
+        <tr><td class="d">17 Nov 2025</td><td class="who county">County</td><td class="ev">Commissioner Haynes &ldquo;stated that the names are needed by December 1st and explained the membership on the board.&rdquo; Postponed to 1 December.</td><td><sup class="c"><a href="#r12">12</a></sup></td></tr>
+        <tr><td class="d">24 Nov 2025</td><td class="who county">County</td><td class="ev">Postponed again to 1 December.</td><td><sup class="c"><a href="#r13">13</a></sup></td></tr>
+        <tr><td class="d">1 Dec 2025</td><td class="who county">County</td><td class="ev">The Board adopts Resolution 26-121. The minute clerk notes &ldquo;that alternates are not appointed in the statutes.&rdquo; No separate vote creating the committee, engaging counsel, or accepting reimbursement from the company appears in the agendas read for this page.</td><td><sup class="c"><a href="#r14">14</a></sup><sup class="c"><a href="#r29">29</a></sup></td></tr>
+        <tr><td class="d">2 Dec 2025</td><td class="who company">Emerald</td><td class="ev">Delaware certifies Emerald ProjectCo in good standing; the certificate is later attached to the Oklahoma filing.</td><td><sup class="c"><a href="#r6">6</a></sup></td></tr>
+        <tr><td class="d">8 Dec 2025</td><td class="who county">Committee</td><td class="ev"><strong>First meeting</strong> of the &ldquo;PCDC Tax Incentive District (TID) Iren Review Committee&rdquo;: Mike Haynes (chair), Sam Rhyne (Kiowa Public Schools), James Schulz (Health Department), Shelley Free (Kiamichi Technology Center); Michael Hull (library system) absent. David Floyd of Floyd &amp; Driver by teleconference. For IREN: Lindsay Ward, Jason Date, Michel Skura, Marat Ahmad, Evan Horn and Jonathan Gray. Horn &ldquo;stated that that the Iren has continued to advance with the project.&rdquo; Date describes an AI services data center south of Kiowa, &ldquo;operating 4 project across the country,&rdquo; possible agreements with PSO, commencing operation &ldquo;about 3 years from now.&rdquo; &ldquo;Haynes asked about attorney fees. Horn stated that Iren would reimburse for the all expenses.&rdquo; Three at-large members are nominated from a list of seven names Haynes had provided.</td><td><sup class="c"><a href="#r16">16</a></sup></td></tr>
+        <tr><td class="d">15 Dec 2025</td><td class="who county">County</td><td class="ev">The Board amends Resolution 26-121 and adopts Resolution 26-138 appointing the at-large members: Brent Stone, Michael Kellogg and Rex Hatridge.</td><td><sup class="c"><a href="#r15">15</a></sup></td></tr>
+        <tr><td class="d">16 Dec 2025</td><td class="who company">Emerald</td><td class="ev">Emerald ProjectCo qualifies to do business in Oklahoma as a foreign corporation, signed by Will Roberts as President and Jason Date as Secretary from IREN&rsquo;s Childress campus: $21,100 of assets, $10 of authorised capital, and $187,000,000 declared as the maximum to be invested in Oklahoma that fiscal year.</td><td><sup class="c"><a href="#r6">6</a></sup></td></tr>
+        <tr><td class="d">17 Dec 2025</td><td class="who county">Committee</td><td class="ev"><strong>Second meeting.</strong> Floyd explains the committee&rsquo;s duties and the 25-year limit. &ldquo;Project plan is in the beginning stages.&rdquo; Jason Date &ldquo;stated that this is their first project outside of Texas,&rdquo; earliest operating date 2028, 75 megawatts growing to &ldquo;possibly 300 mega watts of data per year,&rdquo; phase one &ldquo;3 t05 billion&rdquo; and up to 10 billion, PSO &ldquo;to have the power available in 2028,&rdquo; a closed-loop cooling system losing &ldquo;5% per year,&rdquo; the site &ldquo;south of Kiowa, north of Tenaska.&rdquo; Gerald Byrd of IREN &ldquo;asked when to expect an information request. Floyd stated that he will be sending one.&rdquo; Floyd wants the information &ldquo;by the end of January.&rdquo;</td><td><sup class="c"><a href="#r17">17</a></sup></td></tr>
+        <tr><td class="d">1 Jan 2026</td><td class="who here">Plan</td><td class="ev">The base value date the Project Plan later fixes for the whole 25-year term.</td><td><sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></td></tr>
+        <tr><td class="d">27 Jan 2026</td><td class="who county">Committee</td><td class="ev">A special meeting is noticed for 1:30 PM. No minutes for it are posted on the county&rsquo;s meetings page.</td><td><sup class="c"><a href="#r18">18</a></sup></td></tr>
+        <tr><td class="d">3 Feb 2026</td><td class="who county">Committee</td><td class="ev"><strong>Third meeting.</strong> Floyd &ldquo;presented the board with his initial questions to the developer and responses.&rdquo; Date &ldquo;explained the land under option o purchase&rdquo; and that &ldquo;they have started to work towards development including power from PSO&rdquo;; phase 1 property &ldquo;not at this time&rdquo; acquired; &ldquo;the first 600 megawatts investment will be $31,000,000,000.00 and operational by the end of 2029,&rdquo; as the minutes record it; construction to start 2027. Evan Horn, now listed with &ldquo;Ernest Young,&rdquo; says &ldquo;they would like 85% abatement or reimbursement, whatever the taxing entities prefer.&rdquo; Also present: Brian Lott, MCAAP; Mitch Stevenson and Jonathan Gray, Tipton Capital; Marat Ahmad, &ldquo;Emerald.&rdquo; Floyd &ldquo;will start on a draft of the project plan.&rdquo; Rhyne asks to tour the Childress facility.</td><td><sup class="c"><a href="#r19">19</a></sup></td></tr>
+        <tr><td class="d">5 Feb 2026</td><td class="who company">IREN</td><td class="ev"><strong>IREN&rsquo;s first public announcement:</strong> &ldquo;New 1.6GW data center campus in Oklahoma &hellip; Grid-studies complete, with power scheduled to ramp from 2028 &hellip; Large scale site (2,000 acres).&rdquo; The same day&rsquo;s quarterly report records the $112.0 million asset acquisition.</td><td><sup class="c"><a href="#r4">4</a></sup><sup class="c"><a href="#r3">3</a></sup></td></tr>
+        <tr><td class="d">10 Feb 2026</td><td class="who city">McAlester</td><td class="ev">The McAlester City Council declines to let the mayor sign a contract with Black Mountain Energy Storage for raw water at $1 per 1,000 gallons, citing insufficient information.</td><td><sup class="c"><a href="#r9">9</a></sup><sup class="c"><a href="#r10">10</a></sup></td></tr>
+        <tr><td class="d">2 Mar 2026</td><td class="who county">Committee</td><td class="ev"><strong>Fourth meeting.</strong> Date &ldquo;stated that they are in the development phase of the 2,000 acre project and that they have closed on the 1st property.&rdquo; They &ldquo;have the power secured with PSO for phase 1.&rdquo; Floyd presents a draft Project Plan at 85% and a draft Economic Development Agreement; the Tax Incentive Agreement &ldquo;is not ready for review.&rdquo; &ldquo;Iren stated that the community betterment payments will start in January of 2027.&rdquo; Also present: David Shaw and Giles Walsh, IREN; John Dorff, ISB Group.</td><td><sup class="c"><a href="#r20">20</a></sup></td></tr>
+        <tr><td class="d">7 Apr 2026</td><td class="who county">Committee</td><td class="ev"><strong>Fifth meeting, and the first with residents in the room.</strong> Jonathan Wynn of PSO says the data center &ldquo;is paying for the infrastructure.&rdquo; &ldquo;Candice Crutchfield asked if any NDA are in place. Wynn stated that PSO may have one.&rdquo; Date: a closed-loop system &ldquo;will take initially 6 million gallons to fill the system and around a 5 to 10% loss on an annual basis.&rdquo; Lindsey Naush of the assessor&rsquo;s office attends. Hull&rsquo;s motion to recommend the plan &ldquo;died due to lack of second.&rdquo;</td><td><sup class="c"><a href="#r21">21</a></sup></td></tr>
+        <tr><td class="d">21 Apr 2026</td><td class="who county">Committee</td><td class="ev"><strong>Sixth and final meeting.</strong> Rural Water District 11&rsquo;s board &ldquo;has not appointed a representative to speak.&rdquo; Date: they &ldquo;have spoken to the City of Kiowa and that they can supply the water for the ongoing operations if required,&rdquo; otherwise water can be hauled &ldquo;from outside of the county and state&rdquo;; nine haulers spoken to. Four members toured Childress. The committee recommends the plan unanimously. Hope Trammell, County Clerk, certifies the minutes as Secretary of the Committee.</td><td><sup class="c"><a href="#r22">22</a></sup></td></tr>
+        <tr><td class="d">28 Apr 2026</td><td class="who county">County</td><td class="ev">The Project Plan document circulated to the taxing entities carries this date on the copy obtained by NonDoc.</td><td><sup class="c"><a href="#r10">10</a></sup></td></tr>
+        <tr><td class="d">11 May 2026</td><td class="who state">State</td><td class="ev">The Governor signs HB 2992, the Data Center Customer Ratepayer Protection Act of 2026: large-load developers must notify county commissioners, adjoining landowners and the Corporation Commission within 60 days of acquiring land. Effective 1 July 2026.</td><td><sup class="c"><a href="#r27">27</a></sup><sup class="c"><a href="#r5">5</a></sup></td></tr>
+        <tr><td class="d">14 May 2026</td><td class="who here">Press</td><td class="ev">NonDoc reports, from property records, that the company &ldquo;has purchased 340 acres so far for $19 million,&rdquo; that the committee &ldquo;met five times before locals caught wind of the project,&rdquo; and that the county&rsquo;s $40,000 legal bill is to be reimbursed by IREN.</td><td><sup class="c"><a href="#r10">10</a></sup></td></tr>
+        <tr><td class="d">18 May 2026</td><td class="who county">County</td><td class="ev">The Board approves the notice of two public hearings on the &ldquo;Emerald ProjectCo Data Center Project Economic Development Project Plan&rdquo;; the notice is file-stamped by the County Clerk the same day.</td><td><sup class="c"><a href="#r23">23</a></sup><sup class="c"><a href="/childress-kiowa#r3">C3</a></sup></td></tr>
+        <tr><td class="d">8 Jun 2026</td><td class="who county">County</td><td class="ev"><strong>First public hearing</strong>, Southeast Expo Center: presentations by Senator Warren Hamilton, David Floyd and IREN. IREN representatives say the company does not sign non-disclosure agreements with government bodies.</td><td><sup class="c"><a href="#r24">24</a></sup><sup class="c"><a href="#r25">25</a></sup></td></tr>
+        <tr><td class="d">22 Jun 2026</td><td class="who county">County</td><td class="ev"><strong>Second hearing.</strong> The Board tables the two incentive districts and sends the plan back to the committee for renegotiation.</td><td><sup class="c"><a href="#r24">24</a></sup><sup class="c"><a href="#r26">26</a></sup></td></tr>
+        <tr><td class="d">1 Jul 2026</td><td class="who state">State</td><td class="ev">HB 2992 takes effect. Its 60-day landowner and commissioner notice applies to land acquired after this date.</td><td><sup class="c"><a href="#r27">27</a></sup></td></tr>
+        <tr><td class="d">30 Jul 2026</td><td class="who company">Emerald</td><td class="ev">Corporation Service Company replaces the Secretary of State as Emerald ProjectCo&rsquo;s Oklahoma registered agent, over William Roberts&rsquo;s signature.</td><td><sup class="c"><a href="#r6">6</a></sup></td></tr>
+        <tr><td class="d">27 Aug 2026</td><td class="who company">IREN</td><td class="ev">IREN&rsquo;s annual report lists &ldquo;Kiowa, Oklahoma, United States 1,600MW&rdquo; among its sites, says the company has &ldquo;contracted for electric service from Public Service Company of Oklahoma under a large load rate schedule,&rdquo; and that &ldquo;the utility serving our Kiowa project has submitted a proposed rate for this rate class.&rdquo;</td><td><sup class="c"><a href="#r5">5</a></sup></td></tr>
+        <tr><td class="d">4 Sep 2026</td><td class="who here">This site</td><td class="ev">Certified copies of Emerald ProjectCo&rsquo;s Oklahoma file obtained from the Secretary of State and published on the comparison page.</td><td><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure">Read down the &ldquo;Who&rdquo; column and the shape is plain. The company and its utility moved first, in private, through 2025. The county&rsquo;s process began in November with a committee whose members&rsquo; names were &ldquo;needed by December 1st,&rdquo; and ran for four months before a resident sat in. The public hearings, the only step the statute requires the public be invited to, came last.</p>
+</section>
+
+<section id="gaps">
+  <div class="sec-head">
+    <span class="tag">03 / Where the record goes quiet</span>
+    <h2>What the county&rsquo;s file does not show</h2>
+    <span class="note">each gap is a records request</span>
+  </div>
+  <p class="lede-p measure">These are absences in the posted record, not accusations. Each one is a document that should exist somewhere, and the Open Records Act is the way to ask for it.</p>
+  <ul class="gaps">
+    <li><span class="k">Who first called whom</span>Nothing on the county&rsquo;s posted record precedes the 7 November 2025 agenda. IREN had deposits down by June and a water intermediary in McAlester by July. The correspondence that brought the project to the courthouse is not on the file.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r7">7</a></sup><sup class="c"><a href="#r29">29</a></sup></li>
+    <li><span class="k">The engagement of counsel</span>David Floyd appears at the committee&rsquo;s first meeting, and IREN&rsquo;s representative says the company will reimburse the county&rsquo;s expenses. No agenda item engaging Floyd &amp; Driver, approving a fee, or accepting the reimbursement appears in the Board agendas read for this page, May 2025 to July 2026.<sup class="c"><a href="#r16">16</a></sup><sup class="c"><a href="#r29">29</a></sup></li>
+    <li><span class="k">Who created the committee</span>The resolutions on the record appoint members. The document that constituted the committee, set its name, and produced the &ldquo;list of 7 recommended names&rdquo; is not posted.<sup class="c"><a href="#r14">14</a></sup><sup class="c"><a href="#r16">16</a></sup></li>
+    <li><span class="k">The questions and the answers</span>Counsel&rsquo;s written information request of December 2025 and the developer&rsquo;s responses presented on 3 February 2026 are described in the minutes and published nowhere.<sup class="c"><a href="#r17">17</a></sup><sup class="c"><a href="#r19">19</a></sup></li>
+    <li><span class="k">The drafts</span>A draft Project Plan and a draft Economic Development Agreement were reviewed on 2 March 2026; the Tax Incentive Agreement, the document with the numbers, has never been posted in any version.<sup class="c"><a href="#r20">20</a></sup><sup class="c"><a href="#r22">22</a></sup></li>
+    <li><span class="k">27 January 2026</span>A meeting was noticed. No minutes are posted.<sup class="c"><a href="#r18">18</a></sup></li>
+    <li><span class="k">Non-disclosure agreements</span>Asked on 7 April, PSO&rsquo;s representative said the utility &ldquo;may have one.&rdquo; IREN said in June it signs none with government bodies. Whether any county official or committee member signed one is not on the record either way.<sup class="c"><a href="#r21">21</a></sup><sup class="c"><a href="#r25">25</a></sup></li>
+    <li><span class="k">The Childress trip</span>Four committee members toured IREN&rsquo;s Texas campus before the vote. Who arranged it, who paid, and what was shown is not recorded beyond Rhyne&rsquo;s summary.<sup class="c"><a href="#r22">22</a></sup></li>
+    <li><span class="k">The land</span>The county&rsquo;s record says only that the developer &ldquo;closed on the 1st property.&rdquo; The acreage and price come from a reporter reading the property records. The deeds themselves, and the name on them, are in the County Clerk&rsquo;s land records.<sup class="c"><a href="#r20">20</a></sup><sup class="c"><a href="#r10">10</a></sup></li>
+    <li><span class="k">Executive sessions</span>For the record, none. The Board&rsquo;s executive sessions in the autumn of 2025 were all personnel matters under 25 O.S. &sect;&thinsp;307(B)(1). The project was not discussed behind closed doors, so far as the agendas show; it simply was not discussed in public either.<sup class="c"><a href="#r29">29</a></sup></li>
+  </ul>
+</section>
+
+<section id="cast">
+  <div class="sec-head">
+    <span class="tag">04 / Who is who</span>
+    <h2>The names in the minutes</h2>
+    <span class="note">as the county&rsquo;s clerk recorded them</span>
+  </div>
+  <div class="cast">
+    <div class="who-card"><p class="r">The company</p><p class="n">IREN Limited</p><p>Sydney-based, Nasdaq-listed. Represented at the committee by Jason Date (Associate Director of Development, IREN North America), Evan Horn, Marat Ahmad, Lindsay Ward, Michel Skura, Jonathan Gray, Gerald Byrd, David Shaw and Giles Walsh.</p><p><a href="/iren">The IREN File &rarr;</a></p></div>
+    <div class="who-card"><p class="r">The counterparty</p><p class="n">Emerald ProjectCo Inc.</p><p>Delaware, 29 July 2025. Qualified in Oklahoma 16 December 2025. President Will Roberts, Secretary Jason Date. Ten dollars of capital, no disclosed owner.</p><p><a href="/childress-kiowa#entity">Every field on the record &rarr;</a></p></div>
+    <div class="who-card"><p class="r">The water intermediary</p><p class="n">Black Mountain Energy Storage</p><p>Austin, Texas battery-storage developer. Wrote to McAlester on 30 July 2025 proposing to buy raw water to cool the IREN facility; presented to the council on 12 August through Caroline O&rsquo;Brien.</p><p><a href="https://bmenergystorage.com/" rel="noopener" target="_blank">bmenergystorage.com &rarr;</a></p></div>
+    <div class="who-card"><p class="r">The utility</p><p class="n">Public Service Company of Oklahoma</p><p>Sold IREN a 1,600 MW connection right in late 2025 for $105.1 million. Represented at the committee by Jonathan Wynn. Regulated by the Oklahoma Corporation Commission, where its large-load tariff is pending.</p></div>
+    <div class="who-card"><p class="r">The county&rsquo;s counsel</p><p class="n">Floyd &amp; Driver, PLLC</p><p>Norman. David Floyd drafted the Project Plan and agreements and ran the committee&rsquo;s meetings. The $40,000 fee is to be reimbursed by IREN, per the minutes and NonDoc.</p></div>
+    <div class="who-card"><p class="r">The advisers in the room</p><p class="n">Tipton Capital &middot; Ernst &amp; Young &middot; ISB Group</p><p>Mitch Stevenson and Jonathan Gray (Tipton Capital); Evan Horn, listed with &ldquo;Ernest Young&rdquo; on 3 February; John Dorff (ISB Group). Roles are not stated in the minutes.</p></div>
+    <div class="who-card"><p class="r">The committee</p><p class="n">PCDC TID Review Committee</p><p>Mike Haynes (chair, Board of County Commissioners), Sam Rhyne (Kiowa Public Schools), James Schulz (Health Department), Shelley Free (Kiamichi Technology Center), Michael Hull (Southeastern Oklahoma Public Library System), Brent Stone, Michael Kellogg and Rex Hatridge (at large).</p></div>
+    <div class="who-card"><p class="r">The Board</p><p class="n">Board of County Commissioners</p><p>Charlie Rogers (District 1), Mike Haynes (District 2, where the site is), Ross Selman (District 3, chairman). The only body that can adopt the plan.</p><p><a href="/contact">Who to call &rarr;</a></p></div>
+  </div>
+</section>
+
+<section id="sources">
+  <div class="sec-head">
+    <span class="tag">05 / Sources</span>
+    <h2>Sources</h2>
+  </div>
+  <p class="measure">Numbered markers link here. Markers beginning with <strong>C</strong> point into the register on the <a href="/childress-kiowa#sources">Childress vs. Kiowa</a> comparison. County documents are scanned images without a text layer; they were read page by page. Copies of the committee&rsquo;s agendas and minutes are mirrored on this site in case the county&rsquo;s links change, with the county&rsquo;s original linked beside each.</p>
+  <ol class="refs">
+    <li id="r1"><span class="n">[1]</span><div>
+      <p class="t">IREN Limited &mdash; Form 10-Q for the quarter ended 30 September 2025</p>
+      <p class="m">Filed 6 Nov 2025 &middot; accession 0001878848-25-000081 &middot; CIK 0001878848</p>
+      <p class="used">&ldquo;Security deposits at September 30, 2025 and June 30, 2025, include deposits paid for expansion projects in British Columbia, Canada, Oklahoma, USA and West Texas, USA.&rdquo; The first appearance of Oklahoma in any IREN filing, and the statement that the Oklahoma deposits were already held at 30 June 2025.</p>
+      <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884825000081/iren-20250930.htm" rel="noopener" target="_blank">sec.gov &rarr; iren-20250930.htm</a></p>
+    </div></li>
+    <li id="r2"><span class="n">[2]</span><div>
+      <p class="t">IREN Limited &mdash; Form 10-K for the fiscal year ended 30 June 2025</p>
+      <p class="m">Filed 28 Aug 2025 &middot; accession 0001878848-25-000063</p>
+      <p class="used">Searched in full for &ldquo;Oklahoma&rdquo; and &ldquo;Kiowa&rdquo;: no occurrences. The security deposits note gives totals only.</p>
+      <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884825000063/iren-20250630.htm" rel="noopener" target="_blank">sec.gov &rarr; iren-20250630.htm</a></p>
+    </div></li>
+    <li id="r3"><span class="n">[3]</span><div>
+      <p class="t">IREN Limited &mdash; Form 10-Q for the quarter ended 31 December 2025</p>
+      <p class="m">Filed 5 Feb 2026 &middot; accession 0001878848-26-000015</p>
+      <p class="used">&ldquo;During the three months ended December 31, 2025, the Group acquired contractual rights to acquire land parcels and secured connection rights for electricity in Oklahoma &hellip; The total cost of the asset acquisition was $112.0 million.&rdquo; Intangible assets table: connection rights $105,073 thousand, land purchase options $2,500 thousand. &ldquo;As of December 31, 2025, the Group had secured contractual rights to procure land and 1,600MW of grid-connected power for a new data center site in Oklahoma.&rdquo; The counterparty for the connection right is tagged as Public Service Company of Oklahoma.</p>
+      <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000015/iren-20251231.htm" rel="noopener" target="_blank">sec.gov &rarr; iren-20251231.htm</a></p>
+    </div></li>
+    <li id="r4"><span class="n">[4]</span><div>
+      <p class="t">IREN Limited &mdash; &ldquo;IREN Reports Q2 FY26 Results,&rdquo; Exhibit 99.1 to Form 8-K</p>
+      <p class="m">5 Feb 2026 &middot; accession 0001878848-26-000014</p>
+      <p class="used">&ldquo;New 1.6GW data center campus in Oklahoma &middot; Increases secured grid-connected power to &gt;4.5GW &middot; Grid-studies complete, with power scheduled to ramp from 2028 &middot; Large scale site (2,000 acres) with low latency network connectivity.&rdquo; The company&rsquo;s first public statement of an Oklahoma project.</p>
+      <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000014/a991irenreportsq2fy26res.htm" rel="noopener" target="_blank">sec.gov &rarr; a991irenreportsq2fy26res.htm</a></p>
+    </div></li>
+    <li id="r5"><span class="n">[5]</span><div>
+      <p class="t">IREN Limited &mdash; Form 10-K for the fiscal year ended 30 June 2026</p>
+      <p class="m">Filed 27 Aug 2026 &middot; accession 0001878848-26-000052</p>
+      <p class="used">&ldquo;Kiowa, Oklahoma, United States 1,600MW&rdquo; in the site table; &ldquo;In Oklahoma, we have contracted for electric service from Public Service Company of Oklahoma (&lsquo;PSO&rsquo;) under a large load rate schedule&rdquo;; &ldquo;The utility serving our Kiowa project has submitted a proposed rate for this rate class&rdquo;; the $112.0 million acquisition &ldquo;of which $105.1 million relates to the electricity connection rights&rdquo; with a twelve-year term; the description of HB 2992&rsquo;s 60-day notice to &ldquo;adjoining landowners, county commissioners, and the Oklahoma Corporation Commission.&rdquo;</p>
+      <p class="u"><a href="https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm" rel="noopener" target="_blank">sec.gov &rarr; iren-20260630.htm</a></p>
+    </div></li>
+    <li id="r6"><span class="n">[6]</span><div>
+      <p class="t">Delaware Division of Corporations and Oklahoma Secretary of State &mdash; Emerald ProjectCo Inc.</p>
+      <p class="m">Delaware file 10276559 &middot; Oklahoma filing 2313901183 &middot; certified copies issued 4 Sep 2026 and published on this site</p>
+      <p class="used">Incorporation 29 July 2025; good standing 2 December 2025; Certificate of Qualification 16 December 2025 with its officers, address, capital, assets and declared investment; Appointment of Registered Agent 30 July 2026.</p>
+      <p class="u"><a href="/childress-kiowa#r24">Register entries C24 and C25, with the PDFs &rarr;</a></p>
+    </div></li>
+    <li id="r7"><span class="n">[7]</span><div>
+      <p class="t">City of McAlester &mdash; City Council agenda packet, regular meeting of 12 August 2025</p>
+      <p class="m">Item authorizing negotiation of a raw water purchase agreement with Black Mountain Energy Storage &middot; copy published by NonDoc, May 2026</p>
+      <p class="used">The 30 July 2025 letter from Black Mountain Energy Storage to the city proposing to purchase approximately six million gallons a day of raw water to cool the proposed IREN data center, and the council item acting on it.</p>
+      <p class="u"><a href="https://nondoc.com/wp-content/uploads/2026/05/McAlester-City-Council-agenda-8-12-25.pdf" rel="noopener" target="_blank">nondoc.com &rarr; McAlester-City-Council-agenda-8-12-25.pdf</a></p>
+    </div></li>
+    <li id="r8"><span class="n">[8]</span><div>
+      <p class="t">CitizenPortal &mdash; &ldquo;McAlester council authorizes negotiations for 6,000,000-gpd raw water sale to Black Mountain Energy Storage&rdquo;</p>
+      <p class="m">13 Aug 2025 &middot; an AI-generated summary of the meeting video, cited for the names and the 6,000,000 gallons a day figure only</p>
+      <p class="used">Caroline O&rsquo;Brien of Black Mountain Energy presenting; City Manager Dave Hargrove stating any final agreement would return to the council; the facility described as an AI computing data center south of Kiowa, not cryptocurrency.</p>
+      <p class="u"><a href="https://citizenportal.ai/articles/5566315/McAlester/Pittsburg-County/Oklahoma/Kiowa-Council-Authorizes-Negotiation-with-Black-Mountain-Energy-for-Water-Purchase" rel="noopener" target="_blank">citizenportal.ai &rarr; article 5566315</a></p>
+    </div></li>
+    <li id="r9"><span class="n">[9]</span><div>
+      <p class="t">City of McAlester &mdash; City Council agenda, 10 February 2026</p>
+      <p class="m">CivicClerk public portal, event 1144</p>
+      <p class="used">The item on a raw water sale agreement with Black Mountain Energy Storage at $1 per 1,000 gallons, on which the council declined to authorize the mayor&rsquo;s signature.</p>
+      <p class="u"><a href="https://mcalesterok.portal.civicclerk.com/event/1144/files/agenda/103" rel="noopener" target="_blank">mcalesterok.portal.civicclerk.com &rarr; event 1144</a></p>
+    </div></li>
+    <li id="r10"><span class="n">[10]</span><div>
+      <p class="t">NonDoc &mdash; Derrick James, &ldquo;Pittsburg County committee endorses deal tied to 2,000-acre, $50 billion data center site&rdquo;</p>
+      <p class="m">14 May 2026</p>
+      <p class="used">&ldquo;Of the proposed 2,000 acres, the company has purchased 340 acres so far for $19 million, according to property records&rdquo;; &ldquo;Committee members first met about the proposed project Dec. 8 after county commissioners voted to form the committee Nov. 10&rdquo;; &ldquo;The committee met five times before locals caught wind of the project&rdquo;; the $40,000 legal fee reimbursed by IREN; the 30 July 2025 Black Mountain letter and the 12 August and 10 February council actions; the Project Plan copy dated 28 April 2026.</p>
+      <p class="u"><a href="https://nondoc.com/2026/05/14/pittsburg-county-committee-endorses-deal-tied-to-2000-acre-50-billion-data-center-site/" rel="noopener" target="_blank">nondoc.com &rarr; 14 May 2026</a></p>
+    </div></li>
+    <li id="r11"><span class="n">[11]</span><div>
+      <p class="t">Pittsburg County Board of County Commissioners &mdash; agenda and minutes, regular meeting of 10 November 2025</p>
+      <p class="m">Agenda file-stamped 7 Nov 2025, 8:28 AM &middot; minutes 51 pp.</p>
+      <p class="used">Item 9.K, &ldquo;Resolution 26-121 to Appoint Representative and Alternate Representative to the Iren Data Center TID-TIF Committee&rdquo;; the motion to postpone to 17 November.</p>
+      <p class="u"><a href="/static/records/county/bocc-agenda-2025-11-10.pdf" rel="noopener" target="_blank">agenda (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2025-11-10_bocc_agenda_5171.pdf" rel="noopener" target="_blank">county original</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2025-11-10_5181.pdf" rel="noopener" target="_blank">minutes, county</a></p>
+    </div></li>
+    <li id="r12"><span class="n">[12]</span><div>
+      <p class="t">Board of County Commissioners &mdash; minutes, 17 November 2025</p>
+      <p class="m">Unfinished business, item A</p>
+      <p class="used">&ldquo;Haynes stated that the names are needed by December 1st and explained the membership on the board. Haynes made a motion to postpose the item until December 1, 2025.&rdquo;</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/2025-11-17_5187.pdf" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; 2025-11-17_5187.pdf</a></p>
+    </div></li>
+    <li id="r13"><span class="n">[13]</span><div>
+      <p class="t">Board of County Commissioners &mdash; minutes, 24 November 2025</p>
+      <p class="m">Unfinished business, item A</p>
+      <p class="used">The second postponement of Resolution 26-121 to 1 December.</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/2025-11-24_5199.pdf" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; 2025-11-24_5199.pdf</a></p>
+    </div></li>
+    <li id="r14"><span class="n">[14]</span><div>
+      <p class="t">Board of County Commissioners &mdash; minutes, 1 December 2025</p>
+      <p class="m">Unfinished business, item A</p>
+      <p class="used">&ldquo;Sandra Crenshaw stated that the resolution is for members to the board and that alternates are not appointed in the statutes. Rogers read the resolution. Rogers made a motion to approve the resolution; seconded by Selman.&rdquo; Passed 3&ndash;0.</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/2025-12-01_5208.pdf" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; 2025-12-01_5208.pdf</a></p>
+    </div></li>
+    <li id="r15"><span class="n">[15]</span><div>
+      <p class="t">Board of County Commissioners &mdash; minutes, 15 December 2025</p>
+      <p class="m">Agenda items F and I</p>
+      <p class="used">&ldquo;Amended Resolution 26-121 to Appoint Members to the PCDC TID Review Committee&rdquo; and &ldquo;Resolution 26-138 to Appoint At-Large Members to the PCDC TID Review Committee,&rdquo; both approved 3&ndash;0.</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/2025-12-15_5231.pdf" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; 2025-12-15_5231.pdf</a></p>
+    </div></li>
+    <li id="r16"><span class="n">[16]</span><div>
+      <p class="t">PCDC Tax Incentive District (TID) Iren Review Committee &mdash; agenda and minutes, special meeting of 8 December 2025</p>
+      <p class="m">Agenda posted 4 Dec 2025, 1:25 PM &middot; minutes 2 pp.</p>
+      <p class="used">Members present and absent; David Floyd by teleconference; the six IREN representatives; Horn&rsquo;s statement that IREN &ldquo;has continued to advance with the project&rdquo;; Date&rsquo;s description of the project; &ldquo;Haynes asked about attorney fees. Horn stated that Iren would reimburse for the all expenses&rdquo;; the &ldquo;list of 7 recommended names&rdquo; and the three at-large nominations.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2025-12-08.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="/static/records/county/tid-committee-agenda-2025-12-08.pdf" rel="noopener" target="_blank">agenda (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2025-12-08_tid_5221.pdf" rel="noopener" target="_blank">county original</a></p>
+    </div></li>
+    <li id="r17"><span class="n">[17]</span><div>
+      <p class="t">PCDC TID Iren Review Committee &mdash; agenda and minutes, 17 December 2025</p>
+      <p class="m">Agenda file-stamped 15 Dec 2025 &middot; minutes 3 pp.</p>
+      <p class="used">Floyd&rsquo;s overview of the committee&rsquo;s duties and the 25-year limit; &ldquo;Project plan is in the beginning stages&rdquo;; Date&rsquo;s update quoted in the ledger, including &ldquo;their first project outside of Texas,&rdquo; the 2028 date, the megawatt and dollar figures, the closed-loop water loss and PSO; Gerald Byrd&rsquo;s question about an information request and Floyd&rsquo;s answer; the 27 January date.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2025-12-17.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/12-17-2025_tid_mins_5345.pdf" rel="noopener" target="_blank">county original</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2025-12-17_special_tid_5215.pdf" rel="noopener" target="_blank">agenda, county</a></p>
+    </div></li>
+    <li id="r18"><span class="n">[18]</span><div>
+      <p class="t">PCDC TID Review Committee &mdash; notice and agenda, special meeting of 27 January 2026</p>
+      <p class="m">The county&rsquo;s meetings page lists the agenda and no minutes for this date (checked 4 Sep 2026)</p>
+      <p class="used">That a meeting was noticed and that no minutes are posted.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-agenda-2026-01-27.pdf" rel="noopener" target="_blank">agenda (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/meetings?search=review" rel="noopener" target="_blank">county meetings page, filtered to the committee</a></p>
+    </div></li>
+    <li id="r19"><span class="n">[19]</span><div>
+      <p class="t">PCDC TID Iren Review Committee &mdash; minutes, 3 February 2026</p>
+      <p class="m">Agenda posted 23 Jan 2026 &middot; minutes 2 pp.</p>
+      <p class="used">Those present, including Brian Lott (MCAAP), Mitch Stevenson and Jonathan Gray (Tipton Capital), Evan Horn (&ldquo;Ernest Young&rdquo;), Marat Ahmad (&ldquo;Emerald&rdquo;); Floyd&rsquo;s questions and the developer&rsquo;s responses; &ldquo;the land under option o purchase&rdquo;; the &ldquo;$31,000,000,000.00&rdquo; figure as written; the 85% request; the Childress tour request.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2026-02-03.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2026-02-03_pcdc_tax_5334.pdf" rel="noopener" target="_blank">county original</a></p>
+    </div></li>
+    <li id="r20"><span class="n">[20]</span><div>
+      <p class="t">PCDC TID Iren Review Committee &mdash; agenda and minutes, 2 March 2026</p>
+      <p class="m">Agenda file-stamped 26 Feb 2026 &middot; minutes 3 pp.</p>
+      <p class="used">&ldquo;They have closed on the 1st property&rdquo;; &ldquo;the power secured with PSO for phase 1&rdquo;; the draft Project Plan at 85%, the draft Economic Development Agreement, the Tax Incentive Agreement &ldquo;not ready for review&rdquo;; betterment payments &ldquo;in January of 2027&rdquo;; David Shaw, Giles Walsh and John Dorff present.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2026-03-02.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/pcdc_03-02-2026_5330.pdf" rel="noopener" target="_blank">county original</a></p>
+    </div></li>
+    <li id="r21"><span class="n">[21]</span><div>
+      <p class="t">PCDC TID Iren Review Committee &mdash; agenda and minutes, 7 April 2026</p>
+      <p class="m">Agenda file-stamped 31 Mar 2026 &middot; minutes 3 pp.</p>
+      <p class="used">Jonathan Wynn of PSO; &ldquo;Candice Crutchfield asked if any NDA are in place. Wynn stated that PSO may have one&rdquo;; the six million gallons to fill and 5 to 10% annual loss; residents&rsquo; questions; Lindsey Naush of the assessor&rsquo;s office; the motion that &ldquo;died due to lack of second.&rdquo;</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2026-04-07.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2026-04-07_pcdc_5349.pdf" rel="noopener" target="_blank">county original</a></p>
+    </div></li>
+    <li id="r22"><span class="n">[22]</span><div>
+      <p class="t">PCDC TID Iren Review Committee &mdash; agenda and minutes, final meeting of 21 April 2026</p>
+      <p class="m">Agenda file-stamped 16 Apr 2026 &middot; minutes 4 pp., certified by the County Clerk as Secretary of the Committee</p>
+      <p class="used">Rural Water District 11 unrepresented; Date on Kiowa water and hauling; the Childress tour; Floyd&rsquo;s description of the three documents and the 90-day clock for the taxing entities; the unanimous recommendation.</p>
+      <p class="u"><a href="/static/records/county/tid-committee-minutes-2026-04-21.pdf" rel="noopener" target="_blank">minutes (copy)</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/2026-04-21_tid_5407.pdf" rel="noopener" target="_blank">county original</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/04-21-2026_pcdc_5341.pdf" rel="noopener" target="_blank">agenda, county</a></p>
+    </div></li>
+    <li id="r23"><span class="n">[23]</span><div>
+      <p class="t">Board of County Commissioners &mdash; agenda, regular meeting of 18 May 2026</p>
+      <p class="m">Item 9.E</p>
+      <p class="used">&ldquo;Take Action to Verbally Approve Notice to the public of two public hearings regarding the proposed Emerald ProjectCo Data Center Project Economic Development Project Plan and the adoption of Tax Incentive Districts in Pittsburg County, Oklahoma.&rdquo;</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/bocc_5-18-26_5373.pdf" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; bocc_5-18-26_5373.pdf</a></p>
+    </div></li>
+    <li id="r24"><span class="n">[24]</span><div>
+      <p class="t">Board of County Commissioners &mdash; agendas, special meetings of 8 June and 22 June 2026</p>
+      <p class="m">Southeast Expo Center</p>
+      <p class="used">The hearing agendas: presentations by Senator Warren Hamilton, David Floyd and IREN on 8 June; the second hearing and the adoption item on 22 June.</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/file/meetings/2026-06-08_amended_special_meeting_agenda_5403.pdf" rel="noopener" target="_blank">8 June agenda</a> &middot; <a href="https://pittsburg.okcounties.org/file/meetings/special_bocc_agenda_5416.pdf" rel="noopener" target="_blank">22 June agenda</a></p>
+    </div></li>
+    <li id="r25"><span class="n">[25]</span><div>
+      <p class="t">McAlester News-Capital &mdash; &ldquo;IREN lays out project plans for data center at first public hearing&rdquo;</p>
+      <p class="m">9 Jun 2026</p>
+      <p class="used">Ross Selman presiding; Jonathan Wynn for PSO; David Floyd as the attorney hired to assist the county; IREN&rsquo;s statement that it does not sign non-disclosure agreements with government bodies.</p>
+      <p class="u"><a href="https://www.mcalesternews.com/news/iren-lays-out-project-plans-for-data-center-at-first-public-hearing/article_5b37685c-516a-4540-9804-66762c7490a6.html" rel="noopener" target="_blank">mcalesternews.com &rarr; 9 June 2026</a></p>
+    </div></li>
+    <li id="r26"><span class="n">[26]</span><div>
+      <p class="t">KTUL &mdash; &ldquo;Pittsburg County delays decision on proposed data center tax increment district&rdquo;</p>
+      <p class="m">22 Jun 2026</p>
+      <p class="used">&ldquo;The commissioners voted to table the issue and send it back to the TID Board for renegotiations,&rdquo; and IREN&rsquo;s statement in response.</p>
+      <p class="u"><a href="https://ktul.com/news/local/pittsburg-county-delays-decision-on-proposed-data-center-tax-increment-district" rel="noopener" target="_blank">ktul.com &rarr; 22 June 2026</a></p>
+    </div></li>
+    <li id="r27"><span class="n">[27]</span><div>
+      <p class="t">Oklahoma Legislature &mdash; HB 2992, the Data Center Customer Ratepayer Protection Act of 2026, enrolled</p>
+      <p class="m">Signed 11 May 2026 &middot; effective 1 Jul 2026 &middot; 17 O.S. &sect;&sect;&thinsp;900&ndash;906</p>
+      <p class="used">The 75 MW threshold; separate large-load tariffs with a minimum ten-year term; the requirement that a developer notify adjoining landowners, county commissioners and the Corporation Commission within sixty days of acquiring land.</p>
+      <p class="u"><a href="https://www.oklegislature.gov/cf_pdf/2025-26%20ENR/hB/HB2992%20ENR.PDF" rel="noopener" target="_blank">oklegislature.gov &rarr; HB2992 ENR.PDF</a></p>
+    </div></li>
+    <li id="r28"><span class="n">[28]</span><div>
+      <p class="t">Black Mountain Energy Storage &mdash; company website</p>
+      <p class="m">Austin, Texas &middot; read 4 Sep 2026</p>
+      <p class="used">That the company is a utility-scale battery energy storage developer, and what it says about itself. The site does not mention IREN, McAlester or Kiowa.</p>
+      <p class="u"><a href="https://bmenergystorage.com/" rel="noopener" target="_blank">bmenergystorage.com</a></p>
+    </div></li>
+    <li id="r29"><span class="n">[29]</span><div>
+      <p class="t">Pittsburg County &mdash; Board of County Commissioners agendas, May to November 2025 and January to July 2026, and minutes of September to December 2025</p>
+      <p class="m">46 agendas and 16 sets of minutes downloaded from the county&rsquo;s meetings page and text-recognised, 4 Sep 2026</p>
+      <p class="used">That no agenda item engages Floyd &amp; Driver, approves a fee, or accepts reimbursement from IREN; that no item mentions the project before 7 November 2025; that the executive sessions of 29 September, 14 October and 3 November 2025 were noticed under 25 O.S. &sect;&thinsp;307(B)(1) for personnel matters. Text recognition of scanned agendas can miss words; the author will correct this line if a reader finds an item it missed.</p>
+      <p class="u"><a href="https://pittsburg.okcounties.org/meetings?year=2025&amp;show=All" rel="noopener" target="_blank">pittsburg.okcounties.org &rarr; meetings, 2025</a> &middot; <a href="https://pittsburg.okcounties.org/meetings?year=2026&amp;show=All" rel="noopener" target="_blank">2026</a></p>
+    </div></li>
+  </ol>
+</section>
+
+<footer>
+  <h3>Basis of preparation</h3>
+  <p>Compiled from documents published by Pittsburg County and the City of McAlester, from IREN Limited&rsquo;s filings with the United States Securities and Exchange Commission and its own published materials, from the public corporate registries of Delaware and Oklahoma, and from local reporting cited by outlet and date. The author holds no non-public information concerning IREN Limited, Emerald ProjectCo Inc., Black Mountain Energy Storage, Public Service Company of Oklahoma, the county or the city, and has relied on none.</p>
+  <h3>Named individuals and entities</h3>
+  <p>Nothing on this page alleges, or is intended to imply, wrongdoing by any person, company or public body. Individuals are named as the county&rsquo;s own minutes name them, in the capacities the minutes give. A gap in a posted record is a gap in a posted record; it is not a finding about anyone.</p>
+  <h3>Corrections</h3>
+  <p>None yet. An error of fact reported to the address in the publication statement will be corrected here, with the date and what changed.</p>
+  <h3>Not advice</h3>
+  <p>Nothing here is investment, legal, tax or financial advice; it is not a recommendation, and it is not an offer or solicitation in respect of any security.</p>
+</footer>
+
+</div>
+</div>
+
+{% set share_url = "https://" ~ canonical_host ~ "/timeline" %}
+{% set share_text = "When the Kiowa data center actually started: IREN had money down in Oklahoma by June 2025, a water intermediary was asking McAlester for six million gallons a day in July, and the county's committee met five times before residents knew. Every date sourced." %}
+{% set share_h = "Share the timeline" %}
+{% set share_blurb = "The dated record, with every source. Send it to someone who thinks this began in June." %}
+{% set share_subject = "When the Kiowa data center actually started" %}
+{% include "public/_share_page.html" %}
+{% endblock %}

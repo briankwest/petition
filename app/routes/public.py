@@ -101,6 +101,12 @@ def questions(request: Request, db: Session = Depends(get_db)):
     return render(request, "public/questions.html", s=Settings(db))
 
 
+@router.get("/timeline")
+def timeline(request: Request, db: Session = Depends(get_db)):
+    # The dated record from IREN's June 2025 deposits to the tabled vote. Static: every line is a filed document.
+    return render(request, "public/timeline.html", s=Settings(db))
+
+
 @router.get("/iren")
 def iren(request: Request, db: Session = Depends(get_db)):
     """The IREN File — company dossier; first item in the site nav."""

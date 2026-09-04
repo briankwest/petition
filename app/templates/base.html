@@ -58,6 +58,7 @@ if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/iren" {% if path == '/iren' %}aria-current="page"{% endif %}>Who is IREN?</a>
+      <a href="/timeline" {% if path == '/timeline' %}aria-current="page"{% endif %}>Timeline</a>
       <a href="/childress-kiowa" {% if path == '/childress-kiowa' %}aria-current="page"{% endif %}>Childress vs. Kiowa</a>
       <a href="/questions" {% if path == '/questions' %}aria-current="page"{% endif %}>Ask the board</a>
       <a href="/sign" {% if path == '/sign' %}aria-current="page"{% endif %}>Where to sign</a>

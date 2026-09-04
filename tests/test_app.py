@@ -63,7 +63,7 @@ def test_host_redirect(client):
 
 
 def test_public_pages_and_banner(client):
-    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa", "/questions", "/tldr"]:
+    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa", "/questions", "/tldr", "/timeline"]:
         r = client.get(path)
         assert r.status_code == 200, path
         assert "tabled" in r.text, path
@@ -94,7 +94,7 @@ def test_tldr_flyer(client, db):
 
 def test_share_bars_on_every_public_page(client):
     for path, url in [("/tldr", "/static/tldr.pdf"), ("/contact", "/contact"), ("/sign", "/sign"), ("/registered", "/registered"), ("/faq", "/faq"),
-                      ("/", "/"), ("/iren", "/iren"), ("/childress-kiowa", "/childress-kiowa"), ("/questions", "/questions")]:
+                      ("/", "/"), ("/iren", "/iren"), ("/childress-kiowa", "/childress-kiowa"), ("/questions", "/questions"), ("/timeline", "/timeline")]:
         html = client.get(path).text
         assert 'class="share"' in html, path
         assert f'data-copy="https://petition.mcalester.net{url}' in html, path       # the copy button carries the page's own link, tagged
@@ -394,9 +394,21 @@ def test_favicon_and_opengraph(client):
     r = client.get(doc); assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content.startswith(b"%PDF")
     comp = client.get("/childress-kiowa").text
     assert doc in comp and "620 FM 1033" in comp and "Will Roberts as President" in comp
-    for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png"), ("/tldr", "og-tldr.png")]:
+    for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png"), ("/tldr", "og-tldr.png"), ("/timeline", "og-timeline.png")]:
         assert f'<meta property="og:image" content="https://petition.mcalester.net/static/{img}">' in client.get(path).text, path
         assert client.get(f"/static/{img}").status_code == 200, img
+
+
+def test_timeline_page(client):
+    html = client.get("/timeline").text
+    # The record starts before the Oklahoma filing: IREN's June 2025 deposits and the 30 July 2025 water letter lead the ledger.
+    assert "by 30 Jun 2025" in html and "30 Jul 2025" in html and "7 Nov 2025" in html and "8 Dec 2025" in html
+    assert 'href="https://bmenergystorage.com/"' in html                      # the intermediary is named and linked
+    assert "iren-20250930.htm" in html and "iren-20250630.htm" in html        # the 10-Q that discloses, the 10-K that does not
+    for doc in ("tid-committee-minutes-2025-12-08.pdf", "tid-committee-minutes-2026-04-21.pdf", "bocc-agenda-2025-11-10.pdf"):
+        r = client.get(f"/static/records/county/{doc}")                       # the county minutes are mirrored, not just linked
+        assert r.status_code == 200 and r.content.startswith(b"%PDF"), doc
+    assert 'href="/timeline"' in client.get("/").text and 'href="/timeline"' in client.get("/faq").text   # home pointer and nav
 
 
 def test_mobile_nav_toggle_present(client):
