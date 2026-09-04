@@ -1,6 +1,7 @@
 """Shared template environment + render helper."""
 from __future__ import annotations
 from datetime import date, datetime
+import copy
 import os
 import re
 from fastapi import Request
@@ -90,6 +91,13 @@ def render(request: Request, name: str, status_code: int = 200, **ctx):
     if petition is None:
         petition = cfg.load()
         request.app.state.petition = petition
+    s = ctx.get("s")
+    if s is not None and "petition" not in ctx:
+        # Overlay the admin-entered values (gist, abatement, dates, districts, captain, voter count) on a
+        # copy of the YAML seed, so the public site shows what /admin/petition shows. The copy matters:
+        # from_db mutates its base, and app.state.petition is shared across requests.
+        from ..petition import from_db
+        petition = from_db(s.db, copy.deepcopy(petition))
     base = {
         "petition": petition,
         "csrf": csrf_token(request),
@@ -101,7 +109,6 @@ def render(request: Request, name: str, status_code: int = 200, **ctx):
         "ga_id": os.environ.get("GA_MEASUREMENT_ID", "G-3ECCW6ESQR"),
         "asset_v": ASSET_V,
     }
-    s = ctx.get("s")
     base["site_title"] = (s.raw("site_title") if s is not None else None) or DEFAULTS["site_title"]
     base["site_eyebrow"] = (s.raw("site_eyebrow") if s is not None else None) or f"{petition.county} County, {petition.state}"
     base["site_description"] = (s.raw("site_description") if s is not None else None) or DEFAULTS["site_description"]

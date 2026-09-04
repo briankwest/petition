@@ -83,6 +83,18 @@ def test_home_targets_from_settings(client, db):
     assert "30,000" in html and "3,000" in html and "4,800" in html and "27,727" not in html       # admin edit wins everywhere
 
 
+def test_home_reads_admin_petition_values(client, db):
+    html = client.get("/").text
+    assert "85% data center tax abatement" in html and "This referendum asks Pittsburg County voters" in html   # YAML seed
+    s = Settings(db); s.set("abatement_percent", 75); s.set("gist", "Voters decide on the Kiowa abatement."); db.commit()
+    html = client.get("/").text
+    assert "75% data center tax abatement" in html and "Voters decide on the Kiowa abatement." in html
+    assert "This referendum asks Pittsburg County voters" not in html
+    assert "85% data center tax abatement" not in html
+    html2 = client.get("/").text                                     # the shared YAML seed was copied, not mutated
+    assert "75% data center tax abatement" in html2
+
+
 def test_counts_hidden_until_enabled(client, db):
     r = client.get("/")
     assert "Signature count" not in r.text
