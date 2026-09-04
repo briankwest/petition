@@ -56,6 +56,16 @@
 .irenfile .pull{margin:28px 0;border-left:3px solid var(--copper);padding:4px 0 4px 22px}
 .irenfile .pull blockquote{margin:0;font-family:var(--f-display);font-size:21px;line-height:1.4;letter-spacing:-.015em;text-wrap:pretty}
 .irenfile .pull cite{display:block;margin-top:11px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.05em;font-style:normal;color:var(--muted)}
+.irenfile .chartwrap{margin:24px 0;border:1px solid var(--rule);background:var(--surface);padding:18px 18px 14px}
+.irenfile svg.migration{display:block;width:100%;height:auto;max-width:620px;margin:0 auto}
+.irenfile svg.migration text{font-family:var(--f-mono)}
+.irenfile .ax{stroke:var(--ink);stroke-width:1.2}
+.irenfile .mb.pos{fill:var(--st-op);fill-opacity:.82}
+.irenfile .mb.neg{fill:var(--copper);fill-opacity:.82}
+.irenfile .mv{font-size:15px;font-weight:500;text-anchor:middle;fill:var(--ink)}
+.irenfile .mx{font-size:12px;text-anchor:middle;fill:var(--muted)}
+.irenfile .mnote{font-size:10.5px;fill:var(--muted);letter-spacing:.06em}
+.irenfile .chartwrap figcaption{margin-top:12px;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:70ch}
 .irenfile td.lab{font-weight:500;color:var(--ink)}
 .irenfile th.tx{color:var(--st-op)} .irenfile th.ok{color:var(--copper)}
 @media (max-width:860px){.irenfile .maps,.irenfile .ledger{grid-template-columns:1fr}}
@@ -70,7 +80,7 @@
   <p class="stamp">
     <span>Site Comparison</span>
     <span>Compiled 4 September 2026</span>
-    <span>16 primary sources</span>
+    <span>21 primary sources</span>
   </p>
   <h1>Childress vs. Kiowa
     <span class="sub">What IREN signed in Texas &middot; what Pittsburg County is being asked for &middot; and what the company&rsquo;s own balance sheet says about the need</span>
@@ -108,10 +118,11 @@
     <li><a href="#ground"><span class="toc-n">04</span><span class="toc-t">The two sites, drawn to the same scale</span></a></li>
     <li><a href="#money"><span class="toc-n">05</span><span class="toc-t">The money, line by line</span></a></li>
     <li><a href="#jobs"><span class="toc-n">06</span><span class="toc-t">Both documents already answer the jobs question</span></a></li>
-    <li><a href="#adrift"><span class="toc-n">07</span><span class="toc-t">Four things in the file that do not add up</span></a></li>
-    <li><a href="#reading"><span class="toc-n">08</span><span class="toc-t">The fair reading, which cuts both ways</span></a></li>
-    <li><a href="#gaps"><span class="toc-n">09</span><span class="toc-t">What this file does not establish</span></a></li>
-    <li><a href="#sources"><span class="toc-n">10</span><span class="toc-t">Every source, and what it supports</span></a></li>
+    <li><a href="#aftermath"><span class="toc-n">07</span><span class="toc-t">What eight years of it did to Childress County</span></a></li>
+    <li><a href="#adrift"><span class="toc-n">08</span><span class="toc-t">Four things in the file that do not add up</span></a></li>
+    <li><a href="#reading"><span class="toc-n">09</span><span class="toc-t">The fair reading, which cuts both ways</span></a></li>
+    <li><a href="#gaps"><span class="toc-n">10</span><span class="toc-t">What this file does not establish</span></a></li>
+    <li><a href="#sources"><span class="toc-n">11</span><span class="toc-t">Every source, and what it supports</span></a></li>
   </ol>
 </nav>
 {% endraw %}
@@ -365,9 +376,138 @@
   </div>
 </section>
 
+<section id="aftermath">
+  <div class="sec-head">
+    <span class="tag">07 / Aftermath</span>
+    <h2>What eight years of it did to Childress County</h2>
+    <span class="note">measured, not predicted</span>
+  </div>
+
+  <p class="lede-p measure">Childress is the only place where the question can be answered with evidence instead of argument. IREN has been building and operating there since 2022. So: what happened to the county?</p>
+
+  <div class="callout">
+    <h3>First, the thing this file will not claim</h3>
+    <p class="measure">The obvious worry about a data center in a small county is that it prices people out of their homes. <strong>In Childress, the census record does not support that, and it should not be argued.</strong></p>
+    <div class="scroll">
+      <table>
+        <caption>American Community Survey 5-year estimates, 2019 to 2024, against all 254 Texas counties<sup class="c"><a href="#r17">17</a></sup></caption>
+        <thead><tr><th>Measure</th><th class="num">Childress 2019</th><th class="num">Childress 2024</th><th class="num">Change</th><th class="num">Texas county median</th><th class="num">Childress rank</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Median gross rent</td><td class="num">$745</td><td class="num">$913</td><td class="num">+22.6%</td><td class="num">+25.8%</td><td class="num">42nd percentile</td></tr>
+          <tr><td class="lab">Median home value</td><td class="num">$85,500</td><td class="num">$125,400</td><td class="num">+46.7%</td><td class="num">+55.5%</td><td class="num">34th percentile</td></tr>
+          <tr><td class="lab">Median household income</td><td class="num">$43,181</td><td class="num">$58,654</td><td class="num">+35.8%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="measure">Rents and house prices in Childress rose <strong>more slowly than in the typical Texas county</strong> over exactly the years the data center was built and energized. And in a county of 6,700 the survey&rsquo;s own margins of error are wide enough that none of those changes is statistically significant at the 90% level &mdash; the rent estimate for 2024 is $913 give or take $209.<sup class="c"><a href="#r17">17</a></sup></p>
+    <p class="measure" style="margin-bottom:0">Anyone who argues that IREN drove up rents in Childress can be refuted in an afternoon with public data, and the rest of the case would go down with it. The real findings are below, and they are stronger.</p>
+  </div>
+
+  <h3>The population went up, then went back down</h3>
+
+  <p class="measure">Childress County gained people while the site was being built and lost them once the first phase was done. The Census Bureau&rsquo;s annual estimates put net migration at <strong>+164 in 2021 and +78 in 2022</strong> &mdash; then <strong>&minus;62 in 2023 and &minus;59 in 2024</strong>. County population peaked at 6,834 in 2022 and was back to 6,679 by 2024, below where it started the decade.<sup class="c"><a href="#r18">18</a></sup></p>
+
+  <figure class="chartwrap">
+    <svg class="migration" viewBox="0 0 620 230" role="img" aria-label="Bar chart of net migration for Childress County, Texas: plus 164 in 2021, plus 78 in 2022, minus 62 in 2023 and minus 59 in 2024.">
+<line class="ax" x1="70" y1="120" x2="590" y2="120"/><rect class="mb pos" x="110" y="35.1" width="64" height="84.9"/><text class="mv" x="142.0" y="26.1">+164</text><text class="mx" x="142.0" y="214">2021</text><rect class="mb pos" x="230" y="79.6" width="64" height="40.4"/><text class="mv" x="262.0" y="70.6">+78</text><text class="mx" x="262.0" y="214">2022</text><rect class="mb neg" x="350" y="120.0" width="64" height="32.1"/><text class="mv" x="382.0" y="170.1">-62</text><text class="mx" x="382.0" y="214">2023</text><rect class="mb neg" x="470" y="120.0" width="64" height="30.5"/><text class="mv" x="502.0" y="168.5">-59</text><text class="mx" x="502.0" y="214">2024</text><text class="mnote" x="70" y="26">people</text><text class="mnote" x="590" y="114" text-anchor="end">0</text>
+    </svg>
+    <figcaption>Net migration, Childress County &mdash; Census Bureau population estimates, vintage 2024.<sup class="c"><a href="#r18">18</a></sup> Natural change was negative in every one of these years (&minus;29, &minus;27, &minus;17, &minus;18), so migration is the whole story.</figcaption>
+  </figure>
+
+  <p class="measure">This is the jobs cliff, drawn from the census rather than from an argument. The crowd arrives, and then it leaves.</p>
+
+  <h3>Nobody built any housing</h3>
+
+  <p class="measure">Across the entire period &mdash; <strong>2018 through 2025</strong> &mdash; the Census Bureau&rsquo;s Building Permits Survey records <strong>zero new housing units authorized in Childress County.</strong> Not one, in any year, of any type.<sup class="c"><a href="#r19">19</a></sup></p>
+
+  <p class="measure">That is not a gap in the survey. In the 2024 file, <strong>188 of the 223 Texas counties listed reported at least one authorized unit</strong>, and Childress&rsquo;s small neighbours are among them: Donley authorized three, Dallam five, Hardeman one.<sup class="c"><a href="#r19">19</a></sup> A county that gains a $1.4 billion capital project<sup class="c"><a href="#r9">9</a></sup> and builds no housing is a county whose workforce did not move in.</p>
+
+  <h3>Where the jobs actually landed</h3>
+
+  <p class="measure">The Bureau of Labor Statistics counts every job covered by unemployment insurance, by industry, by county. It is the closest thing to a headcount that exists, and for Childress it says something the brochures do not.</p>
+
+  <div class="scroll">
+    <table>
+      <caption>Childress County covered employment and average weekly wage &mdash; BLS Quarterly Census of Employment and Wages, annual averages<sup class="c"><a href="#r20">20</a></sup></caption>
+      <thead><tr><th>Measure</th><th class="num">2019</th><th class="num">2022</th><th class="num">2024</th><th class="num">2025</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">Total covered employment</td><td class="num">2,553</td><td class="num">2,774</td><td class="num">2,871</td><td class="num">3,019</td></tr>
+        <tr><td class="lab">Average weekly wage, all industries</td><td class="num">$759</td><td class="num">$1,071</td><td class="num">$957</td><td class="num">$1,023</td></tr>
+        <tr><td class="lab">Utilities (NAICS 22) employment</td><td class="num">not disclosed</td><td class="num">59</td><td class="num">79</td><td class="num">81</td></tr>
+        <tr><td class="lab">Construction (NAICS 23) employment</td><td class="num">not disclosed</td><td class="num">56</td><td class="num">92</td><td class="num">165</td></tr>
+        <tr><td class="lab">Information (NAICS 51) employment</td><td class="num">26</td><td class="num">13</td><td class="num">14</td><td class="num">0</td></tr>
+        <tr><td class="lab">Data processing &amp; hosting (NAICS 518)</td><td class="num">none</td><td class="num">none</td><td class="num">none</td><td class="num">none</td></tr>
+        <tr><td class="lab">Retail trade average weekly wage</td><td class="num">$457</td><td class="num">$595</td><td class="num">$582</td><td class="num">$648</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure">Three things fall out of that table. <strong>No data-processing establishment has ever been reported in Childress County</strong> in any year &mdash; the industry the project belongs to does not appear in the county&rsquo;s employment record at all. The nearest proxy is utilities, and it stands at <strong>81 jobs for the whole county</strong> in 2025 &mdash; a figure that covers IREN, Lancium and the wind and solar operators together. And construction is still climbing: 56, then 92, then <strong>165</strong>, at $1,785 a week. The crowd is still on site.<sup class="c"><a href="#r20">20</a></sup></p>
+
+  <p class="measure">The county&rsquo;s average weekly wage did rise, from $759 to $1,023. But an average moves when you add well-paid outsiders to a low-wage base, and the base is where most people work: <strong>retail trade pays $648 a week</strong> against $1,817 in utilities. Retail wages rose 42% in nominal dollars across those six years, which is a real gain once inflation is accounted for &mdash; and a smaller one than the headline average suggests.<sup class="c"><a href="#r20">20</a></sup></p>
+
+  <div class="metrics">
+    <div class="metric"><span class="fig">81</span><span class="cap">Utility-sector jobs in the whole county, 2025<br>covering every energy and data project in it</span></div>
+    <div class="metric"><span class="fig">165</span><span class="cap">Construction jobs, 2025<br>still rising, and temporary by definition</span></div>
+    <div class="metric neg"><span class="fig">0</span><span class="cap">Housing units authorized, 2018&ndash;2025<br>and 0 data-processing establishments, ever</span></div>
+  </div>
+
+  <h3>What happened to the tax roll</h3>
+
+  <p class="measure">This is the part that bears directly on what Pittsburg County is being asked to do, because it is the thing an abatement actually does.</p>
+
+  <div class="scroll">
+    <table>
+      <caption>Childress County property values and rates &mdash; Texas Comptroller, County Report of Property Value<sup class="c"><a href="#r21">21</a></sup></caption>
+      <thead><tr><th>Measure</th><th class="num">2021</th><th class="num">2025</th><th class="num">Change</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">Market value</td><td class="num">1,107,090,815</td><td class="num">2,008,632,991</td><td class="num">+81%</td></tr>
+        <tr><td class="lab">Taxable value</td><td class="num">519,080,479</td><td class="num">740,245,541</td><td class="num">+43%</td></tr>
+        <tr class="total"><td>Value not on the roll</td><td class="num">588,010,336</td><td class="num">1,268,387,450</td><td class="num">53% &rarr; 63%</td></tr>
+        <tr><td class="lab">Total county tax rate</td><td class="num">0.578882</td><td class="num">0.535000</td><td class="num">&minus;7.6%</td></tr>
+        <tr><td class="lab">Calculated levy</td><td class="num">&mdash;</td><td class="num">3,960,314</td><td class="num">$3.43m in 2024</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure">Childress County added <strong>$901.5 million of market value</strong> between 2021 and 2025. Of that, <strong>$221.2 million reached the taxable roll</strong>. Roughly <strong>three quarters of the new value never became taxable</strong>, and the gap between what the county is worth and what it can tax widened from $588 million to <strong>$1.27 billion</strong>.<sup class="c"><a href="#r21">21</a></sup></p>
+
+  <p class="measure">The honest qualification, stated because it matters: that gap is not all abatement. It includes homestead and over-65 exemptions, disabled-veteran exemptions, and the agricultural and open-space valuations that dominate a ranching county. What can be said is narrower and still striking &mdash; the gap grew by $680 million in four years, in a county that was losing population, and agricultural valuations do not move like that.</p>
+
+  <p class="measure">And the counterweight, which belongs here for the same reason: <strong>Childress County came out ahead in cash.</strong> Its tax rate fell from 0.578882 to 0.535000 and its levy still rose, to $3.96 million in 2025 from $3.43 million the year before.<sup class="c"><a href="#r21">21</a></sup> A county can abate most of a project and still collect more than it did &mdash; which is exactly the argument that will be made in Pittsburg County, and it is not a foolish one.</p>
+
+  <h3>The schools, which is the part that does not transfer</h3>
+
+  <p class="measure">Then there is the finding that changes how the Kiowa proposal should be read.</p>
+
+  <div class="scroll">
+    <table>
+      <caption>Childress Independent School District property values &mdash; Texas Comptroller, School District Report of Property Value<sup class="c"><a href="#r21">21</a></sup></caption>
+      <thead><tr><th>Measure</th><th class="num">2021</th><th class="num">2023</th><th class="num">2025</th><th class="num">Change</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">Market value</td><td class="num">977,692,772</td><td class="num">1,114,822,516</td><td class="num">1,825,941,000</td><td class="num">+87%</td></tr>
+        <tr class="total"><td>Taxable value</td><td class="num">451,210,719</td><td class="num">481,405,303</td><td class="num">1,027,607,769</td><td class="num">+128%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure"><strong>Childress ISD&rsquo;s taxable value more than doubled</strong> while the county&rsquo;s abatement gap was widening.<sup class="c"><a href="#r21">21</a></sup> The school district was not inside the county&rsquo;s deal. The county&rsquo;s own agreements make that arrangement explicit: Phase 1 carries a separate <strong>$50,000 annual Education Program Payment</strong> which the County undertakes to distribute to the independent school districts and community colleges serving county residents &mdash; a payment made <em>to</em> the schools precisely because their levy was not being abated. Clarendon College, likewise, negotiated its own agreement rather than being folded into the county&rsquo;s.<sup class="c"><a href="#r5">5</a></sup><sup class="c"><a href="#r8">8</a></sup></p>
+
+  <div class="callout">
+    <h3>In Childress the biggest levy stayed whole. In the Kiowa plan it does not</h3>
+    <p class="measure">Pittsburg County&rsquo;s Project Plan puts <strong>Kiowa Public Schools first among the Taxing Entities</strong>, requires the district to execute the Tax Incentive Agreement before any district can activate, and assigns it <strong>55% of the illustrative distribution</strong> &mdash; $11.0 million of a $20 million example.<sup class="c"><a href="#r1">1</a></sup> The school district is not being paid alongside the abatement, as in Childress. It is inside it, for twenty-five years.</p>
+    <p class="measure" style="margin-bottom:0">That is the single largest structural difference between the deal IREN signed in Texas and the one being proposed here, and it is worth putting to the Board and to the school board in those terms.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--muted)">
+    <h3>What none of this isolates</h3>
+    <p class="measure" style="margin-bottom:0">Childress County hosts more than IREN. <strong>Lancium holds county abatement agreements covering ten permitted phases, and Greenalia operates abated solar and wind there.</strong><sup class="c"><a href="#r4">4</a></sup> Every figure in this section is a county total. None of it separates IREN&rsquo;s effect from the others&rsquo;, and nothing here should be quoted as though it did. What the section establishes is what happened to the county that hosts them &mdash; which is the question Pittsburg County is actually facing.</p>
+  </div>
+</section>
+
 <section id="adrift">
   <div class="sec-head">
-    <span class="tag">07 / Adrift</span>
+    <span class="tag">08 / Adrift</span>
     <h2>Four things in the file that do not add up</h2>
   </div>
 
@@ -386,7 +526,7 @@
 
 <section id="reading">
   <div class="sec-head">
-    <span class="tag">08 / Reading</span>
+    <span class="tag">09 / Reading</span>
     <h2>The fair reading, which cuts both ways</h2>
   </div>
 
@@ -407,7 +547,7 @@
 
 <section id="gaps">
   <div class="sec-head">
-    <span class="tag">09 / Gaps</span>
+    <span class="tag">10 / Gaps</span>
     <h2>What this file does not establish</h2>
   </div>
   <p class="measure">Stated plainly, so nobody mistakes an absence of data for an absence of risk.</p>
@@ -418,6 +558,8 @@
     <li><span class="q">The Clarendon College Phase 2 payment</span><span class="a"><em>Not read</em>The College&rsquo;s Phase 3 payment of $145 per MW per year was read from the executed agreement. Its Phase 2 agreement exists in the county&rsquo;s repository but was not opened for this file.</span></li>
     <li><span class="q">Any renegotiated Oklahoma terms</span><span class="a"><em>Not public</em>If the Project Plan has been revised since the June 2026 hearings, no revised version appears on the county&rsquo;s resolutions page. The Economic Development Agreement and the Tax Incentive Agreement do not exist in public form at all.</span></li>
     <li><span class="q">State-level incentives</span><span class="a"><em>Outside this file</em>Texas and Oklahoma both operate separate state data-center programmes. Whether either site receives state sales-tax or ad valorem benefits on top of the county deals is not established here.</span></li>
+    <li><span class="q">Whether Texas law allowed a school abatement at all</span><span class="a"><em>Not verified</em>Childress ISD kept its full taxable value while the county abated, and the county paid the schools a separate Education Program Payment instead. Whether Texas law positively forbids a school district from granting a Chapter 312 abatement was not confirmed for this file &mdash; the statute site could not be retrieved in readable form. The observable outcome is sourced; the legal reason for it is a question for counsel.</span></li>
+    <li><span class="q">IREN&rsquo;s share of the Childress figures</span><span class="a"><em>Not separable</em>Every Childress measure in section 07 is a county total. Lancium holds abatements covering ten permitted phases and Greenalia operates abated wind and solar in the same county. Nothing in the public data attributes population, employment, wage or tax-base movement to any one of them.</span></li>
     <li><span class="q">Power and water</span><span class="a"><em>Not quantified</em>Neither county document states who pays for transmission and substation upgrades, and neither states expected water withdrawal or its source.</span></li>
   </ul>
 </section>
@@ -425,9 +567,9 @@
 {% raw %}
 <section id="sources">
   <div class="sec-head">
-    <span class="tag">10 / References</span>
+    <span class="tag">11 / References</span>
     <h2>Every source, and what it supports</h2>
-    <span class="note">16 documents &middot; all primary</span>
+    <span class="note">21 documents &middot; all primary</span>
   </div>
   <p class="measure">Numbered markers throughout this file link here. Every figure is traceable to a filed document, an executed agreement or a company disclosure. The county documents on both sides are scanned images without a text layer; they were read page by page, and page and section numbers are given wherever a figure is quoted.</p>
 
@@ -574,6 +716,51 @@
         <p class="m">Transportation service, secondary and local road layers &middot; retrieved 4 Sep 2026</p>
         <p class="used">Road alignments on both plans: US 69, State Highway 131 and Doyle Road at Kiowa; US 287, FM 1033, County Road Z, County Road AA and County Road K5 at Childress &mdash; the last four matching the roads labelled on Childress County&rsquo;s own site map.</p>
         <p class="u"><a href="https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Transportation/MapServer" rel="noopener" target="_blank">https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Transportation/MapServer</a></p>
+      </div>
+    </li>
+    <li id="r17">
+      <span class="n">[17]</span>
+      <div>
+        <p class="t">US Census Bureau &mdash; American Community Survey, 5-year estimates</p>
+        <p class="m">Tables B25064, B25077, B19013, B01003 &middot; Childress County and all 254 Texas counties &middot; vintages 2015&ndash;2024 &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Median gross rent, median home value, median household income and population for Childress County with their published margins of error; the same measures for every Texas county, used to place Childress in the statewide distribution. Significance testing uses the ACS 90% margins.</p>
+        <p class="u"><a href="https://data.census.gov/api/access/data/table?g=0500000US48075&amp;tid=ACSDT5Y2024.B25064" rel="noopener" target="_blank">data.census.gov &rarr; ACSDT5Y &middot; g=0500000US48075</a></p>
+      </div>
+    </li>
+    <li id="r18">
+      <span class="n">[18]</span>
+      <div>
+        <p class="t">US Census Bureau &mdash; County Population Estimates, vintage 2024</p>
+        <p class="m">co-est2024-alldata.csv &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Annual population estimates for Childress County 2020&ndash;2024 and the components of change: net migration of +164 (2021), +78 (2022), &minus;62 (2023) and &minus;59 (2024), against natural change of &minus;29, &minus;27, &minus;17 and &minus;18.</p>
+        <p class="u"><a href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2024/counties/totals/co-est2024-alldata.csv" rel="noopener" target="_blank">https://www2.census.gov/programs-surveys/popest/datasets/2020-2024/counties/totals/co-est2024-alldata.csv</a></p>
+      </div>
+    </li>
+    <li id="r19">
+      <span class="n">[19]</span>
+      <div>
+        <p class="t">US Census Bureau &mdash; Building Permits Survey, county annual files</p>
+        <p class="m">co2018a.txt through co2025a.txt &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Housing units authorized by building permit in Childress County: zero in every year 2018 through 2025, across all structure types. Coverage check: 188 of the 223 Texas counties in the 2024 file reported at least one authorized unit, including Donley (3), Dallam (5) and Hardeman (1).</p>
+        <p class="u"><a href="https://www2.census.gov/econ/bps/County/" rel="noopener" target="_blank">https://www2.census.gov/econ/bps/County/</a></p>
+      </div>
+    </li>
+    <li id="r20">
+      <span class="n">[20]</span>
+      <div>
+        <p class="t">Bureau of Labor Statistics &mdash; Quarterly Census of Employment and Wages</p>
+        <p class="m">Annual averages, area 48075 (Childress County), 2018&ndash;2025 &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Total covered employment and average weekly wage; employment and wages for utilities (NAICS 22), construction (NAICS 23), information (NAICS 51) and retail trade; and the absence of any reported establishment in data processing and hosting (NAICS 518) in any year. Some small-county cells are suppressed for disclosure and are marked as such rather than read as zero.</p>
+        <p class="u"><a href="https://data.bls.gov/cew/data/api/2025/a/area/48075.csv" rel="noopener" target="_blank">https://data.bls.gov/cew/data/api/2025/a/area/48075.csv</a></p>
+      </div>
+    </li>
+    <li id="r21">
+      <span class="n">[21]</span>
+      <div>
+        <p class="t">Texas Comptroller of Public Accounts &mdash; County and School District Rates and Levies</p>
+        <p class="m">County and School District Reports of Property Value, 2021&ndash;2025 &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Childress County market value, taxable value for general and road funds, total county tax rate and calculated levy for each year; and the same market and taxable values for Childress Independent School District. The gap between market and taxable value includes homestead, over-65, disabled-veteran and agricultural or open-space valuations as well as abatements, and is described that way in the text.</p>
+        <p class="u"><a href="https://comptroller.texas.gov/taxes/property-tax/rates/" rel="noopener" target="_blank">https://comptroller.texas.gov/taxes/property-tax/rates/</a></p>
       </div>
     </li>
   </ol>
