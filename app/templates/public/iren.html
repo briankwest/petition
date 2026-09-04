@@ -5,8 +5,8 @@
 {% block og_image_alt %}The IREN File — a sourced dossier on IREN Limited, the company behind the proposed Pittsburg County data-center tax abatement{% endblock %}
 {% block description %}A fully sourced dossier on IREN Limited — the company behind the proposed Pittsburg County data-center tax abatement: sites, board, voting control, the $9.7bn Microsoft contract and six years of results, drawn from its SEC filings.{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="/static/dossier.css">
-<script src="/static/dossier.js" defer></script>
+<link rel="stylesheet" href="/static/dossier.css?v={{ asset_v }}">
+<script src="/static/dossier.js?v={{ asset_v }}" defer></script>
 {% block dossier_head %}{% endblock %}
 {% endblock %}
 {% block content %}

@@ -7,8 +7,8 @@
 <meta name="description" content="{% block description %}{{ site_description }}{% endblock %}">
 <link rel="canonical" href="https://{{ canonical_host }}{{ path }}">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="icon" type="image/svg+xml" href="/static/icons/favicon.svg">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="/static/icons/favicon.svg?v={{ asset_v }}">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v={{ asset_v }}">
 <link rel="manifest" href="/static/icons/site.webmanifest">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#1F2A44" media="(prefers-color-scheme: light)">
@@ -54,6 +54,7 @@ if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t
 <header class="site-head">
   <div class="wrap">
     <a class="brand" href="/"><img class="brand-logo brand-logo-light" src="/static/logo-header.png?v={{ asset_v }}" alt="{{ site_title }} — {{ site_eyebrow }}" width="1311" height="272"><img class="brand-logo brand-logo-dark" src="/static/logo-header-dark.png?v={{ asset_v }}" alt="" aria-hidden="true" width="1311" height="272"></a>
+    <span class="theme theme-head" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/iren" {% if path == '/iren' %}aria-current="page"{% endif %}>Who is IREN?</a>
@@ -65,7 +66,7 @@ if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t
       <a href="/faq" {% if path == '/faq' %}aria-current="page"{% endif %}>FAQ</a>
       <a href="/volunteer" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
       <a class="nav-tldr" href="/tldr" data-tldr {% if path == '/tldr' %}aria-current="page"{% endif %}>TL;DR</a>
-      <span class="theme" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span>
+      <span class="theme theme-nav" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span>
     </nav>
   </div>
 </header>

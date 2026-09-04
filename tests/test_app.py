@@ -117,7 +117,8 @@ def test_tagged_arrivals_are_counted_without_visitor_data(client, db):
 
 def test_theme_switch_and_tokens(client):
     home = client.get("/").text
-    assert home.count('data-theme-set="dark"') == 2 and 'name="color-scheme" content="light dark"' in home   # menu and footer
+    assert home.count('data-theme-set="dark"') == 3 and 'name="color-scheme" content="light dark"' in home   # header, collapsed menu, footer
+    assert '/static/dossier.css?v=' in client.get("/iren").text                                          # versioned, so a theme change cannot be served from cache
     assert "localStorage.getItem('theme')" in home and 'setAttribute(\'data-theme\'' in home               # applied before first paint
     import re as _re
     from toolkit import ROOT
