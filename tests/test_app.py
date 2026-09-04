@@ -86,7 +86,7 @@ def test_tldr_flyer(client, db):
     assert 'id="tldr-modal"' in home and 'data-tldr' in home and ">TL;DR<" in home and "/tldr?embed=1" in home
     assert 'href="/static/tldr.pdf"' in home                                     # the modal's print action is the exact PDF
     bare = client.get("/tldr?print=1").text                                      # what `make tldr-pdf` renders: the sheet alone
-    assert "Print or save the PDF" not in bare and 'class="tldr"' in bare
+    assert 'class="tldr-tools"' not in bare and 'class="tldr"' in bare        # the modal shell's own PDF link is still there
 
 
 def test_home_targets_from_settings(client, db):
