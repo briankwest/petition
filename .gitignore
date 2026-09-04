@@ -12,3 +12,5 @@ Petition Captain Master Tracker*.xlsx
 .DS_Store
 *.egg-info/
 dist/
+# the sender's signature for the records-request letters (personal; never committed)
+config/signature*.png
