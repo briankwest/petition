@@ -88,8 +88,8 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
 
 # ---------- settings ----------
 SETTING_FIELDS = [
-    ("site_title", "Site title (top of every page)", "text", "Shown in the header and the browser tab. Change it to reuse this site for another petition."),
-    ("site_eyebrow", "Site eyebrow (small line above the title)", "text", None),
+    ("site_title", "Site title (browser tab and the logo's alt text)", "text", "The header shows the logo image; this title is the browser-tab name and the image's alternative text for screen readers and link previews. Change it to reuse this site for another petition."),
+    ("site_eyebrow", "Site eyebrow (county and state, follows the title in the alt text)", "text", None),
     ("site_description", "Site description (search + social previews)", "textarea", "One or two sentences. Used for the meta description and Open Graph / Twitter cards."),
     ("registered_voters", "Registered voters in county", "number", "Written, dated figure from the County Election Board. Legal minimum = 10%."),
     ("registered_voters_source", "Voter count source", "text", "Who gave it and how (email, letter)."),
