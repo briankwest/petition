@@ -13,6 +13,7 @@
       {% if user and user.role == 'admin' %}<a href="/admin/users" {% if path.startswith('/admin/users') %}aria-current="page"{% endif %}>Users</a>{% endif %}
       <a href="/" target="_blank" rel="noopener">View site ↗</a>
     </nav>
+    <p class="small theme-row">Appearance <span class="theme" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span></p>
     {% if user %}<form class="logout" method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><span class="small">{{ user.username }} ({{ user.role }})</span><button class="linklike">Sign out</button></form>{% endif %}
   </aside>
   <main id="main" class="admin-main">

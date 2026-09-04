@@ -164,6 +164,9 @@ summary{cursor:pointer;font-weight:600}
 .admin-nav nav a[aria-current=page]{background:var(--accent-soft);color:var(--accent-deep);font-weight:600;box-shadow:inset 3px 0 0 var(--gold)}
 .admin-nav nav a:hover{background:var(--code)}
 .admin-nav .logout{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.theme-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0}   /* admin sidebar and sign-in: the same three-way switch as the public footer */
+.admin-nav .theme-row{margin-top:auto}
+.admin-nav .theme-row+.logout{margin-top:0}
 .admin-main{padding:24px 28px 60px;min-width:0}
 .admin-main h1{font-size:30px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 body.admin{font-size:15px}

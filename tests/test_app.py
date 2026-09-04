@@ -411,6 +411,27 @@ def test_timeline_page(client):
     assert 'href="/timeline"' in client.get("/").text and 'href="/timeline"' in client.get("/faq").text   # home pointer and nav
 
 
+def test_source_registers_show_host_and_identifier(client):
+    # Every register link reads "host → identifier"; the full URL lives in the href and nothing else. A raw URL
+    # as link text is the thing this guards against, so new sources keep the timeline's format.
+    import re as _re
+    for path in ("/iren", "/childress-kiowa", "/questions", "/timeline"):
+        html = client.get(path).text
+        lines = _re.findall(r'<p class="u">(.*?)</p>', html)
+        assert lines, path
+        for line in lines:
+            for href, text in _re.findall(r'<a href="([^"]*)"[^>]*>([^<]*)</a>', line):
+                assert "://" not in text and not text.startswith("www."), (path, href, text)
+    assert "sec.gov &rarr; iren-20260630.htm" in client.get("/iren").text            # the two dossiers now match /timeline
+    assert "pittsburg.okcounties.org &rarr; project_plan_-_final_1875.pdf" in client.get("/childress-kiowa").text
+
+
+def test_admin_has_theme_switch(client, db):
+    assert 'data-theme-set="dark"' in client.get("/admin/login").text
+    login(client, db)
+    assert client.get("/admin").text.count('data-theme-set="dark"') == 1            # sidebar switch, wired by the shared script
+
+
 def test_mobile_nav_toggle_present(client):
     html = client.get("/").text
     assert 'class="nav-toggle"' in html and 'aria-controls="site-nav"' in html and 'id="site-nav"' in html
