@@ -30,6 +30,72 @@
 </section>
 {% endif %}
 
+<section aria-labelledby="deal-h">
+  <h2 id="deal-h">What the county is being asked to give</h2>
+  <p>The <strong>{{ petition.measure.project_name }}</strong> was recommended to the Board of County Commissioners on 21 April 2026 and tabled after the June hearings. It would create two incentive districts on about 2,000 acres two miles south of Kiowa and abate most of the new property tax there for a generation. The figures below are the plan's own, with one from the company's annual report.</p>
+  <div class="tiles">
+    <div class="tile"><span class="num">{{ petition.fmt.abatement }}</span><span class="lbl">of new value abated, at most, once more than 550 MW is energized; a sliding scale below that</span></div>
+    <div class="tile"><span class="num">25 years</span><span class="lbl">from each district's activation date, with the districts activated in any order</span></div>
+    <div class="tile"><span class="num">$25 bn</span><span class="lbl">per phase, two phases, in the plan's own cost table</span></div>
+    <div class="tile"><span class="num">1,600 MW</span><span class="lbl">the campus IREN describes to its shareholders; the plan's arithmetic is built on 1,200</span></div>
+    <div class="tile"><span class="num">1 Jan 2026</span><span class="lbl">base value date, fixed before any vote and frozen for the whole term</span></div>
+    <div class="tile"><span class="num">90 days</span><span class="lbl">notice on which the company may terminate the tax incentive agreement</span></div>
+  </div>
+  <p class="small">Every figure is sourced, page and section, on <a href="/childress-kiowa">Childress vs. Kiowa</a> and in <a href="/questions">the questions to the Board</a>.</p>
+</section>
+
+<section class="two-col">
+  <div>
+    <h2>What binds whom</h2>
+    <p>The plan is carefully drafted. The problem is narrower: the terms that protect the county are labelled illustrative, and the terms that bind the county are already definite.</p>
+    <ul class="plain">
+      <li><strong>Definite, on the county.</strong> The {{ petition.fmt.abatement }}, the 25 years, the 1 January 2026 base value, and five taxing-entity signatures within 60 days of adoption.</li>
+      <li><strong>Illustrative, on the company.</strong> The minimum payments, which the plan introduces as "a non-binding example" that is "not intended to establish fixed or binding payment obligations."</li>
+      <li><strong>Absent.</strong> A jobs floor, a capacity minimum, a parent guarantee, and a recapture clause if the company leaves.</li>
+    </ul>
+    <p><a href="/questions#binds">The full table, term by term →</a></p>
+  </div>
+  <div>
+    <h2>What a referendum does</h2>
+    <p>Under the Oklahoma Local Development Act, voters can refer a county resolution like this one to the ballot. If the Board adopts the plan, a petition signed by ten percent of the county's registered voters, <strong>{{ petition.fmt.legal_minimum }} of {{ petition.fmt.registered_voters }}</strong>, must be filed within 30 days. The question then goes to the next general county election, and the abatement waits for the answer (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>).</p>
+    <p>The Board has tabled the resolution. Nothing can be signed until it acts, and nothing is being circulated. This site is ready for the day it does.</p>
+  </div>
+</section>
+
+<section aria-labelledby="read-h">
+  <h2 id="read-h">Read the file</h2>
+  <ul class="cards">
+    <li class="card"><h3><a href="/iren">Who is IREN?</a></h3><p>The company behind Emerald ProjectCo: sites, board, voting control, the $9.7 billion Microsoft contract and six years of results, from its own SEC filings. It closed its last year with $5.9 billion of unrestricted cash.</p></li>
+    <li class="card"><h3><a href="/childress-kiowa">Childress vs. Kiowa</a></h3><p>IREN built 750 MW in Texas on a ten-year deal worth about a million dollars a year to that county. Here it asks for {{ petition.fmt.abatement }} for twenty-five years. Both deals side by side, from the executed agreements and the county's own plan.</p></li>
+    <li class="card"><h3><a href="/questions">Ask the board</a></h3><p>Fourteen questions for the commissioners, each pinned to a page of the county's plan, a Texas agreement, an SEC filing or a state registry, and the conditions that would answer them. Prints as a letter.</p></li>
+  </ul>
+</section>
+
+<section aria-labelledby="who-h">
+  <h2 id="who-h">Who decides</h2>
+  <p>Three county commissioners. The Kiowa site is in District {{ petition.contacts.site_district }}.</p>
+  <ul class="cards">
+    {% for c in petition.contacts.commissioners %}
+    <li class="card"><h3>District {{ c.district }}{% if c.role %} · {{ c.role }}{% endif %}</h3><p><strong>{{ c.name }}</strong>{% if c.district == petition.contacts.site_district %} · the site's district{% endif %}</p>
+    <p><a class="tel" href="tel:{{ c.phone|tel }}">{{ c.phone }}</a></p></li>
+    {% endfor %}
+  </ul>
+  <p><a href="/contact">Offices, hours and the district map →</a></p>
+</section>
+
+<section aria-labelledby="sofar-h">
+  <h2 id="sofar-h">What has happened so far</h2>
+  <ul class="events">
+    <li><strong>29 July 2025</strong> · Emerald ProjectCo Inc. is incorporated in Delaware. No officer, owner or parent appears on any public record.</li>
+    <li><strong>16 December 2025</strong> · It qualifies to do business in Oklahoma.</li>
+    <li><strong>1 January 2026</strong> · The base value date the plan fixes for the whole term.</li>
+    <li><strong>21 April 2026</strong> · The county's Statutory Review Committee recommends the plan unanimously.</li>
+    <li><strong>8 and 22 June 2026</strong> · Public hearings at the Southeast Expo Center. The Board then tables the resolution; no adoption date has been set.</li>
+    <li><strong>27 August 2026</strong> · IREN files its annual report: $5.9 billion of unrestricted cash, and the Oklahoma campus described at 1,600 MW.</li>
+  </ul>
+  <p class="small">Dates and sources are on <a href="/questions#sequence">the sequence</a>.</p>
+</section>
+
 <section class="two-col">
   <div>
     <h2>Upcoming signing times</h2>

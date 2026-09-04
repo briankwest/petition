@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Am I registered? · {{ site_title }}{% endblock %}
+{% block og_title %}Am I registered?{% endblock %}
+{% block description %}Only registered voters living in Pittsburg County may sign. Check your registration in two minutes on the State Election Board's OK Voter Portal, and see which five fields on the sheet decide whether a signature counts.{% endblock %}
+{% block og_image_alt %}Am I registered to sign? — check with the Oklahoma State Election Board before you sign the Pittsburg County petition{% endblock %}
 {% block content %}
 <h1>Am I registered to sign?</h1>
 <p class="lede">Only <strong>registered voters who live in {{ petition.county }} County</strong> may sign this petition (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868(B)(2)</a>; <a class="cite" href="{{ cite_url('34-23') }}" rel="noopener" target="_blank">34 O.S. § 23</a>). Check before you come — it takes two minutes.</p>

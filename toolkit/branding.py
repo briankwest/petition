@@ -84,6 +84,25 @@ def draw_og(title: str, eyebrow: str, tagline: str,
     return im
 
 
+# Per-page share images. Each page that overrides {% block og_image %} has an entry here, so the
+# whole set regenerates from one command and none is a one-off. Footer text names the page.
+OG_PAGES = {
+    "og-iren.png": dict(eyebrow="Company dossier · Pittsburg County, Oklahoma", title="The IREN File",
+                        tagline="Sites, board, voting control and the $9.7bn\nMicrosoft contract — every figure drawn\nfrom IREN's own SEC filings.",
+                        footer="petition.mcalester.net/iren · Who is IREN?"),
+    "og-sites.png": dict(eyebrow="Pittsburg County, Oklahoma", title="Childress vs. Kiowa",
+                         tagline="IREN built 750 MW in Texas on a ten-year deal.\nHere it wants 85% for twenty-five years.",
+                         footer="petition.mcalester.net/childress-kiowa · Where to sign · Who to call"),
+    "og-questions.png": dict(eyebrow="To the Board of County Commissioners · Pittsburg County",
+                             title="Fourteen questions for the Board",
+                             tagline="The plan binds the county to 85% for 25 years\nand binds the company to almost nothing.\nEvery question is pinned to a document.",
+                             footer="petition.mcalester.net/questions · Ask the board"),
+    "og-contact.png": dict(eyebrow="Pittsburg County, Oklahoma", title="Who to call",
+                           tagline="The three commissioners who decide the abatement,\non a district map. The Kiowa site is in District 2.",
+                           footer="petition.mcalester.net/contact · Who to call"),
+}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--title", default="Referendum Petition")
@@ -101,7 +120,9 @@ def main(argv=None) -> int:
         "icons": [{"src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png"}]}, indent=2))
     draw_og(a.title, a.eyebrow, a.tagline).save(ROOT / "app" / "static" / "og.png", optimize=True)
-    print("wrote", ", ".join(p.name for p in sorted(ICONS.iterdir())), "and app/static/og.png")
+    for name, spec in OG_PAGES.items():
+        draw_og(spec["title"], spec["eyebrow"], spec["tagline"], spec["footer"]).save(ROOT / "app" / "static" / name, optimize=True)
+    print("wrote", ", ".join(p.name for p in sorted(ICONS.iterdir())), "and app/static/og.png +", ", ".join(OG_PAGES))
     return 0
 
 

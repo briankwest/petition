@@ -301,10 +301,14 @@ def test_favicon_and_opengraph(client):
     assert client.get("/static/icons/apple-touch-icon.png").status_code == 200
     assert client.get("/static/og.png").status_code == 200
     html = client.get("/sign").text
-    assert '<meta property="og:title" content="Where to sign · Referendum Petition">' in html
+    assert '<meta property="og:title" content="Where to sign">' in html          # og:site_name carries the site name
+    assert '<meta name="twitter:image:alt" content="Where to sign the Pittsburg County referendum petition' in html
     assert '<meta property="og:image" content="https://petition.mcalester.net/static/og.png">' in html
     assert '<link rel="canonical" href="https://petition.mcalester.net/sign">' in html
     assert '<meta name="twitter:card" content="summary_large_image">' in html and 'rel="manifest"' in html
+    for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png")]:
+        assert f'<meta property="og:image" content="https://petition.mcalester.net/static/{img}">' in client.get(path).text, path
+        assert client.get(f"/static/{img}").status_code == 200, img
 
 
 def test_mobile_nav_toggle_present(client):

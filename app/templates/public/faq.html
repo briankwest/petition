@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Questions · {{ site_title }}{% endblock %}
+{% block title %}FAQ · {{ site_title }}{% endblock %}
+{% block og_title %}FAQ{% endblock %}
+{% block description %}What signing does, who may sign, how many signatures are needed, why there is no online signing, which fields must match the voter file, what gets a signature thrown out, and where the petition is filed.{% endblock %}
+{% block og_image_alt %}Frequently asked questions about signing the Pittsburg County referendum petition{% endblock %}
 {% block content %}
 {% macro cite(sec, label) %}<a class="cite" href="{{ cites[sec] }}" rel="noopener" target="_blank">{{ label }}</a>{% endmacro %}
 
