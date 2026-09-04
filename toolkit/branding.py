@@ -97,10 +97,29 @@ OG_PAGES = {
                              title="Fourteen questions for the Board",
                              tagline="The plan binds the county to 85% for 25 years\nand binds the company to almost nothing.\nEvery question is pinned to a document.",
                              footer="petition.mcalester.net/questions · Ask the board"),
+    "og-tldr.png": dict(eyebrow="Pittsburg County, Oklahoma", title="The one-page version",
+                        tagline="The whole case on one printable sheet,\nwith a QR code to the full file.",
+                        footer="petition.mcalester.net/tldr · Print it, share it"),
     "og-contact.png": dict(eyebrow="Pittsburg County, Oklahoma", title="Who to call",
                            tagline="The three commissioners who decide the abatement,\non a district map. The Kiowa site is in District 2.",
                            footer="petition.mcalester.net/contact · Who to call"),
 }
+
+
+# The flyer's QR code. Tagged so GA can tell scans from other traffic. segno is a dev-only dependency:
+# the SVG is committed and served as a static file, so production never needs the library.
+QR_URL = "https://petition.mcalester.net/?utm_source=flyer&utm_medium=print"
+
+
+def write_qr(path: Path) -> bool:
+    try:
+        import segno
+    except ImportError:
+        print("segno not installed; QR code not regenerated (pip install segno)")
+        return False
+    segno.make(QR_URL, error="m").save(str(path), kind="svg", scale=4, border=1, dark=NAVY, light=None,
+                                       xmldecl=False, svgclass=None, lineclass=None)
+    return True
 
 
 def main(argv=None) -> int:
@@ -120,6 +139,7 @@ def main(argv=None) -> int:
         "icons": [{"src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png"}]}, indent=2))
     draw_og(a.title, a.eyebrow, a.tagline).save(ROOT / "app" / "static" / "og.png", optimize=True)
+    write_qr(ROOT / "app" / "static" / "qr-site.svg")
     for name, spec in OG_PAGES.items():
         draw_og(spec["title"], spec["eyebrow"], spec["tagline"], spec["footer"]).save(ROOT / "app" / "static" / name, optimize=True)
     print("wrote", ", ".join(p.name for p in sorted(ICONS.iterdir())), "and app/static/og.png +", ", ".join(OG_PAGES))

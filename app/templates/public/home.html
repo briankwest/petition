@@ -71,7 +71,7 @@
   </div>
   <div>
     <h2>What a referendum does</h2>
-    <p>Under the Oklahoma Local Development Act, voters can refer a county resolution like this one to the ballot. If the Board adopts the plan, a petition signed by ten percent of the county's registered voters{% if targets.legal_minimum %}, <strong>{{ targets.legal_minimum|int }} of {{ targets.registered_voters|int }}</strong>,{% endif %} must be filed within 30 days. The question then goes to the next general county election, and the abatement waits for the answer (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>).</p>
+    <p>Under the Oklahoma Local Development Act, voters can refer a county resolution like this one to the ballot. If the Board adopts the plan, a petition signed by ten percent of the county's registered voters{% if targets.legal_minimum %}, <strong>{{ targets.legal_minimum|int }} of {{ targets.registered_voters|int }}</strong>,{% endif %} must be filed within 30 days.{% if targets.target %} We are aiming for <strong>{{ targets.target|int }}</strong> signatures{% if targets.overcollect_pct %}, {{ targets.overcollect_pct }} percent over the minimum,{% endif %} so that rejected signatures cannot sink the filing.{% endif %} The question then goes to the next general county election, and the abatement waits for the answer (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>).</p>
     <p>The Board has tabled the resolution. Nothing can be signed until it acts, and nothing is being circulated. This site is ready for the day it does.</p>
   </div>
 </section>

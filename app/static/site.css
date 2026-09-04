@@ -306,3 +306,18 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
   .tk-stats{grid-template-columns:minmax(0,1fr)}
   .tk-stats .tk-wide{grid-column:span 1}
 }
+
+/* TL;DR — last nav item, pushed to the far right on wide screens; opens the one-page sheet in a modal */
+.site-nav .nav-tldr{margin-left:auto}
+@media (max-width:860px){.site-nav .nav-tldr{margin-left:0}}
+/* TL;DR modal — the one-page sheet over any public page; Print prints only the sheet (base.html) */
+.tldr-modal{width:min(96vw,900px);max-height:92vh;padding:0;border:1px solid var(--rule);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.35);overflow:auto;background:var(--bg);color:var(--ink)}
+.tldr-modal::backdrop{background:rgba(31,42,68,.55)}
+.tldr-modal-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--rule)}
+.tldr-modal-bar h2{margin:0 auto 0 0;font-size:18px}
+.tldr-modal-bar .btn{padding:8px 14px;font-size:15px;min-height:0}
+.tldr-modal-body{padding:12px 14px 18px}
+.tldr-tools{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin:10px 0 8px}
+.tldr-tools .btn{background:var(--accent);color:var(--accent-ink)}
+.tldr-note{font-size:14px;color:var(--muted);margin:0;max-width:60ch}
+@media print{#tldr-modal{display:none!important}}

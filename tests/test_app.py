@@ -63,7 +63,7 @@ def test_host_redirect(client):
 
 
 def test_public_pages_and_banner(client):
-    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa", "/questions"]:
+    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa", "/questions", "/tldr"]:
         r = client.get(path)
         assert r.status_code == 200, path
         assert "tabled" in r.text, path
@@ -74,6 +74,20 @@ def test_public_pages_and_banner(client):
     assert "X-Content-Type-Options" in client.get("/").headers
 
 
+def test_tldr_flyer(client, db):
+    html = client.get("/tldr").text
+    assert 'src="/static/qr-site.svg"' in html and client.get("/static/qr-site.svg").status_code == 200
+    assert "2,773 of 27,727" in html and "4,437" in html and "District 2" in html and "window.print()" in html
+    frag = client.get("/tldr?embed=1").text                                      # the modal fetches a bare sheet
+    assert frag.lstrip().startswith("<style>") and "<html" not in frag and 'class="tldr"' in frag and "2,773 of 27,727" in frag
+    home = client.get("/").text                                                  # every public page carries the modal shell
+    assert 'id="tldr-modal"' in home and 'data-tldr' in home and ">TL;DR<" in home and "/tldr?embed=1" in home
+    assert "/tldr?print=1" in home                                               # Print loads the standalone sheet in a frame
+    bare = client.get("/tldr?print=1").text
+    assert "Print this page" not in bare and 'class="tldr"' in bare and "afterprint" in bare   # prints itself, then closes
+    assert "afterprint" not in client.get("/tldr").text
+
+
 def test_home_targets_from_settings(client, db):
     html = client.get("/").text
     assert "The numbers" in html and "27,727" in html and "2,773" in html and "4,437" in html      # seeded from config
@@ -81,6 +95,7 @@ def test_home_targets_from_settings(client, db):
     s = Settings(db); s.set("registered_voters", 30000); db.commit()
     html = client.get("/").text
     assert "30,000" in html and "3,000" in html and "4,800" in html and "27,727" not in html       # admin edit wins everywhere
+    assert "We are aiming for <strong>4,800</strong> signatures, 60 percent over the minimum" in html
 
 
 def test_home_reads_admin_petition_values(client, db):
@@ -327,7 +342,7 @@ def test_favicon_and_opengraph(client):
     assert '<meta property="og:image" content="https://petition.mcalester.net/static/og.png">' in html
     assert '<link rel="canonical" href="https://petition.mcalester.net/sign">' in html
     assert '<meta name="twitter:card" content="summary_large_image">' in html and 'rel="manifest"' in html
-    for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png")]:
+    for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png"), ("/tldr", "og-tldr.png")]:
         assert f'<meta property="og:image" content="https://petition.mcalester.net/static/{img}">' in client.get(path).text, path
         assert client.get(f"/static/{img}").status_code == 200, img
 

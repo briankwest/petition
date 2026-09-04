@@ -86,6 +86,15 @@ def childress_kiowa(request: Request, db: Session = Depends(get_db)):
     return render(request, "public/sites.html", s=Settings(db))
 
 
+@router.get("/tldr")
+def tldr(request: Request, db: Session = Depends(get_db)):
+    """The one-page version — the whole case on one Letter sheet with a QR code to the site; prints as a flyer."""
+    s = Settings(db)
+    if request.query_params.get("embed"):
+        return render(request, "public/_tldr_sheet.html", s=s, targets=_targets(db, s))   # bare sheet for the modal
+    return render(request, "public/tldr.html", s=s, targets=_targets(db, s))
+
+
 @router.get("/questions")
 def questions(request: Request, db: Session = Depends(get_db)):
     """Questions for the Board — the two dossiers' findings put to the commissioners; prints as a letter."""

@@ -56,6 +56,7 @@
       <a href="/contact" {% if path == '/contact' %}aria-current="page"{% endif %}>Who to call</a>
       <a href="/faq" {% if path == '/faq' %}aria-current="page"{% endif %}>FAQ</a>
       <a href="/volunteer" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
+      <a class="nav-tldr" href="/tldr" data-tldr {% if path == '/tldr' %}aria-current="page"{% endif %}>TL;DR</a>
     </nav>
   </div>
 </header>
@@ -68,6 +69,40 @@
   <p>This site gives information about a referendum petition under the Oklahoma Local Development Act (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>). Signing a petition only supports putting the question to a public vote. Signatures are collected only on official, filed paper pamphlets — never online.</p>
   <p class="small">No voter information is collected on this site. Registration lookups go directly to the <a href="{{ petition.links.voter_portal }}" rel="noopener">Oklahoma State Election Board's OK Voter Portal</a>. {% if user %}<a href="/admin">Admin</a>{% else %}<a href="/admin/login">Staff sign-in</a>{% endif %}</p>
 </div></footer>
+<dialog id="tldr-modal" class="tldr-modal" aria-labelledby="tldr-modal-h">
+  <div class="tldr-modal-bar">
+    <h2 id="tldr-modal-h">The one-page version</h2>
+    <button type="button" class="btn primary" data-tldr-print>Print</button>
+    <a class="btn" href="/tldr">Open as a page</a>
+    <button type="button" class="btn" data-tldr-close aria-label="Close">Close</button>
+  </div>
+  <div class="tldr-modal-body"></div>
+</dialog>
+<script>
+(function(){
+  var dlg=document.getElementById('tldr-modal'); if(!dlg||!dlg.showModal) return;
+  var body=dlg.querySelector('.tldr-modal-body'), loaded=false, root=document.documentElement;
+  function load(){
+    if(loaded) return; body.innerHTML='<p class="small" style="padding:20px">Loading…</p>';
+    fetch('/tldr?embed=1',{headers:{Accept:'text/html'}}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function(h){ body.innerHTML=h; loaded=true; })
+      .catch(function(){ body.innerHTML='<p class="small" style="padding:20px">Could not load it here. <a href="/tldr">Open the one-page version</a>.</p>'; });
+  }
+  function open(e){ if(e) e.preventDefault(); root.classList.add('tldr-open'); dlg.showModal(); load(); }
+  // Print the standalone sheet in its own tab. Printing the open dialog lays the page out around the top-layer
+  // element and Chrome shrinks it to under half size; a hidden frame is laid out at the window's width and shrunk
+  // the same way. A top-level document prints at paper width. The tab prints itself on load and then closes.
+  function printSheet(){
+    var w=window.open('/tldr?print=1','_blank');
+    if(!w){ location.href='/tldr?print=1'; }
+  }
+  document.querySelectorAll('[data-tldr]').forEach(function(a){ a.addEventListener('click', open); });
+  dlg.addEventListener('close', function(){ root.classList.remove('tldr-open'); });
+  dlg.addEventListener('click', function(e){ if(e.target===dlg) dlg.close(); });
+  dlg.querySelector('[data-tldr-close]').addEventListener('click', function(){ dlg.close(); });
+  dlg.querySelector('[data-tldr-print]').addEventListener('click', printSheet);
+})();
+</script>
 {% endblock %}
 <script>
 (function(){var b=document.querySelector('.nav-toggle'),h=document.querySelector('.site-head');if(!b||!h)return;
