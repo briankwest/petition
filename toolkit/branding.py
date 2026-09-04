@@ -94,7 +94,7 @@ OG_PAGES = {
                          tagline="IREN built 750 MW in Texas on a ten-year deal.\nHere it wants 85% for twenty-five years.",
                          footer="petition.mcalester.net/childress-kiowa · Where to sign · Who to call"),
     "og-questions.png": dict(eyebrow="To the Board of County Commissioners · Pittsburg County",
-                             title="Fourteen questions for the Board",
+                             title="Fifteen questions for the Board",
                              tagline="The plan binds the county to 85% for 25 years\nand binds the company to almost nothing.\nEvery question is pinned to a document.",
                              footer="petition.mcalester.net/questions · Ask the board"),
     "og-tldr.png": dict(eyebrow="Pittsburg County, Oklahoma", title="The one-page version",
