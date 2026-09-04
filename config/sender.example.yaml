@@ -1,0 +1,9 @@
+# Copy to config/sender.local.yaml (git-ignored) and fill in. Used by `make letters`.
+name: Jane Q. Public
+email: jane@example.org
+address: 100 Main Street
+city: McAlester
+state: OK
+zip: "74501"
+phone: 918-555-0100
+signature: ""   # optional: path to a PNG signature with an alpha channel, placed above the typed name

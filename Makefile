@@ -2,7 +2,7 @@
 PY ?= .venv/bin/python
 TRACKER ?= Petition Captain Master Tracker.xlsx
 
-.PHONY: venv docs docs-final check-docs xlsx xlsx-import check-xlsx fetch-precincts geocode icons map check-geo test check final freeze app-dev seed clean tldr-pdf
+.PHONY: venv docs docs-final check-docs xlsx xlsx-import check-xlsx fetch-precincts geocode icons map check-geo test check final freeze app-dev seed clean tldr-pdf letters
 CHROME ?= /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 TLDR_URL ?= https://petition.mcalester.net/tldr?print=1
 
@@ -45,6 +45,9 @@ final: docs-final ## filing build: strict checks
 tldr-pdf:        ## re-render app/static/tldr.pdf from the live one-page sheet (Chrome, Letter, exact); rerun when the numbers change, then deploy
 	"$(CHROME)" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=10000 --print-to-pdf=app/static/tldr.pdf "$(TLDR_URL)"
 	@$(PY) -c "import re,pathlib; b=pathlib.Path('app/static/tldr.pdf').read_bytes(); n=len(re.findall(rb'/Type\s*/Page[^s]', b)); print('app/static/tldr.pdf:', n, 'page(s),', len(b), 'bytes'); raise SystemExit(0 if n==1 else 1)"
+
+letters:         ## records-request letters -> output/letters (PDF per letter + docupost.csv); sender from config/sender.local.yaml
+	$(PY) -m toolkit.letters.build --out output/letters
 
 freeze:          ## hash + tag the filed pamphlet; later builds must match
 	$(PY) -m toolkit.freeze output/final/01-petition-pamphlet.pdf
