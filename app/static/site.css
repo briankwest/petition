@@ -52,7 +52,7 @@ p{margin:0 0 1em}
 .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);margin:0 0 10px}
 /* header / footer */
 .site-head{border-top:6px solid var(--gold);border-bottom:1px solid var(--rule);background:var(--surface)}
-.site-head .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-top:16px;padding-bottom:14px}
+.site-head .wrap{max-width:1320px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-top:16px;padding-bottom:14px}   /* wider than the page so ten nav items sit on one row beside the logo; TL;DR wrapped alone otherwise */
 .brand{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;line-height:1.1}
 /* the logo lockup is the header; the admin site title and eyebrow are its alt text and the <title> */
 .brand-logo{display:block;height:136px;width:auto}
@@ -65,7 +65,8 @@ p{margin:0 0 1em}
 @media (max-width:900px){.brand-logo{height:auto;width:min(calc(100vw - 175px),560px)}}
 .brand-eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .brand-name{font-family:"Zilla Slab",Georgia,serif;font-size:22px;font-weight:700}
-.site-nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+.site-nav{display:flex;flex-wrap:wrap;gap:4px 15px;font-size:15.5px}
+@media (max-width:1100px){.site-nav{gap:4px 12px;font-size:15px}}   /* ten items still fit one row at 1024 */
 .nav-toggle{display:none}
 .site-nav a{text-decoration:none;color:var(--ink);padding:8px 0;border-bottom:2px solid transparent;font-weight:500}
 .site-nav a[aria-current=page],.site-nav a:hover{border-bottom-color:var(--accent)}
@@ -355,7 +356,7 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
 @media print{.theme{display:none!important}}
 /* TL;DR — last nav item, pushed to the far right on wide screens; opens the one-page sheet in a modal */
 .site-nav .nav-tldr{margin-left:auto}
-@media (max-width:860px){.site-nav .nav-tldr{margin-left:0}}
+@media (max-width:1100px){.site-nav .nav-tldr{margin-left:0}}
 /* TL;DR modal — the one-page sheet over any public page; Print prints only the sheet (base.html) */
 .tldr-modal{width:min(96vw,900px);max-height:92vh;padding:0;border:1px solid var(--rule);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.35);overflow:auto;background:var(--bg);color:var(--ink)}
 .tldr-modal::backdrop{background:var(--backdrop)}
