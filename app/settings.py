@@ -25,7 +25,7 @@ DEFAULTS = {
     "petition_frozen": "false", "frozen_build_id": None, "filed_at": None, "filed_office": None,
     "filed_receiver": None, "filed_sha256": None, "filed_fingerprint": None, "filed_note": None,
     "site_title": "Referendum Petition", "site_eyebrow": None, "volunteer_form_url": None,
-    "site_description": "Where to sign, whether you are registered, and who to call — the Pittsburg County referendum petition on the proposed data center tax abatement. Volunteers of all kinds are needed.",
+    "site_description": "Where to sign, whether you are registered, and who to call — the Pittsburg County referendum petition on the proposed data center tax abatement.",
 }
 
 
