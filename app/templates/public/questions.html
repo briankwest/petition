@@ -32,6 +32,10 @@
 .irenfile .board .seat p{margin:0 0 4px;max-width:none}
 .irenfile .board .seat.here{outline:2px solid var(--copper);outline-offset:-2px}
 .irenfile .letterhead{display:none}
+/* print frame: on screen every part is a plain block; in print thead/tfoot repeat on each page as top and
+   bottom spacers, which is the only margin that survives a print dialog set to Margins: None. */
+.irenfile table.printframe,.irenfile .printframe>thead,.irenfile .printframe>tbody,.irenfile .printframe>tfoot,.irenfile .printframe>*>tr,.irenfile .printframe>*>tr>td{display:block;min-width:0;background:transparent;border:0!important;padding:0!important}
+.irenfile .printframe .pf-top,.irenfile .printframe .pf-bot{display:none}
 .irenfile .printbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:22px 0 0;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .irenfile .printbar button{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink);background:var(--surface);color:var(--ink);padding:9px 14px;cursor:pointer;border-radius:2px}
 .irenfile .printbar button:hover{background:var(--copper-wash)}
@@ -47,7 +51,7 @@
   .irenfile .brief{border-top:1px solid #000}
   .irenfile table{width:100%;table-layout:fixed}
   .irenfile caption,.irenfile thead{break-after:avoid}
-  .irenfile td.who{white-space:normal}
+  .irenfile td.who,.irenfile td.d{white-space:normal}
   .irenfile .letterhead{display:block;margin:0 0 16pt;padding:0 0 10pt;border-bottom:1px solid #000;font-size:10.5pt;line-height:1.4}
   .irenfile .letterhead p{margin:0 0 3pt;max-width:none}
   .irenfile .masthead{padding:0 0 10pt;border-bottom:1px solid #000}
@@ -60,7 +64,14 @@
   .irenfile .sec-head{margin-bottom:10pt;padding-bottom:5pt;break-after:avoid}
   .irenfile .sec-head h2{font-size:14pt}
   .irenfile .sec-head .note{display:none}
-  .irenfile .qs>li,.irenfile .brief li,.irenfile tr,.irenfile .checks li,.irenfile .board .seat{break-inside:avoid}
+  .irenfile .qs>li,.irenfile .brief li,.irenfile .scroll tr,.irenfile .checks li,.irenfile .board .seat{break-inside:avoid}
+  .irenfile table.printframe{display:table;width:100%;table-layout:fixed;border-collapse:collapse;min-width:0}
+  .irenfile .printframe>thead{display:table-header-group}
+  .irenfile .printframe>tfoot{display:table-footer-group}
+  .irenfile .printframe>tbody{display:table-row-group}
+  .irenfile .printframe>*>tr{display:table-row;break-inside:auto}
+  .irenfile .printframe>*>tr>td{display:table-cell;vertical-align:top;padding:0!important;border:0!important}
+  .irenfile .printframe .pf-top,.irenfile .printframe .pf-bot{display:table-cell;height:16mm}
   .irenfile .qs .qt{font-size:12.5pt}
   .irenfile .qs .qw{font-size:10.5pt}
   .irenfile .qs .qg{font-size:8.5pt}
@@ -71,11 +82,12 @@
   .irenfile .board{grid-template-columns:repeat(3,1fr)}
   .irenfile .refs .u{display:none}
 }
-@page{margin:16mm 0}
+@page{margin:0}
 </style>
 {% endblock %}
 {% block content %}
 <div class="irenfile">
+<table class="printframe"><thead><tr><td class="pf-top"></td></tr></thead><tfoot><tr><td class="pf-bot"></td></tr></tfoot><tbody><tr><td>
 <div class="doc">
 
 <header class="masthead">
@@ -237,7 +249,7 @@
   </ol>
 
   <h3 class="grp">What binds whom</h3>
-  <ol class="qs" start="3">
+  <ol class="qs" start="3" style="counter-reset:q 2">
     <li><div>
       <p class="qt">Will the Board adopt anything before the minimum payments are made binding, and will the Tax Incentive Agreement be published before the vote?</p>
       <p class="qw">The plan introduces its minimum-payment table as &ldquo;a non-binding example,&rdquo; &ldquo;intended solely to demonstrate the general economic framework,&rdquo; and &ldquo;not intended to establish fixed or binding payment obligations.&rdquo; The Economic Development Agreement and the Tax Incentive Agreement do not exist in public form.</p>
@@ -261,7 +273,7 @@
   </ol>
 
   <h3 class="grp">The numbers</h3>
-  <ol class="qs" start="7">
+  <ol class="qs" start="7" style="counter-reset:q 6">
     <li><div>
       <p class="qt">If the company builds 1,600 MW rather than 1,200, what does the county receive for the extra 400?</p>
       <p class="qw">The plan&rsquo;s cost tables, tiers and payment schedule assume two phases of about 600 MW. IREN&rsquo;s annual report and site page describe the Oklahoma campus as 1,600 MW across 2,000 acres. The top tier begins above 550 MW per phase and carries the same illustrative minimum.</p>
@@ -290,7 +302,7 @@
   </ol>
 
   <h3 class="grp">Process and need</h3>
-  <ol class="qs" start="12">
+  <ol class="qs" start="12" style="counter-reset:q 11">
     <li><div>
       <p class="qt">Have the five taxing entities been shown the plan&rsquo;s own statement that the payments are illustrative?</p>
       <p class="qw">Kiowa Public Schools, the county, the Health Department, Kiamichi Technology Center and the Southern Oklahoma Public Library System must sign the Tax Incentive Agreement within sixty days of adoption, and no district activates until all have. The Phase 1 distribution the plan shows them, $11.0 million to Kiowa Public Schools among it, is labelled non-binding.</p>
@@ -400,6 +412,7 @@
 </footer>
 
 </div>
+</td></tr></tbody></table>
 </div>
 
 {% set q_url = "https://" ~ canonical_host ~ "/questions" %}
