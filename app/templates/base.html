@@ -72,7 +72,7 @@
 <dialog id="tldr-modal" class="tldr-modal" aria-labelledby="tldr-modal-h">
   <div class="tldr-modal-bar">
     <h2 id="tldr-modal-h">The one-page version</h2>
-    <button type="button" class="btn primary" data-tldr-print>Print</button>
+    <a class="btn primary" href="/static/tldr.pdf" target="_blank" rel="noopener">Print or save the PDF</a>
     <a class="btn" href="/tldr">Open as a page</a>
     <button type="button" class="btn" data-tldr-close aria-label="Close">Close</button>
   </div>
@@ -89,18 +89,12 @@
       .catch(function(){ body.innerHTML='<p class="small" style="padding:20px">Could not load it here. <a href="/tldr">Open the one-page version</a>.</p>'; });
   }
   function open(e){ if(e) e.preventDefault(); root.classList.add('tldr-open'); dlg.showModal(); load(); }
-  // Print the standalone sheet in its own tab. Printing the open dialog lays the page out around the top-layer
-  // element and Chrome shrinks it to under half size; a hidden frame is laid out at the window's width and shrunk
-  // the same way. A top-level document prints at paper width. The tab prints itself on load and then closes.
-  function printSheet(){
-    var w=window.open('/tldr?print=1','_blank');
-    if(!w){ location.href='/tldr?print=1'; }
-  }
+  // Printing is a link to /static/tldr.pdf, rendered by Chrome from this very sheet (make tldr-pdf): the browser's
+  // PDF viewer prints it at exact size, whatever scale or margins the print dialog has remembered.
   document.querySelectorAll('[data-tldr]').forEach(function(a){ a.addEventListener('click', open); });
   dlg.addEventListener('close', function(){ root.classList.remove('tldr-open'); });
   dlg.addEventListener('click', function(e){ if(e.target===dlg) dlg.close(); });
   dlg.querySelector('[data-tldr-close]').addEventListener('click', function(){ dlg.close(); });
-  dlg.querySelector('[data-tldr-print]').addEventListener('click', printSheet);
 })();
 </script>
 {% endblock %}

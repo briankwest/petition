@@ -77,15 +77,16 @@ def test_public_pages_and_banner(client):
 def test_tldr_flyer(client, db):
     html = client.get("/tldr").text
     assert 'src="/static/qr-site.svg"' in html and client.get("/static/qr-site.svg").status_code == 200
-    assert "2,773 of 27,727" in html and "4,437" in html and "District 2" in html and "window.print()" in html
+    assert "2,773 of 27,727" in html and "4,437" in html and "District 2" in html and 'href="/static/tldr.pdf"' in html
+    pdf = client.get("/static/tldr.pdf")                                         # the Chrome-rendered sheet, one Letter page
+    assert pdf.status_code == 200 and pdf.headers["content-type"] == "application/pdf" and pdf.content.startswith(b"%PDF")
     frag = client.get("/tldr?embed=1").text                                      # the modal fetches a bare sheet
     assert frag.lstrip().startswith("<style>") and "<html" not in frag and 'class="tldr"' in frag and "2,773 of 27,727" in frag
     home = client.get("/").text                                                  # every public page carries the modal shell
     assert 'id="tldr-modal"' in home and 'data-tldr' in home and ">TL;DR<" in home and "/tldr?embed=1" in home
-    assert "/tldr?print=1" in home                                               # Print loads the standalone sheet in a frame
-    bare = client.get("/tldr?print=1").text
-    assert "Print this page" not in bare and 'class="tldr"' in bare and "afterprint" in bare   # prints itself, then closes
-    assert "afterprint" not in client.get("/tldr").text
+    assert 'href="/static/tldr.pdf"' in home                                     # the modal's print action is the exact PDF
+    bare = client.get("/tldr?print=1").text                                      # what `make tldr-pdf` renders: the sheet alone
+    assert "Print or save the PDF" not in bare and 'class="tldr"' in bare
 
 
 def test_home_targets_from_settings(client, db):

@@ -7,19 +7,9 @@
 {% block content %}
 {% if not request.query_params.get('print') %}
 <div class="tldr-tools">
-  <button type="button" class="btn" onclick="window.print()">Print this page</button>
-  <p class="tldr-note">One Letter sheet. In the print dialog, choose "Save as PDF" to share it by email or text. Margins can be left at Default or None; the sheet carries its own.</p>
+  <a class="btn" href="/static/tldr.pdf" target="_blank" rel="noopener">Print or save the PDF</a>
+  <p class="tldr-note">The PDF is this sheet exactly, one Letter page, and prints at true size from any PDF viewer. It is the file to share by email or text.</p>
 </div>
 {% endif %}
 {% include "public/_tldr_sheet.html" %}
-{% if request.query_params.get('print') %}
-<script>
-(function(){
-  // Opened by the TL;DR modal's Print button: print on load, then close if we own the tab.
-  function go(){ setTimeout(function(){ window.print(); }, 250); }
-  window.addEventListener('afterprint', function(){ if(window.opener){ setTimeout(function(){ window.close(); }, 100); } });
-  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(go); } else { window.addEventListener('load', go); }
-})();
-</script>
-{% endif %}
 {% endblock %}
