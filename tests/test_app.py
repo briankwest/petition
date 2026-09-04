@@ -74,6 +74,14 @@ def test_public_pages_and_banner(client):
     assert "X-Content-Type-Options" in client.get("/").headers
 
 
+def test_home_targets_from_settings(client, db):
+    html = client.get("/").text
+    assert "The numbers" in html and "27,727" in html and "2,773" in html and "4,437" in html      # seeded from config
+    s = Settings(db); s.set("registered_voters", 30000); db.commit()
+    html = client.get("/").text
+    assert "30,000" in html and "3,000" in html and "4,800" in html and "27,727" not in html       # admin edit wins everywhere
+
+
 def test_counts_hidden_until_enabled(client, db):
     r = client.get("/")
     assert "Signature count" not in r.text

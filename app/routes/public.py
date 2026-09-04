@@ -35,10 +35,21 @@ def _public_stats(db: Session, s: Settings):
     return signature_stats(db, s)
 
 
+def _targets(db: Session, s: Settings) -> dict:
+    """The threshold numbers the campaign plans against, from the same settings the admin dashboard and
+    the XLSX export read — shown on the home page whether or not the collected counts are public."""
+    st = signature_stats(db, s)
+    oc = s.raw("overcollect_fraction")
+    return {"registered_voters": st["registered_voters"], "legal_minimum": st["legal_minimum"], "target": st["target"],
+            "est_valid_rate": st["est_valid_rate"], "days_remaining": st["days_remaining"], "filing_deadline": st["filing_deadline"],
+            "registered_voters_date": s.raw("registered_voters_date"), "registered_voters_source": s.raw("registered_voters_source"),
+            "overcollect_pct": round(float(oc) * 100) if oc else None}
+
+
 @router.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
     s = Settings(db)
-    return render(request, "public/home.html", s=s, stats=_public_stats(db, s), events=_upcoming(db, 5),
+    return render(request, "public/home.html", s=s, stats=_public_stats(db, s), targets=_targets(db, s), events=_upcoming(db, 5),
                   show_progress=s.bool("public_show_progress"))
 
 

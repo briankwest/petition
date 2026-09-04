@@ -30,6 +30,20 @@
 </section>
 {% endif %}
 
+{% if targets.registered_voters %}
+<section aria-labelledby="targets-h">
+  <h2 id="targets-h">The numbers</h2>
+  <div class="tiles">
+    <div class="tile"><span class="num">{{ targets.registered_voters|int }}</span><span class="lbl">registered voters in {{ petition.county }} County{% if targets.registered_voters_date %}, as of {{ targets.registered_voters_date|date }}{% endif %}</span></div>
+    <div class="tile"><span class="num">{{ targets.legal_minimum|int }}</span><span class="lbl">signatures the law requires: ten percent of registered voters</span></div>
+    <div class="tile"><span class="num">{{ targets.target|int }}</span><span class="lbl">our target{% if targets.overcollect_pct %}, {{ targets.overcollect_pct }}% over the legal minimum{% endif %}, so rejected signatures cannot sink the filing</span></div>
+    <div class="tile"><span class="num">{{ (targets.est_valid_rate * 100)|round|int }}%</span><span class="lbl">of collected signatures we plan on surviving verification</span></div>
+    <div class="tile"><span class="num">{% if targets.days_remaining is not none %}{{ targets.days_remaining }}{% else %}30{% endif %}</span><span class="lbl">{% if targets.days_remaining is not none %}days left to file, by {{ targets.filing_deadline|date }}{% else %}days to file once the Board adopts the resolution{% endif %}</span></div>
+  </div>
+  <p class="small">Registered-voter count{% if targets.registered_voters_source %} from the {{ targets.registered_voters_source }}{% endif %}. The ten percent minimum is set by <a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>; the target and the valid-rate assumption are the campaign's own.</p>
+</section>
+{% endif %}
+
 <section aria-labelledby="deal-h">
   <h2 id="deal-h">What the county is being asked to give</h2>
   <p>The <strong>{{ petition.measure.project_name }}</strong> was recommended to the Board of County Commissioners on 21 April 2026 and tabled after the June hearings. It would create two incentive districts on about 2,000 acres two miles south of Kiowa and abate most of the new property tax there for a generation. The figures below are the plan's own, with one from the company's annual report.</p>
@@ -57,7 +71,7 @@
   </div>
   <div>
     <h2>What a referendum does</h2>
-    <p>Under the Oklahoma Local Development Act, voters can refer a county resolution like this one to the ballot. If the Board adopts the plan, a petition signed by ten percent of the county's registered voters, <strong>{{ petition.fmt.legal_minimum }} of {{ petition.fmt.registered_voters }}</strong>, must be filed within 30 days. The question then goes to the next general county election, and the abatement waits for the answer (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>).</p>
+    <p>Under the Oklahoma Local Development Act, voters can refer a county resolution like this one to the ballot. If the Board adopts the plan, a petition signed by ten percent of the county's registered voters{% if targets.legal_minimum %}, <strong>{{ targets.legal_minimum|int }} of {{ targets.registered_voters|int }}</strong>,{% endif %} must be filed within 30 days. The question then goes to the next general county election, and the abatement waits for the answer (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>).</p>
     <p>The Board has tabled the resolution. Nothing can be signed until it acts, and nothing is being circulated. This site is ready for the day it does.</p>
   </div>
 </section>
