@@ -28,19 +28,20 @@
 
   --measure:66ch;
 }
-/* Dark paper: a warm near-black ground with the ink lifted and copper brightened for contrast. Defined twice,
+/* Dark paper: the same blue-black ground as the rest of the site (so the dossier column is not a visible slab,
+   exactly as the cream matches in light), with the ink lifted and copper brightened for contrast. Defined twice,
    as in site.css: for the un-stamped auto state under prefers-color-scheme, and for the explicit stamp. Print
    restores the paper. */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .irenfile{
-  --paper:#171716;--surface:#201F1C;--surface-sunk:#141412;--ink:#EDE9E0;--ink-soft:#D7D2C7;--muted:#A6A196;
-  --rule:#35332E;--rule-strong:#4C4942;--copper:#D68C60;--copper-wash:#3A2A20;--copper-deep:#E6A27A;
+  --paper:#0F1524;--surface:#171F33;--surface-sunk:#0B101C;--ink:#EEF0F5;--ink-soft:#D7DCE6;--muted:#A9B2C4;
+  --rule:#2B3651;--rule-strong:#3F4C6B;--copper:#D68C60;--copper-wash:#3A2A20;--copper-deep:#E6A27A;
   --st-op:#5BB89E;--st-con:#DDA94F;--st-dev:#86AACB;--st-plan:#9DA29A;--c-rev:#E37F51;--c-ni:#43C39B;
-  --grid:#2A2925;--grid-strong:#3A3832}}
+  --grid:#1E273B;--grid-strong:#2B3651}}
 :root[data-theme="dark"] .irenfile{
-  --paper:#171716;--surface:#201F1C;--surface-sunk:#141412;--ink:#EDE9E0;--ink-soft:#D7D2C7;--muted:#A6A196;
-  --rule:#35332E;--rule-strong:#4C4942;--copper:#D68C60;--copper-wash:#3A2A20;--copper-deep:#E6A27A;
+  --paper:#0F1524;--surface:#171F33;--surface-sunk:#0B101C;--ink:#EEF0F5;--ink-soft:#D7DCE6;--muted:#A9B2C4;
+  --rule:#2B3651;--rule-strong:#3F4C6B;--copper:#D68C60;--copper-wash:#3A2A20;--copper-deep:#E6A27A;
   --st-op:#5BB89E;--st-con:#DDA94F;--st-dev:#86AACB;--st-plan:#9DA29A;--c-rev:#E37F51;--c-ni:#43C39B;
-  --grid:#2A2925;--grid-strong:#3A3832}
+  --grid:#1E273B;--grid-strong:#2B3651}
 @media print{.irenfile,:root:not([data-theme="light"]) .irenfile,:root[data-theme="dark"] .irenfile{
   --paper:#FFFFFF;--surface:#FFFFFF;--surface-sunk:#F4F1E8;--ink:#111111;--ink-soft:#26292B;--muted:#525B63;
   --rule:#E6E1D3;--rule-strong:#C7BFA9;--copper:#A2542C;--copper-wash:#EFE2D9;--copper-deep:#7C3E1F;
