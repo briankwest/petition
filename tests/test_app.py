@@ -63,11 +63,14 @@ def test_host_redirect(client):
 
 
 def test_public_pages_and_banner(client):
-    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa"]:
+    for path in ["/", "/sign", "/registered", "/contact", "/faq", "/volunteer", "/iren", "/childress-kiowa", "/questions"]:
         r = client.get(path)
         assert r.status_code == 200, path
         assert "tabled" in r.text, path
     assert "okvoterportal.okelections.gov" in client.get("/registered").text
+    contact = client.get("/contact").text                      # commissioners come from config, the map from static GeoJSON
+    assert "Board of County Commissioners" in contact and "District 2" in contact and "kiowa_sections.geojson" in contact
+    assert client.get("/static/precincts/kiowa_sections.geojson").status_code == 200
     assert "X-Content-Type-Options" in client.get("/").headers
 
 

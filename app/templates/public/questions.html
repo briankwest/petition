@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+{% block title %}Questions for the Board · {{ site_title }}{% endblock %}
+{% block og_title %}Fourteen questions for the Board of County Commissioners{% endblock %}
+{% block og_image_alt %}Fourteen questions for the Pittsburg County commissioners on the Emerald ProjectCo data center tax abatement, each pinned to a document{% endblock %}
+{% block description %}The Emerald ProjectCo plan binds Pittsburg County to 85% for 25 years and binds the company to almost nothing. Fourteen questions for the commissioners, each pinned to a page of the county's own plan, the executed Texas agreements, IREN's SEC filings or the state registries, and the conditions that would answer them.{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/dossier.css">
+<script src="/static/dossier.js" defer></script>
+<style>
+/* --- page-specific: the brief, the binds table, the sequence, the question list, the board, the letter.
+   Class names must not collide with dossier.css: .site, .track, .status, .bar are taken by the /iren site ladder. --- */
+.irenfile .brief{list-style:none;counter-reset:b;margin:0;padding:0;border-top:2px solid var(--ink)}
+.irenfile .brief li{counter-increment:b;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:13px 0;border-bottom:1px solid var(--rule);font-size:16.5px;line-height:1.5;max-width:calc(var(--measure) + 58px)}
+.irenfile .brief li::before{content:counter(b,decimal-leading-zero);font-family:var(--f-mono);font-size:12px;color:var(--copper);padding-top:4px}
+.irenfile td.who{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.irenfile td.who.county{color:var(--copper)} .irenfile td.who.company{color:var(--st-op)} .irenfile td.who.none{color:var(--muted)}
+.irenfile td.d{font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.irenfile td.lab{font-weight:500;color:var(--ink)}
+.irenfile .qs{list-style:none;margin:0;padding:0;counter-reset:q}
+.irenfile .qs>li{counter-increment:q;display:grid;grid-template-columns:52px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.irenfile .qs>li::before{content:"Q" counter(q);font-family:var(--f-mono);font-size:12px;color:var(--copper);padding-top:6px}
+.irenfile .qs .qt{font-family:var(--f-display);font-weight:600;font-size:19.5px;line-height:1.3;letter-spacing:-.015em;margin:0 0 8px;max-width:var(--measure);text-wrap:pretty}
+.irenfile .qs .qw{margin:0 0 8px;max-width:var(--measure);color:var(--ink-soft);font-size:15.5px}
+.irenfile .qs .qg{margin:0;font-family:var(--f-mono);font-size:11.5px;line-height:1.7;color:var(--muted);letter-spacing:.02em;max-width:var(--measure)}
+.irenfile .qs .qg .k{color:var(--copper);letter-spacing:.12em;text-transform:uppercase;font-size:10px;margin-right:6px}
+.irenfile h3.grp{margin-top:34px;font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);border-bottom:1px solid var(--rule-strong);padding-bottom:8px}
+.irenfile .board{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:20px}
+.irenfile .board .seat{background:var(--surface);padding:16px 18px 18px;font-size:14.5px;line-height:1.5}
+.irenfile .board .seat .d{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin:0 0 8px;display:flex;justify-content:space-between;gap:8px}
+.irenfile .board .seat .d .tag2{color:var(--muted);letter-spacing:.08em}
+.irenfile .board .seat .n{font-family:var(--f-display);font-weight:600;font-size:18.5px;margin:0 0 6px;letter-spacing:-.01em}
+.irenfile .board .seat p{margin:0 0 4px;max-width:none}
+.irenfile .board .seat.here{outline:2px solid var(--copper);outline-offset:-2px}
+.irenfile .letterhead{display:none}
+.irenfile .printbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:22px 0 0;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.irenfile .printbar button{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink);background:var(--surface);color:var(--ink);padding:9px 14px;cursor:pointer;border-radius:2px}
+.irenfile .printbar button:hover{background:var(--copper-wash)}
+@media (max-width:860px){.irenfile .board{grid-template-columns:1fr}}
+@media (max-width:620px){.irenfile .qs>li{grid-template-columns:1fr;gap:4px}.irenfile .brief li{grid-template-columns:30px minmax(0,1fr);gap:8px}}
+@media print{
+  .skip,.site-head,.site-foot,.banner,.share,.irenfile .printbar,.irenfile nav.toc,.irenfile .vitals,.irenfile .disclose{display:none!important}
+  main.wrap{max-width:none;padding:0;margin:0}
+  .irenfile{background:#fff;font-size:11pt;line-height:1.45}
+  .irenfile .letterhead{display:block;margin:0 0 16pt;padding:0 0 10pt;border-bottom:1px solid #000;font-size:10.5pt;line-height:1.4}
+  .irenfile .letterhead p{margin:0 0 3pt;max-width:none}
+  .irenfile .masthead{padding:0 0 12pt;border-bottom:1px solid #000}
+  .irenfile .stamp{margin:0 0 10pt;font-size:8.5pt}
+  .irenfile h1{font-size:20pt;line-height:1.1}
+  .irenfile h1 .sub{font-size:11pt;margin-top:6pt}
+  .irenfile .dek{font-size:11pt;margin:10pt 0 0}
+  .irenfile section{margin:16pt 0 0}
+  .irenfile .sec-head{margin-bottom:10pt;padding-bottom:5pt;break-after:avoid}
+  .irenfile .sec-head h2{font-size:14pt}
+  .irenfile .sec-head .note{display:none}
+  .irenfile .qs>li,.irenfile .brief li,.irenfile tr,.irenfile .checks li,.irenfile .board .seat{break-inside:avoid}
+  .irenfile .qs .qt{font-size:12.5pt}
+  .irenfile .qs .qw{font-size:10.5pt}
+  .irenfile .qs .qg{font-size:8.5pt}
+  .irenfile .brief li{font-size:10.5pt}
+  .irenfile table{font-size:9.5pt}
+  .irenfile a{color:inherit;text-decoration:none}
+  .irenfile sup.c a{color:#000}
+  .irenfile .board{grid-template-columns:repeat(3,1fr)}
+  .irenfile .refs .u{display:none}
+  @page{margin:20mm 18mm}
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="irenfile">
+<div class="doc">
+
+<header class="masthead">
+  <p class="stamp">
+    <span>Questions for the Board</span>
+    <span>Compiled 4 September 2026</span>
+    <span>14 questions &middot; each pinned to a document</span>
+  </p>
+  <div class="letterhead">
+    <p><strong>To:</strong> The Honorable Ross Selman, Chairman, Board of County Commissioners of Pittsburg County &middot; 1906 N. 15th Street, McAlester, OK 74501</p>
+    <p><strong>Copies:</strong> Commissioner Charlie Rogers, District 1, 200 N. Craig / P.O. Box 268, Haileyville, OK 74546 &middot; Commissioner Mike Haynes, District 2, 615 Pittsburg Road, Pittsburg, OK 74560 &middot; bocc@pittsburgcountyok.gov &middot; district2@pittsburgcountyok.gov</p>
+    <p><strong>From:</strong> Brian West, Pittsburg County &middot; brian@mcalester.net</p>
+    <p><strong>Date:</strong> 4 September 2026</p>
+    <p><strong>Re:</strong> Emerald ProjectCo Data Center Project Economic Development Project Plan &mdash; fourteen questions before the tabled resolution returns to the agenda. Markers such as C1 and I21 refer to the numbered source registers published at petition.mcalester.net/childress-kiowa and petition.mcalester.net/iren; a copy of each cited document is available on request.</p>
+  </div>
+  <h1>Fourteen questions for the Board
+    <span class="sub">Emerald ProjectCo Data Center Project Plan &middot; Pittsburg County, Oklahoma &middot; addressed to the chair, copied to the other two commissioners</span>
+  </h1>
+  <p class="dek">The plan the Board tabled binds the county to definite terms and binds the company to almost nothing. Every question below points at a page of the county&rsquo;s own plan, an executed Texas agreement, an SEC filing or a state registry, and each has an answer the Board could require before the item returns.</p>
+
+  <dl class="vitals">
+    <div class="vital"><dt>Abatement</dt><dd>up to 85%</dd></div>
+    <div class="vital"><dt>Term</dt><dd>25 years</dd></div>
+    <div class="vital"><dt>Base value date</dt><dd>1 Jan 2026</dd></div>
+    <div class="vital"><dt>Company exit</dt><dd>90 days&rsquo; notice</dd></div>
+    <div class="vital"><dt>Jobs bound</dt><dd>none</dd></div>
+    <div class="vital"><dt>Guarantor</dt><dd>none</dd></div>
+  </dl>
+
+  <div class="disclose">
+    <p class="d-h">Publication statement</p>
+    <dl>
+      <div><dt>Published by</dt><dd>Brian West</dd></div>
+      <div><dt>Author's position</dt><dd>IREN does not need our tax incentives to build and operate.</dd></div>
+      <div><dt>Status of the measure</dt><dd>Tabled by the Board of County Commissioners. Not adopted. No resolution number, adoption date, filing deadline or election date exists.</dd></div>
+      <div><dt>Basis</dt><dd>The county&rsquo;s published Project Plan and committee recommendation, the executed Childress County agreements, IREN&rsquo;s SEC filings, and the Delaware, Oklahoma and British Columbia corporate registries, as cited on the two source pages. No non-public information was received or relied upon.</dd></div>
+      <div><dt>Answers</dt><dd>Any reply from the Board, the county&rsquo;s counsel or the company will be published here in full, with the date received.</dd></div>
+      <div><dt>Corrections</dt><dd><a href="mailto:brian@mcalester.net">brian@mcalester.net</a> &middot; errors of fact will be corrected and the correction noted</dd></div>
+    </dl>
+  </div>
+
+  <div class="printbar">
+    <button type="button" onclick="window.print()">Print as a letter</button>
+    <span>Prints with the addressee block and without the site navigation.</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol class="toc-list">
+    <li><a href="#brief"><span class="toc-n">01</span><span class="toc-t">The case in ten lines</span></a></li>
+    <li><a href="#binds"><span class="toc-n">02</span><span class="toc-t">What binds whom</span></a></li>
+    <li><a href="#sequence"><span class="toc-n">03</span><span class="toc-t">Who moved first</span></a></li>
+    <li><a href="#questions"><span class="toc-n">04</span><span class="toc-t">The fourteen questions</span></a></li>
+    <li><a href="#conditions"><span class="toc-n">05</span><span class="toc-t">What would answer them</span></a></li>
+    <li><a href="#board"><span class="toc-n">06</span><span class="toc-t">Who this goes to</span></a></li>
+    <li><a href="#sources"><span class="toc-n">07</span><span class="toc-t">Sources</span></a></li>
+  </ol>
+</nav>
+
+<section id="brief">
+  <div class="sec-head">
+    <span class="tag">01 / Brief</span>
+    <h2>The case in ten lines</h2>
+    <span class="note">every line carries its source</span>
+  </div>
+  <ol class="brief">
+    <li><span>Pittsburg County is asked to abate up to <strong>85 percent</strong> of new value for <strong>twenty-five years</strong>. Childress County, Texas got IREN&rsquo;s 750 MW campus on ten years, with a written &ldquo;shall not extend beyond ten.&rdquo;<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup><sup class="c"><a href="/childress-kiowa#r6">C6</a></sup></span></li>
+    <li><span>The minimum payments that would protect the county are introduced as <em class="term">a non-binding example</em>, <em class="term">not intended to establish fixed or binding payment obligations</em>. The 85 percent, the 25 years and the base value date are definite.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></span></li>
+    <li><span>Base value is the assessed value as of <strong>1 January 2026</strong>, months before any vote, and stays frozen for the full term.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></span></li>
+    <li><span>The company may terminate the Tax Incentive Agreement on <strong>90 days&rsquo; notice</strong>. No recapture clause is stated.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></span></li>
+    <li><span>The plan <em class="term">anticipates</em> 40 jobs per phase and binds the company to none. Each Childress agreement requires &ldquo;no less than ten.&rdquo;<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup></span></li>
+    <li><span>The counterparty is <strong>Emerald ProjectCo Inc.</strong>, a Delaware corporation formed 29 July 2025 with no officer, owner or parent on any public record and no guarantor in the plan. Childress bound five IREN companies jointly and severally.<sup class="c"><a href="/childress-kiowa#r24">C24</a></sup><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup></span></li>
+    <li><span>The plan is built on 1,200 MW. IREN tells its shareholders the Oklahoma campus is <strong>1,600 MW on 2,000 acres</strong>. The top abatement tier starts above 550 MW per phase and carries the same illustrative minimum, so the extra 400 MW pays the county nothing more.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r11">C11</a></sup><sup class="c"><a href="/childress-kiowa#r13">C13</a></sup></span></li>
+    <li><span>Exhibits C and D, existing conditions and proposed improvements, are <strong>blank</strong> in the copy the county published.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></span></li>
+    <li><span>The plan never mentions 68 O.S. &sect;&thinsp;2902, under which the <strong>state</strong> reimburses local taxing entities for exempt manufacturing property, and the Tax Commission&rsquo;s 2026 report lists NAICS 5182 data-center facilities among the qualifying categories.<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r22">C22</a></sup><sup class="c"><a href="/childress-kiowa#r23">C23</a></sup></span></li>
+    <li><span>IREN closed FY26 with <strong>$5.90 billion</strong> of unrestricted cash, raised $11.0 billion in twelve months at a blended coupon under one percent, and tells shareholders recent contracts pay back in about two years. The county&rsquo;s committee found the investment would &ldquo;more likely than not not occur&rdquo; without the districts.<sup class="c"><a href="/childress-kiowa#r11">C11</a></sup><sup class="c"><a href="/childress-kiowa#r12">C12</a></sup><sup class="c"><a href="/childress-kiowa#r2">C2</a></sup></span></li>
+  </ol>
+</section>
+
+<section id="binds">
+  <div class="sec-head">
+    <span class="tag">02 / Terms</span>
+    <h2>What binds whom</h2>
+  </div>
+  <p class="lede-p measure">The plan is not carelessly drafted. Its problem is narrower: the terms that protect the county are labelled illustrative, and the terms that bind the county are already definite.</p>
+  <div class="scroll">
+    <table>
+      <caption>Each term of the Project Plan, and who it actually binds<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></caption>
+      <thead><tr><th>Term</th><th>What the plan says</th><th>Binds</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">Abatement rate</td><td>85% of value above Base Value once more than 550 MW is energized; lower tiers below, recalculated every year</td><td class="who county">County &middot; definite</td></tr>
+        <tr><td class="lab">Term</td><td>Twenty-five years from each district&rsquo;s Activation Date; districts activate independently, in any order</td><td class="who county">County &middot; definite</td></tr>
+        <tr><td class="lab">Base value</td><td>Assessed value as of 1 January 2026, certified within ninety days of adoption, frozen for the term</td><td class="who county">County &middot; definite</td></tr>
+        <tr><td class="lab">Taxing-entity signatures</td><td>Kiowa Public Schools, the county, the Health Department, Kiamichi Technology Center and the library system sign within sixty days of adoption; no district activates until all have</td><td class="who county">County &middot; spent at adoption</td></tr>
+        <tr><td class="lab">Minimum payments</td><td>A table of minimums, introduced as &ldquo;a non-binding example&rdquo; and &ldquo;not intended to establish fixed or binding payment obligations&rdquo;</td><td class="who company">Company &middot; illustrative</td></tr>
+        <tr><td class="lab">Community Betterment Payment</td><td>$200,000 to $5,000,000 a year by tier</td><td class="who company">Company &middot; plan only; agreement not public</td></tr>
+        <tr><td class="lab">Investment</td><td>About $25 billion per phase in the plan&rsquo;s own cost table; activation requires more than $1 billion in a district</td><td class="who company">Company &middot; $1bn threshold only</td></tr>
+        <tr><td class="lab">Capacity</td><td>About 600 MW per phase assumed; no minimum stated</td><td class="who none">Nobody</td></tr>
+        <tr><td class="lab">Jobs</td><td>&ldquo;Anticipated to create 40 ongoing jobs per Phase&rdquo;; no obligation</td><td class="who none">Nobody</td></tr>
+        <tr><td class="lab">Staying</td><td>Not specified</td><td class="who none">Nobody</td></tr>
+        <tr><td class="lab">Leaving</td><td>Company may terminate the Tax Incentive Agreement on ninety days&rsquo; notice</td><td class="who company">Company&rsquo;s option</td></tr>
+        <tr><td class="lab">Guarantee</td><td>None; one corporation named, no parent</td><td class="who none">Nobody</td></tr>
+        <tr><td class="lab">Verification</td><td>Annual megawatt certification; county audit rights over megawatts, assessed value and business personal property</td><td class="who company">Company &middot; definite</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure">Read down the right-hand column. Everything definite sits on the county. The one definite obligation on the company is to report.</p>
+</section>
+
+<section id="sequence">
+  <div class="sec-head">
+    <span class="tag">03 / Sequence</span>
+    <h2>Who moved first</h2>
+  </div>
+  <div class="scroll">
+    <table>
+      <caption>Dated events from the registries, the county&rsquo;s file and the SEC record</caption>
+      <thead><tr><th>Date</th><th>Event</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td class="d">8 Jul 2021</td><td>IE US Holdings Inc., IREN&rsquo;s United States holding company, is incorporated in Delaware</td><td><sup class="c"><a href="/iren#r21">I21</a></sup></td></tr>
+        <tr><td class="d">29 Jul 2025</td><td>Emerald ProjectCo Inc. is incorporated in Delaware</td><td><sup class="c"><a href="/childress-kiowa#r24">C24</a></sup></td></tr>
+        <tr><td class="d">16 Dec 2025</td><td>Emerald ProjectCo qualifies in Oklahoma as a foreign for-profit business corporation</td><td><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup></td></tr>
+        <tr><td class="d">1 Jan 2026</td><td>The Base Value date the plan fixes for the whole term</td><td><sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></td></tr>
+        <tr><td class="d">21 Apr 2026</td><td>The Statutory Review Committee recommends the plan unanimously</td><td><sup class="c"><a href="/childress-kiowa#r2">C2</a></sup></td></tr>
+        <tr><td class="d">18 May 2026</td><td>Notice of public hearings is file-stamped by the County Clerk</td><td><sup class="c"><a href="/childress-kiowa#r3">C3</a></sup></td></tr>
+        <tr><td class="d">8 &amp; 22 Jun 2026</td><td>Public hearings at the Southeast Expo Center</td><td><sup class="c"><a href="/childress-kiowa#r3">C3</a></sup></td></tr>
+        <tr><td class="d">After the hearings</td><td>The Board tables the resolution; no adopted resolution appears on the county&rsquo;s resolutions page</td><td></td></tr>
+        <tr><td class="d">30 Jul 2026</td><td>Corporation Service Company is appointed Emerald ProjectCo&rsquo;s Oklahoma registered agent</td><td><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup></td></tr>
+        <tr><td class="d">27 Aug 2026</td><td>IREN files its FY26 Form 10-K: $5.90 billion of unrestricted cash; the Oklahoma campus described at 1,600 MW</td><td><sup class="c"><a href="/childress-kiowa#r11">C11</a></sup></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure">The company had a vehicle formed and qualified before the county&rsquo;s committee met. The base value date falls between the two. And the county&rsquo;s whole leverage, five signatures, is scheduled to be spent within sixty days of a vote.</p>
+</section>
+
+<section id="questions">
+  <div class="sec-head">
+    <span class="tag">04 / Questions</span>
+    <h2>The fourteen questions</h2>
+    <span class="note">grounds under each</span>
+  </div>
+  <p class="lede-p measure">Each question is phrased so the answer is either a document or an admission that there is none. The grounds line names where the fact behind it sits.</p>
+
+  <h3 class="grp">The counterparty</h3>
+  <ol class="qs">
+    <li><div>
+      <p class="qt">Who owns Emerald ProjectCo Inc., and will IREN Limited guarantee its obligations?</p>
+      <p class="qw">The Delaware and Oklahoma records show a corporation formed 29 July 2025 with no officer, director or shareholder on file, and IREN&rsquo;s own list of significant subsidiaries does not include it. In Childress County five IREN companies signed, each a party and all jointly and severally liable. The plan names one company and no guarantor.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; Exhibit 21.1 to IREN&rsquo;s 10-K &middot; Delaware file 10276559 &middot; Oklahoma filing 2313901183 &middot; Childress Phase 1 agreement<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/iren#r2">I2</a></sup><sup class="c"><a href="/childress-kiowa#r24">C24</a></sup><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Who signed the application, and who has the county been dealing with?</p>
+      <p class="qw">Neither registry names a person. The plan was prepared with the county&rsquo;s counsel and recommended by the committee; the record should say who represented the applicant at each step.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; committee recommendation of 21 April 2026 &middot; Oklahoma filing 2313901183<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r2">C2</a></sup><sup class="c"><a href="/childress-kiowa#r25">C25</a></sup></p>
+    </div></li>
+  </ol>
+
+  <h3 class="grp">What binds whom</h3>
+  <ol class="qs" start="3">
+    <li><div>
+      <p class="qt">Will the Board adopt anything before the minimum payments are made binding, and will the Tax Incentive Agreement be published before the vote?</p>
+      <p class="qw">The plan introduces its minimum-payment table as &ldquo;a non-binding example,&rdquo; &ldquo;intended solely to demonstrate the general economic framework,&rdquo; and &ldquo;not intended to establish fixed or binding payment obligations.&rdquo; The Economic Development Agreement and the Tax Incentive Agreement do not exist in public form.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan, minimum payment table and &sect;&thinsp;12<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">If the company terminates on ninety days&rsquo; notice in year three, what does the county recover?</p>
+      <p class="qw">The plan lets the company terminate the Tax Incentive Agreement on ninety days&rsquo; notice and does not say what is recaptured. Childress County wrote cancellation and recapture, less payments made, into its agreements as the county&rsquo;s remedy.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; Childress Phase 1 and Phase 2 agreements<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup><sup class="c"><a href="/childress-kiowa#r6">C6</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Why twenty-five years?</p>
+      <p class="qw">Childress County abated for ten calendar years and wrote &ldquo;shall not extend beyond ten&rdquo; into the agreement. IREN built 750 MW there against 600 committed, on its own land, with its own substations.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &sect;&thinsp;8.5 &middot; Childress agreements &middot; IREN&rsquo;s Childress site page<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup><sup class="c"><a href="/childress-kiowa#r6">C6</a></sup><sup class="c"><a href="/childress-kiowa#r13">C13</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Will the base value be reset to the adoption date?</p>
+      <p class="qw">Base Value is the assessed value as of 1 January 2026, certified within ninety days of adoption and then frozen for twenty-five years. Every dollar of value added to the site since January is abated at up to 85 percent.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan, definitions and &sect;&thinsp;8<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></p>
+    </div></li>
+  </ol>
+
+  <h3 class="grp">The numbers</h3>
+  <ol class="qs" start="7">
+    <li><div>
+      <p class="qt">If the company builds 1,600 MW rather than 1,200, what does the county receive for the extra 400?</p>
+      <p class="qw">The plan&rsquo;s cost tables, tiers and payment schedule assume two phases of about 600 MW. IREN&rsquo;s annual report and site page describe the Oklahoma campus as 1,600 MW across 2,000 acres. The top tier begins above 550 MW per phase and carries the same illustrative minimum.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &sect;&thinsp;8.6 and &sect;&thinsp;10.1 &middot; IREN FY26 10-K &middot; IREN&rsquo;s Oklahoma site page<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r11">C11</a></sup><sup class="c"><a href="/childress-kiowa#r13">C13</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Will Exhibits C and D be completed and republished before adoption?</p>
+      <p class="qw">Exhibit C, &ldquo;Existing Uses and Conditions,&rdquo; and Exhibit D, &ldquo;Proposed Improvements and Uses,&rdquo; are empty but for their headings in the copy the county published. The document meant to record what is on the land now, and what will be on it afterwards, says neither.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan, Exhibits C and D<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Has the county asked whether this project qualifies under 68 O.S. &sect;&thinsp;2902, where the state reimburses the county, and what the county&rsquo;s loss is under that route compared with this one?</p>
+      <p class="qw">The plan does not mention &sect;&thinsp;2902. The Tax Commission&rsquo;s 2026 report lists NAICS 5182 data-center facilities among the categories reimbursed from the Ad Valorem Reimbursement Fund, subject to an out-of-state revenue test, and notes that a NAICS code alone does not establish eligibility. The comparison is not on the record.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; 68 O.S. &sect;&thinsp;2902 &middot; Oklahoma Tax Commission, 2026 Ad Valorem Annual Report<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r22">C22</a></sup><sup class="c"><a href="/childress-kiowa#r23">C23</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Will there be a written jobs floor with a clawback?</p>
+      <p class="qw">The plan &ldquo;anticipates&rdquo; 40 ongoing jobs per phase and binds the company to none. Each Childress agreement requires &ldquo;no less than ten (10) new, full-time equivalent jobs.&rdquo; Both counties&rsquo; documents already say permanent employment will be small.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; Childress Phase 1, 2 and 3 agreements<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup><sup class="c"><a href="/childress-kiowa#r6">C6</a></sup><sup class="c"><a href="/childress-kiowa#r7">C7</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">Who pays for transmission and substation upgrades, and how much water is drawn, from where?</p>
+      <p class="qw">Neither county document states who bears the grid costs or what the water demand is. In Childress the company put in its own substations. The Oklahoma plan is silent on both.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan &middot; IREN&rsquo;s Childress site page<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup><sup class="c"><a href="/childress-kiowa#r13">C13</a></sup></p>
+    </div></li>
+  </ol>
+
+  <h3 class="grp">Process and need</h3>
+  <ol class="qs" start="12">
+    <li><div>
+      <p class="qt">Have the five taxing entities been shown the plan&rsquo;s own statement that the payments are illustrative?</p>
+      <p class="qw">Kiowa Public Schools, the county, the Health Department, Kiamichi Technology Center and the Southern Oklahoma Public Library System must sign the Tax Incentive Agreement within sixty days of adoption, and no district activates until all have. The Phase 1 distribution the plan shows them, $11.0 million to Kiowa Public Schools among it, is labelled non-binding.</p>
+      <p class="qg"><span class="k">Grounds</span>Project Plan, Tax Incentive Agreement clause and distribution table<sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">What evidence supported the finding that the investment &ldquo;would more likely than not not occur&rdquo; without the districts?</p>
+      <p class="qw">IREN closed FY26 with $5.90 billion of unrestricted cash, raised $11.0 billion in twelve months at a blended coupon under one percent, tells shareholders recent contracts pay back in about two years, and built Childress on a ten-year deal. The committee&rsquo;s finding is the statutory basis for the districts.</p>
+      <p class="qg"><span class="k">Grounds</span>Committee recommendation, findings under 62 O.S. &sect;&thinsp;855 &middot; IREN FY26 10-K and results release &middot; Childress Phase 1 agreement<sup class="c"><a href="/childress-kiowa#r2">C2</a></sup><sup class="c"><a href="/childress-kiowa#r11">C11</a></sup><sup class="c"><a href="/childress-kiowa#r12">C12</a></sup><sup class="c"><a href="/childress-kiowa#r5">C5</a></sup></p>
+    </div></li>
+    <li><div>
+      <p class="qt">When does the tabled resolution return to the agenda, and how many days before will the two agreements be published?</p>
+      <p class="qw">The notice of 18 May 2026 set hearings for 8 and 22 June. No adopted resolution appears on the county&rsquo;s resolutions page, and no revised plan has been published. The public should not learn the terms from an agenda packet.</p>
+      <p class="qg"><span class="k">Grounds</span>Notice of public hearings &middot; Project Plan<sup class="c"><a href="/childress-kiowa#r3">C3</a></sup><sup class="c"><a href="/childress-kiowa#r1">C1</a></sup></p>
+    </div></li>
+  </ol>
+</section>
+
+<section id="conditions">
+  <div class="sec-head">
+    <span class="tag">05 / Conditions</span>
+    <h2>What would answer them</h2>
+  </div>
+  <p class="lede-p measure">None of this asks the Board to refuse growth. It asks the Board to put the county&rsquo;s protections in the same class of document as the county&rsquo;s obligations. Each condition below is something Childress County, Texas already has in writing, or something the plan itself makes necessary.</p>
+  <ul class="checks">
+    <li><span class="mk">01</span><span>Strike &ldquo;non-binding example&rdquo; and write the minimum-payment table into the Tax Incentive Agreement as a floor.</span></li>
+    <li><span class="mk">02</span><span>IREN Limited as guarantor, and every affiliate holding land or equipment in the districts jointly and severally liable, as in Childress.</span></li>
+    <li><span class="mk">03</span><span>Base value set at the adoption date, not 1 January 2026.</span></li>
+    <li><span class="mk">04</span><span>Term capped at ten years, with &ldquo;shall not extend beyond ten.&rdquo;</span></li>
+    <li><span class="mk">05</span><span>Recapture on early termination, and a stay-in-place covenant for improvements, as in Childress.</span></li>
+    <li><span class="mk">06</span><span>A written jobs floor with clawback, and a capacity minimum per phase.</span></li>
+    <li><span class="mk">07</span><span>Exhibits C and D completed, and both agreements published at least thirty days before any vote.</span></li>
+    <li><span class="mk">08</span><span>A &sect;&thinsp;2902 comparison on the record before the taxing entities are asked to sign.</span></li>
+  </ul>
+</section>
+
+<section id="board">
+  <div class="sec-head">
+    <span class="tag">06 / Delivery</span>
+    <h2>Who this goes to</h2>
+  </div>
+  <p class="measure">The Board of County Commissioners has three seats. The petition is addressed to the chair. The Kiowa site lies in Commissioner District 2, per the county&rsquo;s own district boundaries.<sup class="c"><a href="#r1">1</a></sup><sup class="c"><a href="#r2">2</a></sup></p>
+  <div class="board">
+    <div class="seat">
+      <p class="d"><span>District 1</span></p>
+      <p class="n">Charlie Rogers</p>
+      <p>200 N. Craig / P.O. Box 268<br>Haileyville, OK 74546</p>
+      <p><a href="tel:+19182972933">918.297.2933</a> &middot; fax 918.297.7326</p>
+      <p><a href="mailto:bocc@pittsburgcountyok.gov">bocc@pittsburgcountyok.gov</a></p>
+      <p>Office hours 7:00&ndash;5:30, Monday to Thursday</p>
+    </div>
+    <div class="seat here">
+      <p class="d"><span>District 2</span><span class="tag2">the site&rsquo;s district</span></p>
+      <p class="n">Mike Haynes</p>
+      <p>615 Pittsburg Road<br>Pittsburg, OK 74560</p>
+      <p><a href="tel:+19184325536">918.432.5536</a> &middot; fax 918.432.6344</p>
+      <p><a href="mailto:district2@pittsburgcountyok.gov">district2@pittsburgcountyok.gov</a></p>
+      <p>Office hours 7:00&ndash;5:00 Monday to Thursday, 7:00&ndash;3:30 Friday</p>
+    </div>
+    <div class="seat">
+      <p class="d"><span>District 3</span><span class="tag2">chair</span></p>
+      <p class="n">Ross Selman</p>
+      <p>1906 N. 15th Street<br>McAlester, OK 74501</p>
+      <p><a href="tel:+19184231405">918.423.1405</a> &middot; fax 918.423.7291</p>
+      <p><a href="mailto:bocc@pittsburgcountyok.gov">bocc@pittsburgcountyok.gov</a></p>
+      <p>Office hours 7:00&ndash;3:30</p>
+    </div>
+  </div>
+  <p class="measure">A district map with the three offices is on the <a href="/contact">Who to call</a> page.</p>
+</section>
+
+<section id="sources">
+  <div class="sec-head">
+    <span class="tag">07 / Sources</span>
+    <h2>Sources</h2>
+  </div>
+  <p class="measure">Markers beginning with <strong>C</strong> point into the numbered register on the <a href="/childress-kiowa#sources">Childress vs. Kiowa</a> comparison; markers beginning with <strong>I</strong> point into the register on <a href="/iren#sources">The IREN File</a>. Every figure above is traceable through those registers to a filed document, an executed agreement, a company disclosure or a state registry. The two sources below are specific to this page.</p>
+  <ol class="refs">
+    <li id="r1">
+      <span class="n">[1]</span>
+      <div>
+        <p class="t">Pittsburg County &mdash; county offices directory, Board of County Commissioners</p>
+        <p class="m">pittsburg.okcounties.org &middot; retrieved 4 Sep 2026</p>
+        <p class="used">Commissioner names by district, office addresses, telephone and fax numbers, email addresses and office hours.</p>
+        <p class="u"><a href="https://pittsburg.okcounties.org/offices" rel="noopener" target="_blank">https://pittsburg.okcounties.org/offices</a></p>
+      </div>
+    </li>
+    <li id="r2">
+      <span class="n">[2]</span>
+      <div>
+        <p class="t">OU Center for Spatial Analysis &mdash; Pittsburg County commissioner districts, 2020</p>
+        <p class="m">ArcGIS feature service Pittsburg_County_Data, layer 2 (comm2020_121) &middot; the State Election Board&rsquo;s mapping contractor &middot; retrieved 1 Sep 2026</p>
+        <p class="used">That the Kiowa site, two miles south of Kiowa in Sections 25&ndash;27 and 33&ndash;35, T3N R13E, falls within Commissioner District 2.</p>
+        <p class="u"><a href="https://services7.arcgis.com/cpyRdAfuizCFzBhp/arcgis/rest/services/Pittsburg_County_Data/FeatureServer" rel="noopener" target="_blank">services7.arcgis.com &rarr; Pittsburg_County_Data &rarr; FeatureServer</a></p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<footer>
+  <h3>Basis of preparation</h3>
+  <p>Compiled from documents published by Pittsburg County, Oklahoma and Childress County, Texas, from IREN Limited&rsquo;s filings with the United States Securities and Exchange Commission and its own published materials, and from the public corporate registries of Delaware, Oklahoma and British Columbia, each cited through the registers on the two source pages. The author holds no non-public information concerning IREN Limited, Emerald ProjectCo Inc. or the county, and has relied on none. Statements of analysis and opinion are the author&rsquo;s own and are presented as such.</p>
+  <h3>Named individuals and entities</h3>
+  <p>Nothing in this document alleges, or is intended to imply, wrongdoing by any person, by the county, or by any company. The commissioners are named in their public capacity, from the county&rsquo;s own directory. Questions are questions; an unanswered question is not a finding.</p>
+  <h3>Not advice</h3>
+  <p>Nothing here is investment, legal, tax or financial advice; it is not a recommendation, and it is not an offer or solicitation in respect of any security. The author accepts corrections: errors of fact notified to the address in the publication statement above will be corrected and the correction noted.</p>
+</footer>
+
+</div>
+</div>
+
+{% set q_url = "https://" ~ canonical_host ~ "/questions" %}
+{% set q_text = "Fourteen questions for the Pittsburg County commissioners on the Emerald ProjectCo data center tax abatement — each one pinned to a page of the county's own plan, the Texas agreements, IREN's SEC filings or the state registries." %}
+<section class="share" aria-labelledby="share-q-h" style="max-width:880px;margin-left:auto;margin-right:auto">
+  <h2 id="share-q-h">Share these questions</h2>
+  <p class="small">Send them to a neighbor, or to a commissioner.</p>
+  <ul class="share-row">
+    <li><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ q_url|urlencode }}&quote={{ q_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg><span>Facebook</span></a></li>
+    <li><a class="share-btn" href="https://twitter.com/intent/tweet?url={{ q_url|urlencode }}&text={{ q_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 3h3l-6.8 7.8L21.7 21h-6.2l-4.9-6.3L5 21H2l7.3-8.4L1.7 3h6.4l4.4 5.8L17.5 3zm-1.1 16h1.7L7 4.7H5.2L16.4 19z"/></svg><span>X</span></a></li>
+    <li><a class="share-btn" href="https://nextdoor.com/sharekit/?source={{ canonical_host|urlencode }}&body={{ (q_text ~ ' ' ~ q_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Nextdoor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.3 14.5h-2.6v-4.2c0-1.2-.6-1.8-1.6-1.8s-1.7.7-1.7 1.9v4.1H7.8v-5.6c-1.2-.2-2-1-2.2-2.4h2.3c.1.5.4.8.9.8.5-1.2 1.6-1.9 3-1.9 2.6 0 4.5 1.6 4.5 4.6v4.5z"/></svg><span>Nextdoor</span></a></li>
+    <li><a class="share-btn" href="https://wa.me/?text={{ (q_text ~ ' ' ~ q_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 22l5.2-1.4A9.8 9.8 0 1 0 12 2.2zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.1 8.1 0 1 1 12 20.1zm4.5-6c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.2z"/></svg><span>WhatsApp</span></a></li>
+    <li><a class="share-btn" href="sms:?&body={{ (q_text ~ ' ' ~ q_url)|urlencode }}" aria-label="Share by text message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm3 5v2h10V8H7zm0 4v2h7v-2H7z"/></svg><span>Text</span></a></li>
+    <li><a class="share-btn" href="mailto:?subject={{ 'Fourteen questions for the Pittsburg County commissioners'|urlencode }}&body={{ q_text|urlencode }}%0A%0A{{ q_url|urlencode }}" aria-label="Share by email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V17h16V7.5l-8 5-8-5zM4.6 7l7.4 4.6L19.4 7H4.6z"/></svg><span>Email</span></a></li>
+    <li><button class="share-btn" type="button" data-copy="{{ q_url }}" aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a3 3 0 0 1 4.2 4.2l-1.6 1.6-1.4-1.4 1.6-1.6a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0zm2.8-2.8a1 1 0 0 1 0 1.4L10 15.4a3 3 0 0 1-4.2-4.2l1.6-1.6 1.4 1.4-1.6 1.6a1 1 0 0 0 1.4 1.4l3.4-3.4a1 1 0 0 1 1.4 0z"/></svg><span class="copy-label">Copy link</span></button></li>
+  </ul>
+</section>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+  var done=function(){var l=b.querySelector('.copy-label');l.textContent='Copied';setTimeout(function(){l.textContent='Copy link';},1800);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done);}
+  else{var t=document.createElement('textarea');t.value=b.dataset.copy;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(t);}
+});});
+</script>
+{% endblock %}

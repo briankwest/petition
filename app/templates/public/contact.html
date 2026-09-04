@@ -1,7 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Who to call · {{ site_title }}{% endblock %}
+{% block description %}The three Pittsburg County commissioners who decide the Emerald ProjectCo tax abatement, on a district map with their offices, hours and numbers, plus who to call about the petition.{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="/static/map.css?v={{ asset_v }}">
+<style>
+.map-districts{height:min(70vh,560px)}
+.cards.bocc .card.site{outline:2px solid #A2542C;outline-offset:-2px}
+.cards.bocc .card h3 .role{color:#A2542C;font-weight:600}
+.cards.bocc .site-note{color:#A2542C;font-weight:600}
+.pmap-pin.bocc{width:16px;height:16px}
+.pmap-label.bocc-site{color:#7C3E1F}
+</style>{% endblock %}
 {% block content %}
 <h1>Who to call</h1>
+<p class="lede">The three county commissioners decide the Emerald ProjectCo tax abatement. The Kiowa site is in District {{ petition.contacts.site_district }}. <a href="/questions">Fourteen questions</a>, each pinned to a document, are ready to send them.</p>
+
+<h2>Board of County Commissioners</h2>
+<div id="bocc-map" class="map map-districts" role="region" aria-label="Map of Pittsburg County commissioner districts, the three commissioners' offices and the Kiowa site"></div>
+<ul class="cards bocc">
+{% for c in petition.contacts.commissioners %}
+<li class="card{% if c.district == petition.contacts.site_district %} site{% endif %}"><h3>District {{ c.district }}{% if c.role %} · <span class="role">{{ c.role }}</span>{% endif %}</h3>
+<p><strong>{{ c.name }}</strong></p>
+<p><a class="tel" href="tel:{{ c.phone|tel }}">{{ c.phone }}</a>{% if c.fax %} · fax {{ c.fax }}{% endif %}<br><a href="mailto:{{ c.email }}">{{ c.email }}</a></p>
+<p>{{ c.address|addr }}</p>
+{% if c.hours %}<p class="small">{{ c.hours }}</p>{% endif %}
+{% if c.district == petition.contacts.site_district %}<p class="small site-note">The Kiowa site is in this district.</p>{% endif %}</li>
+{% endfor %}
+</ul>
+<p class="small">Names, addresses, hours and numbers are from the county's offices directory, retrieved 4 September 2026. District boundaries are the State Election Board's 2020 commissioner districts. The site outline is the six PLSS sections named in the county's hearing notice (Sections 25–27 and 33–35, T3N R13E); the tract boundaries themselves are not public. Confirm hours before you drive.</p>
+
+<h2>Petition contacts</h2>
 <p class="lede">Questions about the petition, where to sign, or volunteering.</p>
 <ul class="cards">
 {% for c in contacts %}
@@ -11,4 +38,62 @@
 {% endfor %}
 {% if not contacts %}<li class="card"><h3>{{ petition.contacts.election_board.name }}</h3><p><a class="tel" href="tel:{{ petition.contacts.election_board.phone|tel }}">{{ petition.contacts.election_board.phone }}</a><br>{{ petition.contacts.election_board.address|addr }}</p></li>{% endif %}
 </ul>
+
+<script type="application/json" id="bocc-data">{{ {"commissioners": petition.contacts.commissioners, "site_district": petition.contacts.site_district}|tojson }}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+  var el=document.getElementById('bocc-map'); if(!el) return;
+  if(!window.L){ el.innerHTML='<p class="small">Map is loading…</p>'; return; }
+  var data={}; try{ data=JSON.parse(document.getElementById('bocc-data').textContent||'{}'); }catch(e){}
+  var seats=data.commissioners||[], siteDistrict=String(data.site_district||'');
+  var colors={'1':'#4A6B8A','2':'#A2542C','3':'#2C7A66'};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function gj(url){return fetch(url,{headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json();});}
+  function tel(p){return 'tel:+1'+String(p||'').replace(/\D/g,'').slice(-10);}
+  var bySeat={}; seats.forEach(function(s){bySeat[String(s.district)]=s;});
+  var map=L.map(el,{center:[34.93,-95.75],zoom:9,scrollWheelZoom:false,tap:true});
+  // OpenStreetMap tiles, as the /sign map uses by default: CARTO's basemaps now watermark "API KEY REQUIRED" without a key.
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+  map.createPane('labels'); map.getPane('labels').style.zIndex=650; map.getPane('labels').style.pointerEvents='none';
+
+  gj('/static/precincts/commissioner_districts.geojson').then(function(fc){
+    var layer=L.geoJSON(fc,{
+      style:function(f){var d=String(f.properties.DISTRICT);return{color:colors[d]||'#555',weight:d===siteDistrict?3:1.5,fillColor:colors[d]||'#555',fillOpacity:d===siteDistrict?0.2:0.1};},
+      onEachFeature:function(f,l){
+        var d=String(f.properties.DISTRICT),s=bySeat[d]||{};
+        l.bindPopup('<div class="pmap-popup"><h4>District '+esc(d)+(s.role?' &middot; '+esc(s.role):'')+'</h4>'+(s.name?'<div>Commissioner '+esc(s.name)+'</div>':'')+(d===siteDistrict?'<div class="k">The Kiowa site is in this district</div>':'')+'</div>');
+        l.on('mouseover',function(){l.setStyle({fillOpacity:0.3});}); l.on('mouseout',function(){layer.resetStyle(l);});
+      }}).addTo(map);
+    map.fitBounds(layer.getBounds(),{padding:[8,8]});
+    fc.features.forEach(function(f){
+      var d=String(f.properties.DISTRICT), c=L.geoJSON(f).getBounds().getCenter();
+      L.marker(c,{pane:'labels',interactive:false,icon:L.divIcon({className:'pmap-label',html:'District '+esc(d),iconSize:null})}).addTo(map);
+    });
+  }).catch(function(e){console.warn('districts failed',e);});
+  gj('/static/precincts/county.geojson').then(function(fc){L.geoJSON(fc,{interactive:false,style:{color:'#1c1a19',weight:1.6,fill:false,dashArray:'4 3'}}).addTo(map);}).catch(function(){});
+  gj('/static/precincts/municipalities.geojson').then(function(fc){L.geoJSON(fc,{interactive:false,style:{color:'#6b625f',weight:0.7,fillColor:'#6b625f',fillOpacity:0.08}}).addTo(map);}).catch(function(){});
+  gj('/static/precincts/kiowa_sections.geojson').then(function(fc){
+    var s=L.geoJSON(fc,{
+      style:function(f){return{color:'#7C3E1F',weight:2,fillColor:'#A2542C',fillOpacity:f.properties.phase===2?0.35:0.55,dashArray:f.properties.phase===2?'5 3':null};},
+      onEachFeature:function(f,l){l.bindPopup('<div class="pmap-popup"><h4>Proposed incentive district</h4><div>Section '+esc(f.properties.section)+', T3N R13E &middot; Phase '+esc(f.properties.phase)+'</div><div class="k">Section outline only; the tract boundaries are not public</div></div>');}
+    }).addTo(map);
+    var c=s.getBounds().getCenter();
+    L.marker([c.lat,c.lng],{pane:'labels',interactive:false,icon:L.divIcon({className:'pmap-label bocc-site',html:'Kiowa site',iconSize:null})}).addTo(map);
+  }).catch(function(e){console.warn('site failed',e);});
+  seats.forEach(function(s){
+    if(s.lat==null||s.lon==null) return;
+    L.marker([s.lat,s.lon],{icon:L.divIcon({className:'',html:'<div class="pmap-pin bocc" style="background:'+(colors[String(s.district)]||'#555')+'"></div>',iconSize:[16,16],iconAnchor:[8,8]}),title:s.name})
+      .bindPopup('<div class="pmap-popup"><h4>'+esc(s.name)+'</h4><div>Commissioner, District '+esc(s.district)+(s.role?' &middot; '+esc(s.role):'')+'</div><div>'+esc(s.address)+'</div><div><a href="'+tel(s.phone)+'">'+esc(s.phone)+'</a>'+(s.email?' &middot; <a href="mailto:'+esc(s.email)+'">'+esc(s.email)+'</a>':'')+'</div>'+(s.hours?'<div class="k">'+esc(s.hours)+'</div>':'')+'</div>')
+      .addTo(map);
+  });
+  var legend=L.control({position:'bottomright'});
+  legend.onAdd=function(){
+    var d=L.DomUtil.create('div','pmap-legend');
+    d.innerHTML=seats.map(function(s){return '<div><span class="sw" style="background:'+(colors[String(s.district)]||'#555')+'"></span>District '+esc(s.district)+' &middot; '+esc(s.name)+'</div>';}).join('')+'<div><span class="sw sq" style="background:#A2542C"></span>Kiowa site, proposed districts</div>';
+    L.DomEvent.disableClickPropagation(d); return d;
+  };
+  legend.addTo(map);
+})();
+</script>
 {% endblock %}

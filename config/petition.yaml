@@ -83,6 +83,40 @@ contacts:
   petition_captain: {name: null, phone: null}
   attorney: {name: null, phone: null}
   district_attorney: {name: null, phone: null}
+  # Board of County Commissioners — county offices directory, pittsburg.okcounties.org/offices,
+  # retrieved 2026-09-04. Coordinates geocoded from the office addresses (Census, Nominatim
+  # fallback); the Haileyville match is street-level. site_district: the Kiowa site (Sections
+  # 25–27 and 33–35, T3N R13E) falls in District 2 per the CSA comm2020_121 layer.
+  commissioners:
+    - district: 1
+      name: Charlie Rogers
+      address: 200 N. Craig / P.O. Box 268, Haileyville, OK 74546
+      phone: 918-297-2933
+      fax: 918-297-7326
+      email: bocc@pittsburgcountyok.gov
+      hours: 7:00 a.m.–5:30 p.m. Mon–Thu
+      lat: 34.85888
+      lon: -95.57719
+    - district: 2
+      name: Mike Haynes
+      address: 615 Pittsburg Road, Pittsburg, OK 74560
+      phone: 918-432-5536
+      fax: 918-432-6344
+      email: district2@pittsburgcountyok.gov
+      hours: 7:00 a.m.–5:00 p.m. Mon–Thu, 7:00 a.m.–3:30 p.m. Fri
+      lat: 34.81879
+      lon: -95.84190
+    - district: 3
+      name: Ross Selman
+      role: Chairman
+      address: 1906 N. 15th Street, McAlester, OK 74501
+      phone: 918-423-1405
+      fax: 918-423-7291
+      email: bocc@pittsburgcountyok.gov
+      hours: 7:00 a.m.–3:30 p.m.
+      lat: 34.94648
+      lon: -95.74297
+  site_district: 2
 
 links:
   voter_portal: https://okvoterportal.okelections.gov/

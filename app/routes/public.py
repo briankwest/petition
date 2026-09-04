@@ -73,6 +73,12 @@ def childress_kiowa(request: Request, db: Session = Depends(get_db)):
     return render(request, "public/sites.html", s=Settings(db))
 
 
+@router.get("/questions")
+def questions(request: Request, db: Session = Depends(get_db)):
+    """Questions for the Board — the two dossiers' findings put to the commissioners; prints as a letter."""
+    return render(request, "public/questions.html", s=Settings(db))
+
+
 @router.get("/iren")
 def iren(request: Request, db: Session = Depends(get_db)):
     """The IREN File — company dossier; first item in the site nav."""
