@@ -77,6 +77,7 @@ def test_public_pages_and_banner(client):
 def test_home_targets_from_settings(client, db):
     html = client.get("/").text
     assert "The numbers" in html and "27,727" in html and "2,773" in html and "4,437" in html      # seeded from config
+    assert "Records Log" not in html                                                                  # the source's internal to-do stays private
     s = Settings(db); s.set("registered_voters", 30000); db.commit()
     html = client.get("/").text
     assert "30,000" in html and "3,000" in html and "4,800" in html and "27,727" not in html       # admin edit wins everywhere

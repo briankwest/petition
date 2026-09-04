@@ -40,7 +40,7 @@
     <div class="tile"><span class="num">{{ (targets.est_valid_rate * 100)|round|int }}%</span><span class="lbl">of collected signatures we plan on surviving verification</span></div>
     <div class="tile"><span class="num">{% if targets.days_remaining is not none %}{{ targets.days_remaining }}{% else %}30{% endif %}</span><span class="lbl">{% if targets.days_remaining is not none %}days left to file, by {{ targets.filing_deadline|date }}{% else %}days to file once the Board adopts the resolution{% endif %}</span></div>
   </div>
-  <p class="small">Registered-voter count{% if targets.registered_voters_source %} from the {{ targets.registered_voters_source }}{% endif %}. The ten percent minimum is set by <a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>; the target and the valid-rate assumption are the campaign's own.</p>
+  <p class="small">Registered-voter count{% if targets.registered_voters_source %}: {{ targets.registered_voters_source }}{% endif %}. The ten percent minimum is set by <a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>; the target and the valid-rate assumption are the campaign's own.</p>
 </section>
 {% endif %}
 

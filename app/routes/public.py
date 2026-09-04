@@ -42,7 +42,9 @@ def _targets(db: Session, s: Settings) -> dict:
     oc = s.raw("overcollect_fraction")
     return {"registered_voters": st["registered_voters"], "legal_minimum": st["legal_minimum"], "target": st["target"],
             "est_valid_rate": st["est_valid_rate"], "days_remaining": st["days_remaining"], "filing_deadline": st["filing_deadline"],
-            "registered_voters_date": s.raw("registered_voters_date"), "registered_voters_source": s.raw("registered_voters_source"),
+            # the source string carries an internal to-do after ';' (config/petition.yaml); only the citation is public
+            "registered_voters_date": s.raw("registered_voters_date"),
+            "registered_voters_source": (s.raw("registered_voters_source") or "").split(";")[0].strip() or None,
             "overcollect_pct": round(float(oc) * 100) if oc else None}
 
 
