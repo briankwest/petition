@@ -216,7 +216,7 @@
 .irenfile .callout p:last-child{margin-bottom:0}
 .irenfile .callout .measure{max-width:none}
 
-.irenfile .checks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
+.irenfile .checks{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:9px;max-width:var(--measure)}
 .irenfile .checks li{
   display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;
   font-size:15.5px;line-height:1.5

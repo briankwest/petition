@@ -19,13 +19,15 @@
   <p class="small share-note" hidden aria-live="polite"></p>
 </section>
 <script>
-document.querySelectorAll('[data-fb-copy]').forEach(function(a){a.addEventListener('click',function(e){
-  // Facebook ignores pre-filled text, so the message goes to the clipboard and the share dialog opens beside it
-  e.preventDefault(); var w=window.open(a.href,'_blank','noopener'); var note=a.closest('.share').querySelector('.share-note');
+document.querySelectorAll('[data-fb-copy]').forEach(function(a){a.addEventListener('click',function(){
+  // Facebook ignores pre-filled text, so the message goes to the clipboard while the link opens the share
+  // dialog in its own tab exactly as a plain link would (no preventDefault, no window.open: a popup blocker
+  // never sees it, and nothing can send this page away).
+  var note=a.closest('.share').querySelector('.share-note');
   var done=function(){ if(note){ note.hidden=false; note.textContent='Message copied. Paste it into your Facebook post.'; } };
-  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(a.dataset.fbCopy).then(done,function(){}); }
-  else{ var t=document.createElement('textarea'); t.value=a.dataset.fbCopy; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(err){} document.body.removeChild(t); }
-  if(!w){ location.href=a.href; }
+  var text=a.dataset.fbCopy;
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done,function(){}); }
+  else{ var t=document.createElement('textarea'); t.value=text; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(err){} document.body.removeChild(t); }
 });});
 document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
   var done=function(){var l=b.querySelector('.copy-label');l.textContent='Copied';setTimeout(function(){l.textContent='Copy link';},1800);};
