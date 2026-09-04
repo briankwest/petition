@@ -21,6 +21,7 @@ OK Voter Portal (registration lookup; requires name + date of birth): https://ok
 | `precincts/lakes.geojson` | 49 water polygons (layer 7) | 707 KB |
 | `precincts/roads.geojson` | 827 highway-class centerlines only (US 69/270, SH 31/63/113/9E, Indian Nation Tpke, George Nigh Expy) filtered from the 8,375-segment PSAP layer 15; `--full-roads` keeps everything (~17 MB) | 455 KB |
 | `precincts/kiowa_sections.geojson` | The six PLSS sections the Project Plan's two Incentive Districts sit in (25–27 = Phase 1, 33–35 = Phase 2; T3N R13E, township `OK170030N0130E0`), from BLM National PLSS CadNSDI MapServer layer 2, https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer — retrieved 2026-09-04. Section outlines only: the tract boundaries are not public. Drawn on the /contact commissioner map. | 3 KB |
+| `../app/static/records/oksos/*.pdf` | Oklahoma Secretary of State certified copies and certificates for Emerald ProjectCo Inc. (filing 2313901183), order 78346070003, issued 2026-09-04; originals with their SOS document numbers in `../oksos/`. Published on the comparison page, section 09. | 1.1 MB |
 
 Geocoding (`toolkit.geo.lookup.geocode`): U.S. Census Bureau geocoder first (no key); OpenStreetMap Nominatim as fallback when Census has no match or returns the wrong street directional (e.g. Census maps "801 N 9th St, McAlester" to S 9th St). Nominatim usage policy: ≤ 1 request/s, identified User-Agent — fallback only, never bulk.
 

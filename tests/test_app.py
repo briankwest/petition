@@ -369,6 +369,10 @@ def test_favicon_and_opengraph(client):
     assert '<meta property="og:image" content="https://petition.mcalester.net/static/og.png">' in html
     assert '<link rel="canonical" href="https://petition.mcalester.net/sign">' in html
     assert '<meta name="twitter:card" content="summary_large_image">' in html and 'rel="manifest"' in html
+    doc = "/static/records/oksos/emerald-projectco-ok-certificate-of-qualification-2025-12-16.pdf"   # the certified filings are published
+    r = client.get(doc); assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content.startswith(b"%PDF")
+    comp = client.get("/childress-kiowa").text
+    assert doc in comp and "620 FM 1033" in comp and "Will Roberts as President" in comp
     for path, img in [("/questions", "og-questions.png"), ("/contact", "og-contact.png"), ("/iren", "og-iren.png"), ("/childress-kiowa", "og-sites.png"), ("/tldr", "og-tldr.png")]:
         assert f'<meta property="og:image" content="https://petition.mcalester.net/static/{img}">' in client.get(path).text, path
         assert client.get(f"/static/{img}").status_code == 200, img
