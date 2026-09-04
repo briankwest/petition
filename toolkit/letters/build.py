@@ -58,10 +58,14 @@ def env() -> Environment:
     return Environment(loader=FileSystemLoader(str(TEMPLATES)), autoescape=False, trim_blocks=True, lstrip_blocks=True)
 
 
-def render_html(x: dict, sender: dict, when: date, sig_uri: str = "") -> str:
+SIZES = (10, 9.5, 9, 8.5)      # tried in order until the letter fits front and back
+MAX_PAGES = 2
+
+
+def render_html(x: dict, sender: dict, when: date, sig_uri: str = "", font_size: float = SIZES[0]) -> str:
     t = env().get_template("records-letter.html")
     clauses = dict(OPEN=data.OPEN, PERIOD=data.PERIOD, FORMAT=data.FORMAT, FEES=data.FEES, WITHHOLD=data.WITHHOLD, RESPONSE=data.RESPONSE)
-    return t.render(l=x, sender=sender, date=long_date(when), signature=sig_uri, federal=bool(x.get("paras")), **clauses)
+    return t.render(l=x, sender=sender, date=long_date(when), signature=sig_uri, federal=bool(x.get("paras")), font_size=font_size, **clauses)
 
 
 def _clip(v: str) -> str:
@@ -90,17 +94,23 @@ def build(out: Path, sender: dict, when: date, only: list[int] | None = None, si
         if x["n"] not in selected:
             continue
         stem = f"{x['n']:02d}-{SLUGS[x['n']]}"
-        html = render_html(x, sender, when, sig_uri)
-        (out / f"{stem}.html").write_text(html)
         pdf = out / f"{stem}.pdf"
-        pages = None
+        pages, size = None, SIZES[0]
+        html = render_html(x, sender, when, sig_uri, size)
         if not html_only:
             from weasyprint import HTML
-            doc = HTML(string=html, base_url=str(TEMPLATES)).render()
+            for size in SIZES:                       # shrink until it is a single sheet, front and back
+                html = render_html(x, sender, when, sig_uri, size)
+                doc = HTML(string=html, base_url=str(TEMPLATES)).render()
+                if len(doc.pages) <= MAX_PAGES:
+                    break
             doc.write_pdf(str(pdf))
             pages = len(doc.pages)
+            if pages > MAX_PAGES:
+                print(f"warning: {pdf.name} is {pages} pages even at {size}pt", file=sys.stderr)
+        (out / f"{stem}.html").write_text(html)
         filenames[x["n"]] = pdf.name
-        manifest.append(dict(letter=x["n"], title=x["title"], file=pdf.name, pages=pages, re=x["re"], date=long_date(when),
+        manifest.append(dict(letter=x["n"], title=x["title"], file=pdf.name, pages=pages, font_pt=size, re=x["re"], date=long_date(when),
                              mail=MAIL[x["n"]], copies=[m for k, m in COPIES if k == x["n"]]))
     rows = csv_rows(selected, filenames)
     with (out / "docupost.csv").open("w", newline="") as f:
@@ -125,7 +135,7 @@ def main(argv=None) -> int:
     only = [int(n) for n in a.only.split(",")] if a.only else None
     r = build(Path(a.out), sender, when, only, sig, a.html_only)
     for m in r["letters"]:
-        print(f"{m['file']:42s} {str(m['pages'] or '-'):>3s} page(s)  {m['title']}")
+        print(f"{m['file']:42s} {str(m['pages'] or '-'):>3s} page(s) at {m['font_pt']:>4}pt  {m['title']}")
     print(f"docupost.csv: {len(r['rows'])} rows ({sum(1 for x in r['rows'] if x['role']=='recipient')} recipients, {sum(1 for x in r['rows'] if x['role']=='copy')} copies)"
           + ("" if sig else "  · no signature yet: a gap is left above the typed name"))
     return 0

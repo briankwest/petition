@@ -54,6 +54,14 @@ def test_one_pdf_renders_letter_size(tmp_path):
     assert len(doc.pages) == r["letters"][0]["pages"]
 
 
+def test_every_letter_is_one_sheet_front_and_back(tmp_path):
+    # DocuPost prints double-sided; the builder steps the type size down until each letter is two pages or fewer,
+    # and the closing is tied to the last paragraph so the signature never sits alone on a page.
+    r = build.build(tmp_path, SENDER, date(2026, 9, 8))
+    assert all(m["pages"] <= build.MAX_PAGES for m in r["letters"]), [(m["file"], m["pages"]) for m in r["letters"] if m["pages"] > build.MAX_PAGES]
+    assert all(m["font_pt"] >= build.SIZES[-1] for m in r["letters"])
+
+
 def test_signature_png_is_embedded(tmp_path):
     from PIL import Image
     sig = tmp_path / "sig.png"

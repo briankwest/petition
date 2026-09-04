@@ -4,33 +4,32 @@
 <meta charset="utf-8">
 <title>{{ l.re }}</title>
 <style>
-/* Letter, 8.5 x 11, one-inch margins: DocuPost reserves a 3/4-inch perimeter for its sorting marks and
-   adds its own address cover sheet, so nothing here has to line up with an envelope window. */
-@page { size: Letter; margin: 1in 1in 1in 1in;
-  @bottom-left { content: "{{ sender.name }} · {{ l.re[:70] }}{% if l.re|length > 70 %}…{% endif %}"; font: 8.5pt "Libre Franklin", "Helvetica Neue", Arial, sans-serif; color: #666; }
-  @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8.5pt "Libre Franklin", "Helvetica Neue", Arial, sans-serif; color: #666; } }
-@page :first { @bottom-left { content: none; } }
-html { font-size: 11pt; }
-body { margin: 0; font-family: "Libre Franklin", "Helvetica Neue", Arial, sans-serif; color: #111; line-height: 1.42; }
-.letterhead { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1.5pt solid #111; padding-bottom: 8pt; margin-bottom: 16pt; }
-.letterhead .who { font-family: "Zilla Slab", Georgia, "Times New Roman", serif; font-size: 16pt; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; flex: 1 0 auto; }
-.letterhead .from { font-size: 9.5pt; color: #333; text-align: right; line-height: 1.4; }
-.date { margin: 0 0 12pt; }
-.to { margin: 0 0 10pt; }
+/* Letter, 8.5 x 11, front and back: 0.85-inch margins clear DocuPost's 3/4-inch sorting perimeter, no running
+   header or footer, and the type size is chosen by the builder (10pt down to 8.5pt) so every letter fits two
+   pages. The closing travels with the last paragraph, so the signature is never stranded on a page of its own. */
+@page { size: Letter; margin: 0.85in 0.85in 0.8in 0.85in; }
+html { font-size: {{ font_size }}pt; }
+body { margin: 0; font-family: "Libre Franklin", "Helvetica Neue", Arial, sans-serif; color: #111; line-height: 1.34; }
+.letterhead { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1.2pt solid #111; padding-bottom: 5pt; margin-bottom: 10pt; }
+.letterhead .who { font-family: "Zilla Slab", Georgia, "Times New Roman", serif; font-size: 14pt; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; flex: 1 0 auto; }
+.letterhead .from { font-size: 8.5pt; color: #333; text-align: right; line-height: 1.35; }
+.date { margin: 0 0 8pt; }
+.to { margin: 0 0 6pt; }
 .to p { margin: 0; }
-.cc { font-size: 10pt; color: #333; margin: 0 0 10pt; }
-.re { font-weight: 700; margin: 12pt 0 12pt; padding-left: 0; }
+.cc { font-size: 0.92em; color: #333; margin: 0 0 6pt; }
+.re { font-weight: 700; margin: 8pt 0 8pt; }
 .re span { font-weight: 400; }
-p { margin: 0 0 9pt; text-align: left; orphans: 3; widows: 3; }
-ol { margin: 0 0 9pt; padding-left: 20pt; }
-ol li { margin: 0 0 7pt; padding-left: 3pt; break-inside: avoid; }
+p { margin: 0 0 6pt; text-align: left; orphans: 3; widows: 3; }
+ol { margin: 0 0 6pt; padding-left: 18pt; }
+ol li { margin: 0 0 4.5pt; padding-left: 2pt; break-inside: avoid; }
 b { font-weight: 700; }
-.close { margin-top: 16pt; break-inside: avoid; }
-.sig { display: block; height: 0.9in; margin: 4pt 0 2pt -4pt; }
-.sig-gap { height: 0.65in; }
+.tail { break-inside: avoid; }
+.close { margin-top: 8pt; }
+.sig { display: block; height: 0.7in; margin: 2pt 0 0 -3pt; }
+.sig-gap { height: 0.5in; }
 .typed { margin: 0; }
 .typed .n { font-weight: 700; }
-.enc { font-size: 9.5pt; color: #333; margin-top: 14pt; }
+.enc { font-size: 0.9em; color: #333; margin-top: 8pt; }
 </style>
 </head>
 <body>
@@ -52,9 +51,10 @@ b { font-weight: 700; }
 <p class="re">Re: <span>{{ l.re }}</span></p>
 
 {% if federal %}
-  {% for para in l.paras %}
+  {% for para in l.paras[:-1] %}
   <p>{{ para }}</p>
   {% endfor %}
+  <div class="tail"><p>{{ l.paras[-1] }}</p>
 {% else %}
   <p>{{ l.opening or OPEN.format(body=l.body, holders=l.holders) }}</p>
   <ol>
@@ -63,13 +63,13 @@ b { font-weight: 700; }
   {% endfor %}
   </ol>
   {% if l.closing %}
-  <p>{{ l.closing }}</p>
+  <div class="tail"><p>{{ l.closing }}</p>
   {% else %}
   <p>{{ PERIOD.format(start=l.start) }}</p>
   <p>{{ FORMAT }}</p>
   <p>{{ FEES }}</p>
   <p>{{ WITHHOLD.format(extra=l.extra) }}</p>
-  <p>{{ RESPONSE }}</p>
+  <div class="tail"><p>{{ RESPONSE }}</p>
   {% endif %}
 {% endif %}
 
@@ -77,6 +77,7 @@ b { font-weight: 700; }
   <p>Sincerely,</p>
   {% if signature %}<img class="sig" src="{{ signature }}" alt="">{% else %}<div class="sig-gap"></div>{% endif %}
   <p class="typed"><span class="n">{{ sender.name }}</span><br>{{ sender.address }}, {{ sender.city }}, {{ sender.state }} {{ sender.zip }}<br>{{ sender.email }} · {{ sender.phone }}</p>
+</div>
 </div>
 {% if l.n == 9 %}
 <p class="enc">Enclosure: Oklahoma State Department of Health Open Records Request Form.</p>
