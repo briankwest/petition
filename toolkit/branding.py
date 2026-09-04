@@ -192,7 +192,7 @@ OG_PAGES = {
 
 # The flyer's QR code. Tagged so GA can tell scans from other traffic. segno is a dev-only dependency:
 # the SVG is committed and served as a static file, so production never needs the library.
-QR_URL = "https://petition.mcalester.net/?utm_source=flyer&utm_medium=print"
+QR_URL = "https://petition.mcalester.net/?utm_source=qrcode&utm_medium=print&utm_campaign=onepager"
 
 
 def write_qr(path: Path) -> bool:

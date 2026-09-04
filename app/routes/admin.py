@@ -2,7 +2,7 @@
 events, contacts, settings. Server-rendered forms; CSRF on every POST; login required."""
 from __future__ import annotations
 import io
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -83,7 +83,10 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
     out = db.scalars(select(m.Pamphlet).options(selectinload(m.Pamphlet.issued_to)).where(m.Pamphlet.status.in_(["Issued", "In Field"]))
                      .order_by(m.Pamphlet.issued_on).limit(15)).all()
     signups_new = db.scalar(select(func.count()).select_from(m.VolunteerSignup).where(m.VolunteerSignup.status == "New")) or 0
-    return render(request, "admin/dashboard.html", s=s, st=st, issues=issues, outstanding=out, signups_new=signups_new)
+    visits = db.execute(select(m.Visit.source, m.Visit.medium, m.Visit.campaign, func.sum(m.Visit.count).label("n"))
+                        .where(m.Visit.day >= date.today() - timedelta(days=30))
+                        .group_by(m.Visit.source, m.Visit.medium, m.Visit.campaign).order_by(desc("n"))).all()
+    return render(request, "admin/dashboard.html", s=s, st=st, issues=issues, outstanding=out, signups_new=signups_new, visits=visits)
 
 
 # ---------- settings ----------

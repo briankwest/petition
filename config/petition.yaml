@@ -39,8 +39,8 @@ threshold:
   registered_voters: 27727                # total registered (provided 2026-09-01)
   registered_voters_active: 23338
   registered_voters_inactive: 4389
-  registered_voters_source: Pittsburg County Election Board figure relayed by the campaign; obtain a written, dated copy for the Records Log
-  registered_voters_date: 2026-09-01
+  registered_voters_source: Pittsburg County Election Board, provided 2 September 2026
+  registered_voters_date: 2026-09-02
   legal_fraction: 0.10                    # 62 O.S. § 868(B)(2)
   target_fraction: 0.16                   # 16% of registered voters = 60% over the legal minimum → 4,437 (campaign decision 2026-09-01)
 

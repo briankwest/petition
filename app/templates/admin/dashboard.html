@@ -32,4 +32,10 @@
   {% if outstanding %}<ul class="plain">{% for p in outstanding %}<li><a href="/admin/pamphlets/{{ p.number }}">{{ p.number }}</a> — {{ p.issued_to.name if p.issued_to else '?' }}{% if p.issued_on %} since {{ p.issued_on|date }}{% endif %}</li>{% endfor %}</ul>{% else %}<p class="small">None issued.</p>{% endif %}
   <p class="small">{{ st.circulators_ready }} volunteers cleared to circulate (registration verified + trained).</p></section>
 </div>
+<section><h2>Where tagged visitors came from (30 days)</h2>
+{% if visits %}<div class="tbl"><table><thead><tr><th>Source</th><th>Medium</th><th>Campaign</th><th class="num">Arrivals</th></tr></thead><tbody>
+{% for v in visits %}<tr><td>{{ v.source }}</td><td>{{ v.medium or '' }}</td><td>{{ v.campaign or '' }}</td><td class="num">{{ v.n }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<p class="small">Nothing yet. An arrival is counted when the link carries a tag: the QR code on the one-page sheet (qrcode / print), the share buttons (facebook, x, nextdoor, whatsapp, sms, email, link / share), the Facebook group post (facebook / post).</p>{% endif %}
+<p class="small">Counts only: the day, the tag and the page. No addresses, devices or cookies are stored. Google Analytics has the fuller picture under Reports &rarr; Acquisition &rarr; Traffic acquisition, with &ldquo;Session source / medium&rdquo; as the dimension.</p></section>
 {% endblock %}

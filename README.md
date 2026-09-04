@@ -74,3 +74,12 @@ cut-off and is labelled as such on the page.
 - No signatures before the true copy is filed. Only the frozen, filed pamphlet is printed.
 - No signer names, addresses or birth dates in the database, the workbook export, or the website — tracking is at pamphlet/sheet level. Paper is the only record of signers.
 - Statute text is quoted from `reference/statutes/`, never from memory.
+
+## Traffic sources
+
+Every share button, the QR code on the one-page sheet and the group post carry `utm_` tags. Google Analytics attributes
+them automatically: Reports → Acquisition → Traffic acquisition, dimension "Session source / medium" (`qrcode / print`,
+`facebook / share`, `facebook / post`, `sms / share`, `link / share`…). The admin dashboard keeps its own count of tagged
+arrivals by day, tag and page in the `visits` table, with no visitor data, so the captain can see it without a GA login and
+it still counts when a visitor blocks the GA script. The QR URL lives in `toolkit/branding.py` (`QR_URL`); change it, run
+`python -m toolkit.branding`, then `make tldr-pdf`, and deploy.

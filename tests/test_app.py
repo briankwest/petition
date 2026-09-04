@@ -94,10 +94,25 @@ def test_share_bars_on_every_public_page(client):
                       ("/", "/"), ("/iren", "/iren"), ("/childress-kiowa", "/childress-kiowa"), ("/questions", "/questions")]:
         html = client.get(path).text
         assert 'class="share"' in html, path
-        assert f'data-copy="https://petition.mcalester.net{url}"' in html, path      # the copy button carries the page's own link
+        assert f'data-copy="https://petition.mcalester.net{url}' in html, path       # the copy button carries the page's own link, tagged
         assert "petition.mcalester.net/volunteer" in html, path                        # every share carries the volunteer link
     home = client.get("/").text
     assert "data-tldr-copy" in home and "sms:?&body=" in home                          # the TL;DR modal can copy or text the PDF
+
+
+def test_tagged_arrivals_are_counted_without_visitor_data(client, db):
+    client.get("/?utm_source=qrcode&utm_medium=print&utm_campaign=onepager")
+    client.get("/?utm_source=qrcode&utm_medium=print&utm_campaign=onepager")
+    client.get("/contact?utm_source=Facebook&utm_medium=share&utm_content=contact&utm_term=<script>")
+    client.get("/faq")                                                    # untagged: nothing recorded
+    client.get("/static/qr-site.svg?utm_source=nope")                     # static: nothing recorded
+    rows = db.scalars(select(m.Visit).order_by(m.Visit.page)).all()
+    assert [(r.page, r.source, r.medium, r.campaign, r.content, r.count) for r in rows] == [
+        ("/", "qrcode", "print", "onepager", None, 2), ("/contact", "facebook", "share", None, "contact", 1)]
+    assert not hasattr(m.Visit, "ip") and not hasattr(m.Visit, "user_agent")
+    login(client, db)
+    page = client.get("/admin").text
+    assert "Where tagged visitors came from" in page and "qrcode" in page and "onepager" in page
 
 
 def test_home_targets_from_settings(client, db):
@@ -367,7 +382,7 @@ def test_mobile_nav_toggle_present(client):
 def test_share_bar_and_statute_html_links(client):
     html = client.get("/").text
     assert "facebook.com/sharer/sharer.php?u=https%3A//petition.mcalester.net/" in html
-    assert "twitter.com/intent/tweet" in html and "nextdoor.com/sharekit" in html and "wa.me/?text=" in html and 'href="sms:' in html and 'href="mailto:' in html and 'data-copy="https://petition.mcalester.net/"' in html
+    assert "twitter.com/intent/tweet" in html and "nextdoor.com/sharekit" in html and "wa.me/?text=" in html and 'href="sms:' in html and 'href="mailto:' in html and 'data-copy="https://petition.mcalester.net/?utm_source=link&utm_medium=share&utm_content=home"' in html
     import re as _re
     for net in ("twitter.com/intent/tweet", "nextdoor.com/sharekit", "wa.me/?text=", 'href="sms:', 'href="mailto:', "facebook.com/sharer"):
         href = _re.search(r'href="([^"]*' + _re.escape(net.replace('href="', '')) + r'[^"]*)"', html).group(1)

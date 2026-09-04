@@ -218,6 +218,21 @@ class QATask(Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=100)
 
 
+class Visit(Base):
+    """Daily counts of tagged arrivals (utm_source and friends). Day, tag and page only: no address,
+    device, cookie or user agent, so it sits comfortably beside the no-signer-PII rule above."""
+    __tablename__ = "visits"
+    __table_args__ = (UniqueConstraint("day", "source", "medium", "campaign", "content", "page"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    day: Mapped[date] = mapped_column(Date)
+    source: Mapped[str] = mapped_column(String(64))
+    medium: Mapped[str | None] = mapped_column(String(64))
+    campaign: Mapped[str | None] = mapped_column(String(64))
+    content: Mapped[str | None] = mapped_column(String(64))
+    page: Mapped[str] = mapped_column(String(120))
+    count: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class RecordsLog(Base):
     """Filing & Records Log — every office visit, filing, print batch, handoff (Action Plan §11)."""
     __tablename__ = "records_log"

@@ -1100,6 +1100,8 @@
   <p>Texas payment figures are computed from the formulas as written in each executed agreement, applied to the minimum capacity that agreement commits to. Oklahoma minimum payments, distribution shares and per-phase revenue estimates are reproduced as the Project Plan states them, and the plan labels them illustrative and non-binding; wherever they appear here they are described that way. Acreages for Phase 1 at Kiowa are computed by regular subdivision of the survey sections and are indicative &mdash; Exhibit B of the Project Plan controls.</p>
   <h3>Named individuals and entities</h3>
   <p>Nothing in this document alleges, or is intended to imply, wrongdoing by any person, by either county, or by any company. Every agreement described was lawfully entered into and lawfully published. Statements of analysis and opinion are the author&rsquo;s own, are presented as such, and are honestly held on the basis of the cited material.</p>
+  <h3>Corrections</h3>
+  <p>None so far, as of 4 September 2026. An error of fact reported to the address in the publication statement is corrected here, with the date and what changed.</p>
   <h3>Not advice</h3>
   <p>Nothing here is investment, legal, tax or financial advice; it is not a recommendation, and it is not an offer or solicitation in respect of any security. The author accepts corrections: errors of fact notified to the address in the publication statement above will be corrected and the correction noted.</p>
 </footer>
@@ -1133,27 +1135,10 @@
 })();
 </script>
 
-{% set sites_url = "https://" ~ canonical_host ~ "/childress-kiowa" %}
-{% set sites_text = "Childress vs. Kiowa — IREN built 750 MW in Texas on a ten-year deal worth $1m a year to that county, and holds $5.9bn in cash. Pittsburg County is being asked for 85% for twenty-five years." %}
-{% set sites_text = sites_text ~ " Volunteers of all kinds are needed: https://" ~ canonical_host ~ "/volunteer" %}
-<section class="share" aria-labelledby="share-sites-h" style="max-width:880px;margin-left:auto;margin-right:auto">
-  <h2 id="share-sites-h">Share this comparison</h2>
-  <p class="small">Send neighbors the two deals side by side, from the documents.</p>
-  <ul class="share-row">
-    <li><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ sites_url|urlencode }}&quote={{ sites_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg><span>Facebook</span></a></li>
-    <li><a class="share-btn" href="https://twitter.com/intent/tweet?url={{ sites_url|urlencode }}&text={{ sites_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 3h3l-6.8 7.8L21.7 21h-6.2l-4.9-6.3L5 21H2l7.3-8.4L1.7 3h6.4l4.4 5.8L17.5 3zm-1.1 16h1.7L7 4.7H5.2L16.4 19z"/></svg><span>X</span></a></li>
-    <li><a class="share-btn" href="https://nextdoor.com/sharekit/?source={{ canonical_host|urlencode }}&body={{ (sites_text ~ ' ' ~ sites_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Nextdoor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.3 14.5h-2.6v-4.2c0-1.2-.6-1.8-1.6-1.8s-1.7.7-1.7 1.9v4.1H7.8v-5.6c-1.2-.2-2-1-2.2-2.4h2.3c.1.5.4.8.9.8.5-1.2 1.6-1.9 3-1.9 2.6 0 4.5 1.6 4.5 4.6v4.5z"/></svg><span>Nextdoor</span></a></li>
-    <li><a class="share-btn" href="https://wa.me/?text={{ (sites_text ~ ' ' ~ sites_url)|urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 22l5.2-1.4A9.8 9.8 0 1 0 12 2.2zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.1 8.1 0 1 1 12 20.1zm4.5-6c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.2z"/></svg><span>WhatsApp</span></a></li>
-    <li><a class="share-btn" href="sms:?&body={{ (sites_text ~ ' ' ~ sites_url)|urlencode }}" aria-label="Share by text message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm3 5v2h10V8H7zm0 4v2h7v-2H7z"/></svg><span>Text</span></a></li>
-    <li><a class="share-btn" href="mailto:?subject={{ 'Childress vs. Kiowa'|urlencode }}&body={{ sites_text|urlencode }}%0A%0A{{ sites_url|urlencode }}" aria-label="Share by email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V17h16V7.5l-8 5-8-5zM4.6 7l7.4 4.6L19.4 7H4.6z"/></svg><span>Email</span></a></li>
-    <li><button class="share-btn" type="button" data-copy="{{ sites_url }}" aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a3 3 0 0 1 4.2 4.2l-1.6 1.6-1.4-1.4 1.6-1.6a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0zm2.8-2.8a1 1 0 0 1 0 1.4L10 15.4a3 3 0 0 1-4.2-4.2l1.6-1.6 1.4 1.4-1.6 1.6a1 1 0 0 0 1.4 1.4l3.4-3.4a1 1 0 0 1 1.4 0z"/></svg><span class="copy-label">Copy link</span></button></li>
-  </ul>
-</section>
-<script>
-document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
-  var done=function(){var l=b.querySelector('.copy-label');l.textContent='Copied';setTimeout(function(){l.textContent='Copy link';},1800);};
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done);}
-  else{var t=document.createElement('textarea');t.value=b.dataset.copy;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(t);}
-});});
-</script>
+{% set share_url = "https://" ~ canonical_host ~ "/childress-kiowa" %}
+{% set share_text = "Childress vs. Kiowa — IREN built 750 MW in Texas on a ten-year deal worth $1m a year to that county, and holds $5.9bn in cash. Pittsburg County is being asked for 85% for twenty-five years." %}
+{% set share_h = "Share this comparison" %}
+{% set share_blurb = "Send neighbors the two deals side by side, from the documents." %}
+{% set share_subject = "Childress vs. Kiowa" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

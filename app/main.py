@@ -1,7 +1,10 @@
 """petition.mcalester.net — FastAPI app factory, host canonicalization, static mounts."""
 from __future__ import annotations
 import os
+import re
 import mimetypes
+from datetime import date
+from sqlalchemy import select
 mimetypes.add_type("application/geo+json", ".geojson")
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
@@ -31,6 +34,39 @@ def _allowed_hosts(canonical: str) -> set[str]:
     extra = os.environ.get("EXTRA_ALLOWED_HOSTS", "")
     hosts.update(h.strip().lower() for h in extra.split(",") if h.strip())
     return hosts
+
+
+_UTM_OK = re.compile(r"[^a-z0-9_.-]")
+
+
+def _utm(v) -> str | None:
+    v = _UTM_OK.sub("", (v or "").strip().lower()[:64])
+    return v or None
+
+
+def _record_visit(request: Request, path: str) -> None:
+    """Count a tagged arrival for the admin dashboard: day, utm fields and page. Nothing about the visitor."""
+    q = request.query_params
+    source = _utm(q.get("utm_source"))
+    if not source:
+        return
+    from .models import Visit
+    gen = request.app.dependency_overrides.get(dbmod.get_db, dbmod.get_db)()
+    db = next(gen)
+    try:
+        key = dict(day=date.today(), source=source, medium=_utm(q.get("utm_medium")), campaign=_utm(q.get("utm_campaign")),
+                   content=_utm(q.get("utm_content")), page=path[:120])
+        row = db.scalar(select(Visit).filter_by(**key))
+        if row:
+            row.count += 1
+        else:
+            db.add(Visit(count=1, **key))
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        gen.close()
 
 
 def create_app(engine=None) -> FastAPI:
@@ -71,6 +107,12 @@ def create_app(engine=None) -> FastAPI:
                     and os.environ.get("FORCE_HTTPS", "1") != "0"):
                 return RedirectResponse(url=f"https://{canonical}{path}{query}", status_code=301)
         response = await call_next(request)
+        if (request.method == "GET" and response.status_code == 200 and "utm_source" in request.query_params
+                and not path.startswith(("/static", "/admin", "/api", "/healthz"))):
+            try:
+                _record_visit(request, path)
+            except Exception:
+                pass    # a counter must never break a page
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         if request.url.path.startswith("/admin/documents/file/"):

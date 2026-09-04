@@ -1,0 +1,5 @@
+{# tagged(url, source, medium, content): the link with utm_ parameters GA4 attributes automatically.
+   PDF links are left bare: the file cannot report, and its download is already an event. #}
+{% macro tagged(base, source, medium, content) -%}
+{{ base }}{% if not base.endswith('.pdf') %}{{ '&' if '?' in base else '?' }}utm_source={{ source }}&utm_medium={{ medium }}{% if content %}&utm_content={{ content }}{% endif %}{% endif %}
+{%- endmacro %}
