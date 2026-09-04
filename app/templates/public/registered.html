@@ -24,4 +24,10 @@
   <a href="tel:{{ petition.contacts.election_board.phone|tel }}">{{ petition.contacts.election_board.phone }}</a> · <a href="mailto:{{ petition.contacts.election_board.email }}">{{ petition.contacts.election_board.email }}</a><br>
   {{ petition.contacts.election_board.hours }} · Secretary: {{ petition.contacts.election_board.secretary }}</p>
 </div>
+{% set share_url = "https://" ~ canonical_host ~ "/registered" %}
+{% set share_text = "Check your Pittsburg County voter registration in two minutes before you sign the referendum petition. Only registered county voters can sign, and four of five fields must match the voter file." %}
+{% set share_h = "Share this check" %}
+{% set share_blurb = "The two-minute registration check, so a signature is not thrown out later." %}
+{% set share_subject = "Check your registration before you sign" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

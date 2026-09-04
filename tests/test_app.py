@@ -89,6 +89,17 @@ def test_tldr_flyer(client, db):
     assert 'class="tldr-tools"' not in bare and 'class="tldr"' in bare        # the modal shell's own PDF link is still there
 
 
+def test_share_bars_on_every_public_page(client):
+    for path, url in [("/tldr", "/static/tldr.pdf"), ("/contact", "/contact"), ("/sign", "/sign"), ("/registered", "/registered"), ("/faq", "/faq"),
+                      ("/", "/"), ("/iren", "/iren"), ("/childress-kiowa", "/childress-kiowa"), ("/questions", "/questions")]:
+        html = client.get(path).text
+        assert 'class="share"' in html, path
+        assert f'data-copy="https://petition.mcalester.net{url}"' in html, path      # the copy button carries the page's own link
+        assert "petition.mcalester.net/volunteer" in html, path                        # every share carries the volunteer link
+    home = client.get("/").text
+    assert "data-tldr-copy" in home and "sms:?&body=" in home                          # the TL;DR modal can copy or text the PDF
+
+
 def test_home_targets_from_settings(client, db):
     html = client.get("/").text
     assert "The numbers" in html and "27,727" in html and "2,773" in html and "4,437" in html      # seeded from config

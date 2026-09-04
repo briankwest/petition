@@ -12,4 +12,10 @@
 </div>
 {% endif %}
 {% include "public/_tldr_sheet.html" %}
+{% set share_url = "https://" ~ canonical_host ~ "/static/tldr.pdf" %}
+{% set share_text = "The Pittsburg County data center tax abatement on one sheet: what the county is asked to give, who is asking, what binds whom, and what you can do, with a QR code to every source." %}
+{% set share_h = "Share the one-page version" %}
+{% set share_blurb = "Sends the PDF itself. It prints on one Letter page and reads on a phone." %}
+{% set share_subject = "The Pittsburg County data center tax abatement, on one page" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

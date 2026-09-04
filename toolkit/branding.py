@@ -28,7 +28,7 @@ SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 LOGO_SRC = ROOT / "logo.png"
 LOGO = ROOT / "app" / "static" / "logo.png"
 MARK = ROOT / "app" / "static" / "logo-mark.png"
-LOGO_HEADER = ROOT / "app" / "static" / "logo-header.png"   # 2x of the 68px site header
+LOGO_HEADER = ROOT / "app" / "static" / "logo-header.png"   # 2x of the 136px site header
 LOGO_PALETTE = [(240, 0, 16), (240, 240, 240), (0, 48, 112), (0, 32, 96), (0, 16, 80), (0, 0, 48), (0, 0, 16)]
 
 
@@ -52,7 +52,9 @@ def prepare_logo(src: Path = LOGO_SRC) -> bool:
     pad = 8
     lock = clean.crop((x0 - pad, y0 - pad, x1 + pad, y1 + pad))
     lock.save(LOGO, optimize=True)
-    lock.resize((round(lock.width * 136 / lock.height), 136), Image.LANCZOS).save(LOGO_HEADER, optimize=True)
+    hdr = lock.resize((round(lock.width * 272 / lock.height), 272), Image.LANCZOS)
+    # palette PNG: a quarter of the size of RGBA at this scale, and indistinguishable once the browser halves it
+    hdr.quantize(colors=256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE).save(LOGO_HEADER, optimize=True)
     # the mark: everything left of the wordmark, with the navy bar that runs under the wordmark cut
     # off at the plate's right edge. Plate edge = where navy ends on a row below the bar; wordmark
     # start = the first column of white lettering.

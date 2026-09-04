@@ -62,4 +62,10 @@
   });
 })();
 </script>
+{% set share_url = "https://" ~ canonical_host ~ "/sign" %}
+{% set share_text = "Where and when to sign the Pittsburg County referendum petition, with the precinct map. Only on official paper pamphlets, only registered Pittsburg County voters, only once." %}
+{% set share_h = "Share where to sign" %}
+{% set share_blurb = "Nothing is circulating until the Board acts; this page will show the times and places the day it does." %}
+{% set share_subject = "Where to sign the Pittsburg County referendum petition" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

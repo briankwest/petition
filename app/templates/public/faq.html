@@ -27,4 +27,10 @@
 </dl>
 </dl>
 <p class="small">Full statute text: {% for k, u in cites.items() %}<a href="{{ u }}" rel="noopener" target="_blank">{{ k.replace('-', ' O.S. § ') }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+{% set share_url = "https://" ~ canonical_host ~ "/faq" %}
+{% set share_text = "Why the Pittsburg County referendum petition cannot be signed online, who may sign, how many signatures it takes, and what gets a signature thrown out." %}
+{% set share_h = "Share the answers" %}
+{% set share_blurb = "The questions people argue about, answered from the statute." %}
+{% set share_subject = "Pittsburg County referendum petition: the questions people ask" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

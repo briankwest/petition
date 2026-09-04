@@ -99,4 +99,10 @@
   legend.addTo(map);
 })();
 </script>
+{% set share_url = "https://" ~ canonical_host ~ "/contact" %}
+{% set share_text = "The three Pittsburg County commissioners decide the Emerald ProjectCo tax abatement, and the Kiowa site is in District 2. Offices, hours, numbers and the district map, plus fifteen questions to ask them." %}
+{% set share_h = "Share who to call" %}
+{% set share_blurb = "Send a neighbor the people who decide this, and how to reach them." %}
+{% set share_subject = "Who decides the Pittsburg County data center tax abatement" %}
+{% include "public/_share_page.html" %}
 {% endblock %}

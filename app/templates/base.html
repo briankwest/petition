@@ -45,7 +45,7 @@
 {% block shell %}
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="/"><img class="brand-logo" src="/static/logo-header.png?v={{ asset_v }}" alt="Let Pittsburg County Vote — {{ site_title }}, {{ site_eyebrow }}" width="656" height="136"><span class="brand-text"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></span></a>
+    <a class="brand" href="/"><img class="brand-logo" src="/static/logo-header.png?v={{ asset_v }}" alt="Let Pittsburg County Vote — {{ site_title }}, {{ site_eyebrow }}" width="1311" height="272"><span class="brand-text"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/iren" {% if path == '/iren' %}aria-current="page"{% endif %}>Who is IREN?</a>
@@ -73,6 +73,8 @@
   <div class="tldr-modal-bar">
     <h2 id="tldr-modal-h">The one-page version</h2>
     <a class="btn primary" href="/static/tldr.pdf" target="_blank" rel="noopener">Print or save the PDF</a>
+    <button type="button" class="btn" data-tldr-copy>Copy PDF link</button>
+    <a class="btn" href="sms:?&body={{ ('The Pittsburg County data center tax abatement on one page: https://' ~ canonical_host ~ '/static/tldr.pdf')|urlencode }}">Text it</a>
     <a class="btn" href="/tldr">Open as a page</a>
     <button type="button" class="btn" data-tldr-close aria-label="Close">Close</button>
   </div>
@@ -95,6 +97,12 @@
   dlg.addEventListener('close', function(){ root.classList.remove('tldr-open'); });
   dlg.addEventListener('click', function(e){ if(e.target===dlg) dlg.close(); });
   dlg.querySelector('[data-tldr-close]').addEventListener('click', function(){ dlg.close(); });
+  var cp=dlg.querySelector('[data-tldr-copy]');
+  cp.addEventListener('click', function(){
+    var url=location.origin+'/static/tldr.pdf', done=function(){ cp.textContent='Copied'; setTimeout(function(){ cp.textContent='Copy PDF link'; }, 1800); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done); }
+    else{ var t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(t); }
+  });
 })();
 </script>
 {% endblock %}
