@@ -28,6 +28,11 @@ p{margin:0 0 1em}
 .site-head{border-top:6px solid var(--gold);border-bottom:1px solid var(--rule);background:var(--surface)}
 .site-head .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-top:16px;padding-bottom:14px}
 .brand{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;line-height:1.1}
+/* the logo lockup (kangaroo, check, "Let Pittsburg County Vote", the domain) is the brand; the site title
+   stays in the DOM for screen readers and the <title> */
+.brand-logo{display:block;height:68px;width:auto}
+.brand-text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:640px){.brand-logo{height:50px}}
 .brand-eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .brand-name{font-family:"Zilla Slab",Georgia,serif;font-size:22px;font-weight:700}
 .site-nav{display:flex;flex-wrap:wrap;gap:4px 18px}

@@ -45,7 +45,7 @@
 {% block shell %}
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="/"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></a>
+    <a class="brand" href="/"><img class="brand-logo" src="/static/logo-header.png?v={{ asset_v }}" alt="Let Pittsburg County Vote — {{ site_title }}, {{ site_eyebrow }}" width="656" height="136"><span class="brand-text"><span class="brand-eyebrow">{{ site_eyebrow }}</span><span class="brand-name">{{ site_title }}</span></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/iren" {% if path == '/iren' %}aria-current="page"{% endif %}>Who is IREN?</a>
