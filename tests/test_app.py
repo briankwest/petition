@@ -82,6 +82,9 @@ def test_tldr_flyer(client, db):
     assert pdf.status_code == 200 and pdf.headers["content-type"] == "application/pdf" and pdf.content.startswith(b"%PDF")
     frag = client.get("/tldr?embed=1").text                                      # the modal fetches a bare sheet
     assert frag.lstrip().startswith("<style>") and "<html" not in frag and 'class="tldr"' in frag and "2,773 of 27,727" in frag
+    for path in ("/", "/questions", "/contact"):                                 # Facebook gets the message via the clipboard
+        page = client.get(path).text
+        assert 'data-fb-copy="' in page and 'class="small share-note"' in page and "Message copied" in page, path
     home = client.get("/").text                                                  # every public page carries the modal shell
     assert 'id="tldr-modal"' in home and 'data-tldr' in home and ">TL;DR<" in home and "/tldr?embed=1" in home
     assert 'href="/static/tldr.pdf"' in home                                     # the modal's print action is the exact PDF

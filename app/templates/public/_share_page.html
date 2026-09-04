@@ -8,7 +8,7 @@
   <h2 id="share-page-h">{{ share_h }}</h2>
   <p class="small">{{ share_blurb }}</p>
   <ul class="share-row">
-    <li><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ tagged(share_url, 'facebook', 'share', share_content)|urlencode }}&quote={{ share_full|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg><span>Facebook</span></a></li>
+    <li><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{ tagged(share_url, 'facebook', 'share', share_content)|urlencode }}&quote={{ share_full|urlencode }}" data-fb-copy="{{ share_full }}" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg><span>Facebook</span></a></li>
     <li><a class="share-btn" href="https://twitter.com/intent/tweet?url={{ tagged(share_url, 'x', 'share', share_content)|urlencode }}&text={{ share_text|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 3h3l-6.8 7.8L21.7 21h-6.2l-4.9-6.3L5 21H2l7.3-8.4L1.7 3h6.4l4.4 5.8L17.5 3zm-1.1 16h1.7L7 4.7H5.2L16.4 19z"/></svg><span>X</span></a></li>
     <li><a class="share-btn" href="https://nextdoor.com/sharekit/?source={{ canonical_host|urlencode }}&body={{ (share_full ~ ' ' ~ tagged(share_url, 'nextdoor', 'share', share_content))|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Nextdoor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.3 14.5h-2.6v-4.2c0-1.2-.6-1.8-1.6-1.8s-1.7.7-1.7 1.9v4.1H7.8v-5.6c-1.2-.2-2-1-2.2-2.4h2.3c.1.5.4.8.9.8.5-1.2 1.6-1.9 3-1.9 2.6 0 4.5 1.6 4.5 4.6v4.5z"/></svg><span>Nextdoor</span></a></li>
     <li><a class="share-btn" href="https://wa.me/?text={{ (share_full ~ ' ' ~ tagged(share_url, 'whatsapp', 'share', share_content))|urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 22l5.2-1.4A9.8 9.8 0 1 0 12 2.2zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.1 8.1 0 1 1 12 20.1zm4.5-6c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.2z"/></svg><span>WhatsApp</span></a></li>
@@ -16,8 +16,17 @@
     <li><a class="share-btn" href="mailto:?subject={{ share_subject|urlencode }}&body={{ share_full|urlencode }}%0A%0A{{ tagged(share_url, 'email', 'share', share_content)|urlencode }}" aria-label="Share by email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V17h16V7.5l-8 5-8-5zM4.6 7l7.4 4.6L19.4 7H4.6z"/></svg><span>Email</span></a></li>
     <li><button class="share-btn" type="button" data-copy="{{ tagged(share_url, 'link', 'share', share_content) }}" aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a3 3 0 0 1 4.2 4.2l-1.6 1.6-1.4-1.4 1.6-1.6a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0zm2.8-2.8a1 1 0 0 1 0 1.4L10 15.4a3 3 0 0 1-4.2-4.2l1.6-1.6 1.4 1.4-1.6 1.6a1 1 0 0 0 1.4 1.4l3.4-3.4a1 1 0 0 1 1.4 0z"/></svg><span class="copy-label">Copy link</span></button></li>
   </ul>
+  <p class="small share-note" hidden aria-live="polite"></p>
 </section>
 <script>
+document.querySelectorAll('[data-fb-copy]').forEach(function(a){a.addEventListener('click',function(e){
+  // Facebook ignores pre-filled text, so the message goes to the clipboard and the share dialog opens beside it
+  e.preventDefault(); var w=window.open(a.href,'_blank','noopener'); var note=a.closest('.share').querySelector('.share-note');
+  var done=function(){ if(note){ note.hidden=false; note.textContent='Message copied. Paste it into your Facebook post.'; } };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(a.dataset.fbCopy).then(done,function(){}); }
+  else{ var t=document.createElement('textarea'); t.value=a.dataset.fbCopy; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(err){} document.body.removeChild(t); }
+  if(!w){ location.href=a.href; }
+});});
 document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
   var done=function(){var l=b.querySelector('.copy-label');l.textContent='Copied';setTimeout(function(){l.textContent='Copy link';},1800);};
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(b.dataset.copy).then(done);}

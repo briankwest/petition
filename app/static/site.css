@@ -342,6 +342,7 @@ fieldset.field{border:1px solid var(--rule);border-radius:8px;padding:10px 14px}
   .tk-stats .tk-wide{grid-column:span 1}
 }
 
+.share-note{margin:8px 0 0;color:var(--ok);font-weight:600}
 /* theme switch: auto / light / dark, in the menu and the footer (base.html) */
 .theme{display:inline-flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--rule);border-radius:999px;background:var(--surface)}
 .theme button{font:inherit;font-size:12.5px;font-weight:600;letter-spacing:.02em;border:0;background:transparent;color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer;min-height:0}
