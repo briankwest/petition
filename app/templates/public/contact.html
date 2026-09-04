@@ -7,11 +7,11 @@
 {% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="/static/map.css?v={{ asset_v }}">
 <style>
 .map-districts{height:min(70vh,560px)}
-.cards.bocc .card.site{outline:2px solid #A2542C;outline-offset:-2px}
-.cards.bocc .card h3 .role{color:#A2542C;font-weight:600}
-.cards.bocc .site-note{color:#A2542C;font-weight:600}
+.cards.bocc .card.site{outline:2px solid var(--copper);outline-offset:-2px}
+.cards.bocc .card h3 .role{color:var(--copper);font-weight:600}
+.cards.bocc .site-note{color:var(--copper);font-weight:600}
 .pmap-pin.bocc{width:16px;height:16px}
-.pmap-label.bocc-site{color:#7C3E1F}
+.pmap-label.bocc-site{color:var(--copper-deep)}
 </style>{% endblock %}
 {% block content %}
 <h1>Who to call</h1>

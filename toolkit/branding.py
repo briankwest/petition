@@ -29,6 +29,7 @@ LOGO_SRC = ROOT / "logo.png"
 LOGO = ROOT / "app" / "static" / "logo.png"
 MARK = ROOT / "app" / "static" / "logo-mark.png"
 LOGO_HEADER = ROOT / "app" / "static" / "logo-header.png"   # 2x of the 136px site header
+LOGO_HEADER_DARK = ROOT / "app" / "static" / "logo-header-dark.png"   # same, with the navy lettering lightened for the dark theme
 LOGO_PALETTE = [(240, 0, 16), (240, 240, 240), (0, 48, 112), (0, 32, 96), (0, 16, 80), (0, 0, 48), (0, 0, 16)]
 
 
@@ -76,6 +77,17 @@ def prepare_logo(src: Path = LOGO_SRC) -> bool:
     mb = mark.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
     mark = mark.crop(mb)
     mark.save(MARK, optimize=True)
+    # dark-theme header: in the wordmark's letter band (right of the plate, above the domain bar) the navy fill of
+    # "COUNTY" and the navy outlines of "LET" and "VOTE" become a light blue; the mark and the bar are untouched
+    ha = np.array(hdr.convert("RGBA")).astype(int)
+    sx = hdr.width / lock.width
+    px_right = int((plate_right + 6 - (x0 - pad)) * sx); band_top = 0; band_bot = int((bar_top - 4 - (y0 - pad)) * sx)
+    hr, hg, hb, hal = ha[..., 0], ha[..., 1], ha[..., 2], ha[..., 3]
+    navy_px = (hal > 40) & (hb > 40) & (hr < 90) & (hg < 110)
+    region = np.zeros_like(navy_px); region[band_top:band_bot, px_right:] = True
+    sel = navy_px & region
+    ha[sel, 0], ha[sel, 1], ha[sel, 2] = 168, 204, 244
+    Image.fromarray(ha.astype("uint8"), "RGBA").quantize(colors=256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE).save(LOGO_HEADER_DARK, optimize=True)
     print(f"logo: lockup {Image.open(LOGO).size}, mark {mark.size}, plate edge x={plate_right}, wordmark x={text_left}, bar top y={bar_top}")
     return True
 

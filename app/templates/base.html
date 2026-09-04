@@ -10,7 +10,15 @@
 <link rel="icon" type="image/svg+xml" href="/static/icons/favicon.svg">
 <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
 <link rel="manifest" href="/static/icons/site.webmanifest">
-<meta name="theme-color" content="#1F2A44">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1F2A44" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1524" media="(prefers-color-scheme: dark)">
+<script>
+/* theme before first paint: light | dark | auto (nothing stamped, the phone decides). ?theme= sets and remembers. */
+(function(){try{var q=new URLSearchParams(location.search).get('theme'),t=localStorage.getItem('theme');
+if(q&&/^(light|dark|auto)$/.test(q)){t=q;localStorage.setItem('theme',t);}
+if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ site_title }}">
 <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
@@ -45,7 +53,7 @@
 {% block shell %}
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="/"><img class="brand-logo" src="/static/logo-header.png?v={{ asset_v }}" alt="{{ site_title }} — {{ site_eyebrow }}" width="1311" height="272"></a>
+    <a class="brand" href="/"><img class="brand-logo brand-logo-light" src="/static/logo-header.png?v={{ asset_v }}" alt="{{ site_title }} — {{ site_eyebrow }}" width="1311" height="272"><img class="brand-logo brand-logo-dark" src="/static/logo-header-dark.png?v={{ asset_v }}" alt="" aria-hidden="true" width="1311" height="272"></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-bars" aria-hidden="true"></span>Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <a href="/iren" {% if path == '/iren' %}aria-current="page"{% endif %}>Who is IREN?</a>
@@ -57,6 +65,7 @@
       <a href="/faq" {% if path == '/faq' %}aria-current="page"{% endif %}>FAQ</a>
       <a href="/volunteer" {% if path.startswith('/volunteer') %}aria-current="page"{% endif %}>Volunteer</a>
       <a class="nav-tldr" href="/tldr" data-tldr {% if path == '/tldr' %}aria-current="page"{% endif %}>TL;DR</a>
+      <span class="theme" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span>
     </nav>
   </div>
 </header>
@@ -67,6 +76,7 @@
 </main>
 <footer class="site-foot"><div class="wrap">
   <p>This site gives information about a referendum petition under the Oklahoma Local Development Act (<a class="cite" href="{{ cite_url('62-868') }}" rel="noopener" target="_blank">62 O.S. § 868</a>). Signing a petition only supports putting the question to a public vote. Signatures are collected only on official, filed paper pamphlets — never online.</p>
+  <p class="small">Appearance: <span class="theme" role="group" aria-label="Appearance"><button type="button" data-theme-set="auto" aria-pressed="false">Auto</button><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></span></p>
   <p class="small">No voter information is collected on this site. Registration lookups go directly to the <a href="{{ petition.links.voter_portal }}" rel="noopener">Oklahoma State Election Board's OK Voter Portal</a>. {% if user %}<a href="/admin">Admin</a>{% else %}<a href="/admin/login">Staff sign-in</a>{% endif %}</p>
 </div></footer>
 <dialog id="tldr-modal" class="tldr-modal" aria-labelledby="tldr-modal-h">
@@ -110,6 +120,14 @@
 (function(){var b=document.querySelector('.nav-toggle'),h=document.querySelector('.site-head');if(!b||!h)return;
 b.addEventListener('click',function(){var open=h.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');b.lastChild.textContent=open?'Close':'Menu';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){h.classList.remove('open');b.setAttribute('aria-expanded','false');b.lastChild.textContent='Menu';b.focus();}});})();
+</script>
+<script>
+(function(){var root=document.documentElement,btns=document.querySelectorAll('[data-theme-set]');if(!btns.length)return;
+function current(){try{return localStorage.getItem('theme')||'auto';}catch(e){return 'auto';}}
+function paint(){var t=current();btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.themeSet===t?'true':'false');});}
+btns.forEach(function(b){b.addEventListener('click',function(){var t=b.dataset.themeSet;try{localStorage.setItem('theme',t);}catch(e){}
+if(t==='auto'){root.removeAttribute('data-theme');}else{root.setAttribute('data-theme',t);}paint();});});
+paint();})();
 </script>
 {% block scripts %}{% endblock %}
 </body>

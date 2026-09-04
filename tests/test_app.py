@@ -115,6 +115,23 @@ def test_tagged_arrivals_are_counted_without_visitor_data(client, db):
     assert "Where tagged visitors came from" in page and "qrcode" in page and "onepager" in page
 
 
+def test_theme_switch_and_tokens(client):
+    home = client.get("/").text
+    assert home.count('data-theme-set="dark"') == 2 and 'name="color-scheme" content="light dark"' in home   # menu and footer
+    assert "localStorage.getItem('theme')" in home and 'setAttribute(\'data-theme\'' in home               # applied before first paint
+    import re as _re
+    from toolkit import ROOT
+    for css, allowed in [("app/static/site.css", {"#F6C945", "#fff"}), ("app/static/dossier.css", set()), ("app/static/map.css", {"#fff", "#1e7f4b", "#f2b705", "#8a8580", "#1e6fb8", "#1f2a44", "#b8860b", "#fff3c4", "#c2352b", "#333"})]:
+        text = (ROOT / css).read_text()
+        # strip the token blocks (:root / .irenfile / the theme and print redefinitions), then no literal colour may remain
+        body = _re.sub(r"(:root[^{]*|\.irenfile|[^{}]*\.irenfile)\{[^{}]*--[a-z-]+:[^{}]*\}", "", text)
+        body = _re.sub(r"@media[^{]*\{", "", body)
+        found = {c.lower() for c in _re.findall(r"#[0-9A-Fa-f]{3,6}\b", body)} - {a.lower() for a in allowed}
+        assert not found, (css, sorted(found))
+    dark = client.get("/?theme=dark").status_code                                                        # the server ignores it; the script uses it
+    assert dark == 200
+
+
 def test_home_targets_from_settings(client, db):
     html = client.get("/").text
     assert "The numbers" in html and "27,727" in html and "2,773" in html and "4,437" in html      # seeded from config
