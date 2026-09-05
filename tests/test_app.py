@@ -408,6 +408,9 @@ def test_timeline_page(client):
     for doc in ("tid-committee-minutes-2025-12-08.pdf", "tid-committee-minutes-2026-04-21.pdf", "bocc-agenda-2025-11-10.pdf"):
         r = client.get(f"/static/records/county/{doc}")                       # the county minutes are mirrored, not just linked
         assert r.status_code == 200 and r.content.startswith(b"%PDF"), doc
+    r = client.get("/static/records/occ/occ-pud-2025-000075-777-large-load-joint-stipulation-2026-06-26.pdf")   # and the Commission's filings
+    assert r.status_code == 200 and r.content.startswith(b"%PDF")
+    assert "1 Oct 2026" in html and "PUD 2025-000075" in html and 'id="r38"' in html
     assert 'href="/timeline"' in client.get("/").text and 'href="/timeline"' in client.get("/faq").text   # home pointer and nav
 
 
