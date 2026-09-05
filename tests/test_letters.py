@@ -11,8 +11,8 @@ SENDER = dict(name="Jane Q. Public", email="jane@example.org", address="100 Main
 
 def test_sixteen_letters_with_addresses_and_slugs():
     L = data.letters()
-    assert [x["n"] for x in L] == list(range(1, 17))
-    assert set(data.MAIL) == set(range(1, 17)) == set(data.SLUGS)
+    assert [x["n"] for x in L] == list(range(1, 18))
+    assert set(data.MAIL) == set(range(1, 18)) == set(data.SLUGS)
     for x in L:
         assert x["re"] and x["to"] and len(x["to"]) == 2, x["n"]
         assert x.get("paras") or x["items"], x["n"]
@@ -20,7 +20,7 @@ def test_sixteen_letters_with_addresses_and_slugs():
 
 def test_html_renders_without_placeholders(tmp_path):
     r = build.build(tmp_path, SENDER, date(2026, 9, 8), html_only=True)
-    assert len(r["letters"]) == 16
+    assert len(r["letters"]) == 17
     for m in r["letters"]:
         html = (tmp_path / m["file"].replace(".pdf", ".html")).read_text()
         assert "8 September 2026" in html and "Jane Q. Public" in html and "100 Main Street" in html
@@ -35,7 +35,7 @@ def test_html_renders_without_placeholders(tmp_path):
 def test_docupost_csv_within_limits(tmp_path):
     build.build(tmp_path, SENDER, date(2026, 9, 8), html_only=True)
     rows = list(csv.DictReader((tmp_path / "docupost.csv").open()))
-    assert [r["letter"] for r in rows if r["role"] == "recipient"] == [str(n) for n in range(1, 17)]
+    assert [r["letter"] for r in rows if r["role"] == "recipient"] == [str(n) for n in range(1, 18)]
     assert sum(1 for r in rows if r["role"] == "copy") == len(data.COPIES)
     for r in rows:
         for k in ("name", "company", "address", "address2", "city", "state", "zip"):

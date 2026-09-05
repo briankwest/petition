@@ -50,7 +50,7 @@ letter(1, "Board of County Commissioners and the PCDC TID Review Committee",
    "<b>The Childress visit.</b> Invitations, itineraries, travel and expense records, reimbursements, notes, photographs and correspondence for the visit by committee members to IREN’s Childress, Texas facility described on 21 April 2026, including who arranged and who paid for it.",
    "<b>The committee’s formation.</b> Resolutions 26-121 (original and amended) and 26-138 with their backup; any document that created, convened or named the committee; the “list of 7 recommended names” referred to on 8 December 2025; and any communication explaining why, as the minutes of 17 November 2025 record, “the names are needed by December 1st,” and by whom.",
    "<b>Meeting records.</b> Minutes, audio or video recordings, sign-in sheets, handouts, slides and presentations for every committee meeting, including the meeting noticed for 27 January 2026 for which no minutes are posted, and for the public hearings of 8 and 22 June 2026, together with every written comment the Board or committee received.",
-   "<b>State and utility contacts.</b> Communications with the Oklahoma Department of Commerce, the Corporation Commission, the Water Resources Board, the Department of Environmental Quality, the Department of Transportation, the Governor’s office, any legislator, McAlester Army Ammunition Plant, or Public Service Company of Oklahoma concerning the project.",
+   "<b>State and utility contacts.</b> Communications with the Oklahoma Department of Commerce, the Corporation Commission, the Water Resources Board, the Department of Environmental Quality, the Department of Transportation, the Governor’s office, any legislator, the Kiamichi Economic Development District of Oklahoma (KEDDO), McAlester Army Ammunition Plant, or Public Service Company of Oklahoma concerning the project.",
    "<b>Water.</b> Communications with the City of Kiowa, the Kiowa Public Works Authority, Rural Water District No. 11, the City of McAlester, the McAlester Public Works Authority or the Pittsburg County Water Authority concerning water for the project."],
   extra_withhold=" Records of the review committee are records of a public body under § 24A.3, and the County Clerk certified its final minutes as its Secretary. No executive session on this subject appears on any 2025 or 2026 agenda, so § 24A.5(1)(b) does not reach these records.")
 
@@ -62,6 +62,7 @@ letter(2, "City of McAlester and the McAlester Public Works Authority",
   "the City of McAlester and the McAlester Public Works Authority",
   "officers, council members and trustees individually, the City Manager and Assistant City Manager, the city attorney, public works and utility staff, and other representatives",
   ["<b>The request.</b> The letter of 30 July 2025 from Black Mountain Energy Storage to the Assistant City Manager proposing to purchase approximately six million gallons a day of raw water to cool the proposed IREN data center, with every attachment, and any earlier or later letter, email or proposal from that company.",
+   "<b>The 29 July 2025 meeting.</b> Calendar entries, notes, sign-in records, presentations and follow-up correspondence for the meeting between Black Mountain Energy Storage and the Assistant City Manager that the 30 July letter refers to, and the file of Director Wimer, who told the council on 12 August that he “had been involved from the beginning of discussion,” including anything that shows when that beginning was.",
    "<b>The 12 August 2025 action.</b> The agenda packet, staff memorandum, presentation and audio or video recording for the council’s authorization to negotiate a raw water purchase agreement with Black Mountain Energy Storage, and any council or trust action on the subject before or after that date.",
    "<b>The agreement.</b> Every draft and version of the raw water purchase agreement, including the version at $1 per 1,000 gallons on the agenda of 10 February 2026, with redlines, transmittals, term sheets and the recording of that meeting.",
    COMMS.format(who="the City, the Authority, the Mayor, any council member or trustee, the City Manager, the Assistant City Manager, the city attorney or utility staff") + " Include in particular communications with Caroline O’Brien or anyone at Black Mountain Energy Storage, and with Pittsburg County or Floyd & Driver about the project.",
@@ -248,6 +249,21 @@ letter(15, "Oklahoma Department of Transportation",
    "<b>Traffic and improvements.</b> Any traffic impact study, turn-lane, signal or interchange analysis, construction-traffic plan or improvement request concerning the project, and any communication with Pittsburg County, Commissioner Haynes’s district or the developer about road improvements for construction, which the developer told the county’s committee on 3 February 2026 it would “discuss with the Commissioner.”",
    COMMS.format(who="the Department or any employee")])
 
+letter(17, "Kiamichi Economic Development District of Oklahoma (KEDDO)",
+  ["Kim Rose, Executive Director and custodian of records, Kiamichi Economic Development District of Oklahoma",
+   "1002 Highway 2 North, Wilburton, OK 74578 · krose@keddo.org · 918-465-2367"],
+  [],
+  "Open Records Act request — the proposed IREN / Emerald ProjectCo data center south of Kiowa; the District’s part in it",
+  "the Kiamichi Economic Development District of Oklahoma",
+  "executive director, staff, board members individually, contractors, attorneys and other representatives",
+  [COMMS.format(who="the District, any board member, the executive director or any employee or contractor"),
+   "<b>The prospect file.</b> Every prospect, site-selection, incentive, grant or technical-assistance file, under any code name including “Project Emerald,” concerning a data center in Pittsburg County or near Kiowa, or concerning IREN, Emerald ProjectCo Inc., Black Mountain Energy Storage or Tipton Capital, from 1 January 2024. On 12 August 2025 Black Mountain’s director told the McAlester City Council she “had been working with Pittsburg County, KEDDO, the Town of Kiowa and the City of McAlester to establish a data center”; I am asking for the District’s side of that work.",
+   "<b>Infrastructure and grants.</b> Any REAP, CDBG, EDA, ARPA or other grant or loan application, feasibility study, engineering scope or funding request concerning water, sewer, roads or power for the site or the Town of Kiowa in connection with the project.",
+   "<b>Meetings.</b> Calendars, invitations, sign-in sheets, minutes, presentations and notes for any meeting or call with the developer or its advisers, Pittsburg County or its counsel, the Town of Kiowa, the City of McAlester, Public Service Company of Oklahoma or the Oklahoma Department of Commerce about the project, and any report of it to the District’s board.",
+   "<b>Confidentiality.</b> Any non-disclosure, confidentiality or exclusivity agreement, or request for one, involving the District or any board member, officer or employee and any party named in item 1."],
+  start="1 January 2024",
+  note="A council of governments supported by public funds is a public body under § 24A.3. KEDDO is the one body in the developer’s own list of who it was “working with” whose file has not been asked for anywhere else.")
+
 # letter 16 is the FEDERAL dict below
 
 
@@ -291,6 +307,7 @@ MAIL = {
     14: dict(name="Central Records", company="Oklahoma Dept of Environmental Quality", address="PO Box 1677", address2="", city="Oklahoma City", state="OK", zip="73101"),
     15: dict(name="Office of General Counsel", company="Oklahoma Department of Transportation", address="200 NE 21st St", address2="", city="Oklahoma City", state="OK", zip="73105"),
     16: dict(name="FOIA Officer", company="Army Records Management Directorate", address="9301 Chapek Road", address2="Building 1458", city="Fort Belvoir", state="VA", zip="22060"),
+    17: dict(name="Kim Rose, Executive Director", company="Kiamichi Economic Development District", address="1002 Highway 2 North", address2="", city="Wilburton", state="OK", zip="74578"),
 }
 COPIES = [  # paper copies worth sending alongside a letter; same PDF, flagged role=copy in the CSV
     (1, dict(name="Board of County Commissioners", company="Pittsburg County, Room 100", address="115 E Carl Albert Pkwy", address2="", city="McAlester", state="OK", zip="74501")),
@@ -300,7 +317,7 @@ COPIES = [  # paper copies worth sending alongside a letter; same PDF, flagged r
 ]
 SLUGS = {1: "county-board-and-committee", 2: "city-of-mcalester", 3: "kiowa-public-schools", 4: "town-of-kiowa", 5: "rural-water-district-11",
          6: "county-eda-and-water-authority", 7: "kiamichi-technology-center", 8: "library-system", 9: "health-department-osdh", 10: "county-assessor",
-         11: "county-clerk-land-records", 12: "dept-of-commerce", 13: "water-resources-board", 14: "deq", 15: "odot", 16: "mcaap-army-foia"}
+         11: "county-clerk-land-records", 12: "dept-of-commerce", 13: "water-resources-board", 14: "deq", 15: "odot", 16: "mcaap-army-foia", 17: "keddo"}
 
 def letters() -> list[dict]:
     return sorted(L, key=lambda x: x["n"])
