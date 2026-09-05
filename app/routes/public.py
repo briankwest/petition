@@ -4,7 +4,7 @@ import os
 import time
 from collections import defaultdict, deque
 from datetime import date
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from sqlalchemy import select
@@ -18,6 +18,8 @@ from .. import market
 from .. import forms as F
 from . import render
 from toolkit import statutes
+from toolkit.letters import tokens as portal_tokens
+from toolkit.letters import data as letter_data
 
 router = APIRouter(dependencies=[Depends(current_user)])
 
@@ -105,6 +107,19 @@ def questions(request: Request, db: Session = Depends(get_db)):
 def timeline(request: Request, db: Session = Depends(get_db)):
     # The dated record from IREN's June 2025 deposits to the tabled vote. Static: every line is a filed document.
     return render(request, "public/timeline.html", s=Settings(db))
+
+
+@router.get("/r/{token}")
+def portal(token: str, request: Request, db: Session = Depends(get_db)):
+    """The page a records custodian reaches from the QR code or URL printed in a request letter. Until the response
+    portal ships this is a holding page that names the request and says how to reply meanwhile; the token is matched
+    against the committed hashes only, so an unknown or retired token is an ordinary 404 and nothing is recorded."""
+    e = portal_tokens.lookup(token)
+    if not e:
+        raise HTTPException(status_code=404)
+    letter = next((x for x in letter_data.letters() if x["n"] == e["n"]), None)
+    # path drives the canonical and og:url tags; the token must never be echoed into the page
+    return render(request, "public/portal_holding.html", s=Settings(db), entry=e, letter=letter, path="/r")
 
 
 @router.get("/iren")

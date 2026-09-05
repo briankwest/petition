@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Records request {{ entry.n }} · {{ site_title }}{% endblock %}
+{% block og_title %}Records request {{ entry.n }}{% endblock %}
+{% block description %}The response page for one of the Open Records Act requests about the proposed IREN / Emerald data center south of Kiowa.{% endblock %}
+{% block head %}<meta name="robots" content="noindex,nofollow"><style>.kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}</style>{% endblock %}
+{% block content %}
+<p class="kicker">A records request from Brian West, a Pittsburg County resident. This is not a government site.</p>
+<h1>Records request {{ entry.n }}: {{ letter.title if letter else entry.slug }}</h1>
+{% if letter %}<p class="lede">Letter {{ entry.n }}, addressed to {{ letter.to[0] }}, asks for records about the proposed IREN / Emerald ProjectCo data center south of Kiowa. Its subject line reads: <em>{{ letter.re }}</em>.</p>{% endif %}
+<div class="callout">
+  <p><strong>The response page for this request is not open yet.</strong> When it opens, this same address will let your office confirm receipt, upload records, send a written response, or say when you expect to produce, and everything posted will become part of the public record of the request.</p>
+  <p>Until then a reply by email or by post is equally good, and nothing you do on this page is recorded. Email <a href="mailto:brian@mcalester.net">brian@mcalester.net</a>, or write to the address on the letter. The request itself stands from the date the letter arrived.</p>
+</div>
+<p class="small">Token issued {{ entry.issued }}. The site holds only a hash of it; if the letter has changed hands, an email from the office named above is enough to have a fresh link issued.</p>
+{% endblock %}

@@ -788,3 +788,19 @@ def test_assign_propagates_and_master_row(client, db):
     assert 'id="master-row"' in page and 'id="apply-all"' in page and 'data-m="notary_commission"' in page
     title = page.split("<title>")[1].split("</title>")[0]
     assert "script" not in title and "getElementById('apply-all')" in page.split("</title>")[1]   # script executes in the body, not the title
+
+
+def test_portal_holding_page(client, tmp_path, monkeypatch):
+    # The QR code in each letter opens /r/<token>. Until the portal ships it is a holding page; the token is checked
+    # against committed hashes only, and an unknown or retired one is a plain 404 that records nothing.
+    from datetime import date
+    from toolkit.letters import tokens as T
+    local, public = tmp_path / "tokens.local.json", tmp_path / "tokens.json"
+    T.issue(local=local, public=public, today=date(2026, 9, 5))
+    monkeypatch.setattr(T, "PUBLIC", public)
+    tok = T.load_local(local)[1]["token"]
+    r = client.get(f"/r/{tok}")
+    assert r.status_code == 200 and "Records request 1" in r.text and "not a government site" in r.text and "noindex" in r.text
+    assert "Board of County Commissioners" in r.text and tok not in r.text                  # the page never echoes the token
+    assert client.get(f"/r/{T.display(tok).lower()}").status_code == 200                  # typed from the letter, hyphens and lower case
+    assert client.get("/r/" + "A" * 32).status_code == 404 and client.get("/r/nope").status_code == 404

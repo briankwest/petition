@@ -7,7 +7,9 @@
 /* Letter, 8.5 x 11, front and back: 0.85-inch margins clear DocuPost's 3/4-inch sorting perimeter, no running
    header or footer, and the type size is chosen by the builder (10pt down to 8.5pt) so every letter fits two
    pages; before each step down it first tries the same size with tighter leading (1.27 instead of 1.34), since the
-   closing block is tied to the last paragraph and often misses the foot of page two by only a few lines. */
+   closing block is tied to the last paragraph and often misses the foot of page two by only a few lines.
+   The portal paragraph and the QR code beside the signature carry the letter's response token; public copies
+   (public=True) drop the token, the street address and the phone. */
 @page { size: Letter; margin: 0.85in 0.85in 0.8in 0.85in; }
 html { font-size: {{ font_size }}pt; }
 body { margin: 0; font-family: "Libre Franklin", "Helvetica Neue", Arial, sans-serif; color: #111; line-height: {{ leading }}; }
@@ -25,7 +27,11 @@ ol { margin: 0 0 6pt; padding-left: 18pt; }
 ol li { margin: 0 0 4.5pt; padding-left: 2pt; break-inside: avoid; }
 b { font-weight: 700; }
 .tail { break-inside: avoid; }
-.close { margin-top: 8pt; }
+.close { margin-top: 8pt; display: flex; justify-content: space-between; align-items: flex-end; gap: 14pt; break-inside: avoid; }
+.close .left { flex: 1 1 auto; }
+.qr { flex: 0 0 auto; text-align: center; font-family: "Libre Franklin", Arial, sans-serif; font-size: 6.6pt; color: #333; line-height: 1.3; }
+.qr img { display: block; width: 0.82in; height: 0.82in; margin: 0 auto 2pt; }
+.url { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.93em; }
 .sig { display: block; height: 0.7in; margin: 2pt 0 0 -3pt; }
 .sig-gap { height: 0.5in; }
 .typed { margin: 0; }
@@ -36,7 +42,7 @@ b { font-weight: 700; }
 <body>
 <div class="letterhead">
   <div class="who">{{ sender.name }}</div>
-  <div class="from">{{ sender.address }}<br>{{ sender.city }}, {{ sender.state }} {{ sender.zip }}<br>{{ sender.email }} · {{ sender.phone }}</div>
+  <div class="from">{% if public %}{{ sender.city }}, {{ sender.state }}<br>{{ sender.email }}{% else %}{{ sender.address }}<br>{{ sender.city }}, {{ sender.state }} {{ sender.zip }}<br>{{ sender.email }} · {{ sender.phone }}{% endif %}</div>
 </div>
 
 <p class="date">{{ date }}</p>
@@ -74,10 +80,14 @@ b { font-weight: 700; }
   {% endif %}
 {% endif %}
 
+<p class="portal">{% if portal %}<b>Responding online.</b> You may also reply through the page set up for this request at <span class="url">{{ portal.pretty }}</span>, or by scanning the code beside my signature. It lets you confirm receipt, upload records, send a written response, or tell me when you expect to produce, and everything posted there becomes part of the public record of this request. A reply by post or email is equally welcome.{% else %}<b>Responding online.</b> You may also reply through the page set up for this request, whose address and code appear on the mailed copy. It lets you confirm receipt, upload records, send a written response, or tell me when you expect to produce, and everything posted there becomes part of the public record of this request. A reply by post or email is equally welcome.{% endif %}</p>
 <div class="close">
+  <div class="left">
   <p>Sincerely,</p>
   {% if signature %}<img class="sig" src="{{ signature }}" alt="">{% else %}<div class="sig-gap"></div>{% endif %}
-  <p class="typed"><span class="n">{{ sender.name }}</span><br>{{ sender.address }}, {{ sender.city }}, {{ sender.state }} {{ sender.zip }}<br>{{ sender.email }} · {{ sender.phone }}</p>
+  <p class="typed"><span class="n">{{ sender.name }}</span><br>{% if public %}{{ sender.email }}{% else %}{{ sender.address }}, {{ sender.city }}, {{ sender.state }} {{ sender.zip }}<br>{{ sender.email }} · {{ sender.phone }}{% endif %}</p>
+  </div>
+  {% if portal %}<div class="qr"><img src="{{ portal.qr }}" alt="QR code for this request's response page">Scan to respond<br><span class="url">{{ portal.host }}</span><br><span class="url">{{ portal.code }}</span></div>{% endif %}
 </div>
 </div>
 {% if l.n == 9 %}

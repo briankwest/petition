@@ -14,3 +14,5 @@ Petition Captain Master Tracker*.xlsx
 dist/
 # the sender's signature for the records-request letters (personal; never committed)
 config/signature*.png
+# the plain response tokens printed in the letters (the committed file holds only their hashes)
+config/tokens.local.json
