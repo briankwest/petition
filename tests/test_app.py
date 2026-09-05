@@ -411,6 +411,7 @@ def test_timeline_page(client):
     r = client.get("/static/records/occ/occ-pud-2025-000075-777-large-load-joint-stipulation-2026-06-26.pdf")   # and the Commission's filings
     assert r.status_code == 200 and r.content.startswith(b"%PDF")
     assert "1 Oct 2026" in html and "PUD 2025-000075" in html and 'id="r38"' in html
+    assert "PUD 2025-000064" in html and 'id="r42"' in html and client.get("/static/records/occ/occ-pud-2025-000064-final-order-757495-2026-05-11.pdf").status_code == 200
     assert 'href="/timeline"' in client.get("/").text and 'href="/timeline"' in client.get("/faq").text   # home pointer and nav
 
 
