@@ -7,8 +7,10 @@
 
 Sender details come from config/sender.local.yaml (git-ignored; see config/sender.example.yaml). Output is
 NN-slug.pdf and NN-slug.html per letter, docupost.csv, and manifest.json. DocuPost wants 8.5x11 PDFs with a
-3/4-inch clear perimeter and adds its own address cover sheet, so the letter keeps one-inch margins and an
-ordinary addressee block. CSV fields are capped at 40 characters, state two letters, ZIP five digits.
+3/4-inch clear perimeter and adds its own address cover sheet, so the letter keeps 0.85-inch margins and an
+ordinary addressee block. Each letter must fit one sheet front and back: the builder tries 10pt, then the same
+size with tighter leading, then steps the size down, and stops at the first fit. CSV fields are capped at 40
+characters, state two letters, ZIP five digits.
 """
 from __future__ import annotations
 import argparse, base64, csv, json, re, sys
@@ -59,13 +61,15 @@ def env() -> Environment:
 
 
 SIZES = (10, 9.5, 9, 8.5)      # tried in order until the letter fits front and back
+LEADINGS = (1.34, 1.27)        # normal leading first, then tighter, before the next size down
+STEPS = [(s, l) for s in SIZES for l in LEADINGS]
 MAX_PAGES = 2
 
 
-def render_html(x: dict, sender: dict, when: date, sig_uri: str = "", font_size: float = SIZES[0]) -> str:
+def render_html(x: dict, sender: dict, when: date, sig_uri: str = "", font_size: float = SIZES[0], leading: float = LEADINGS[0]) -> str:
     t = env().get_template("records-letter.html")
     clauses = dict(OPEN=data.OPEN, PERIOD=data.PERIOD, FORMAT=data.FORMAT, FEES=data.FEES, WITHHOLD=data.WITHHOLD, RESPONSE=data.RESPONSE)
-    return t.render(l=x, sender=sender, date=long_date(when), signature=sig_uri, federal=bool(x.get("paras")), font_size=font_size, **clauses)
+    return t.render(l=x, sender=sender, date=long_date(when), signature=sig_uri, federal=bool(x.get("paras")), font_size=font_size, leading=leading, **clauses)
 
 
 def _clip(v: str) -> str:
@@ -95,12 +99,12 @@ def build(out: Path, sender: dict, when: date, only: list[int] | None = None, si
             continue
         stem = f"{x['n']:02d}-{SLUGS[x['n']]}"
         pdf = out / f"{stem}.pdf"
-        pages, size = None, SIZES[0]
-        html = render_html(x, sender, when, sig_uri, size)
+        pages, (size, leading) = None, STEPS[0]
+        html = render_html(x, sender, when, sig_uri, size, leading)
         if not html_only:
             from weasyprint import HTML
-            for size in SIZES:                       # shrink until it is a single sheet, front and back
-                html = render_html(x, sender, when, sig_uri, size)
+            for size, leading in STEPS:              # tighten, then shrink, until it is a single sheet front and back
+                html = render_html(x, sender, when, sig_uri, size, leading)
                 doc = HTML(string=html, base_url=str(TEMPLATES)).render()
                 if len(doc.pages) <= MAX_PAGES:
                     break
@@ -110,7 +114,7 @@ def build(out: Path, sender: dict, when: date, only: list[int] | None = None, si
                 print(f"warning: {pdf.name} is {pages} pages even at {size}pt", file=sys.stderr)
         (out / f"{stem}.html").write_text(html)
         filenames[x["n"]] = pdf.name
-        manifest.append(dict(letter=x["n"], title=x["title"], file=pdf.name, pages=pages, font_pt=size, re=x["re"], date=long_date(when),
+        manifest.append(dict(letter=x["n"], title=x["title"], file=pdf.name, pages=pages, font_pt=size, leading=leading, re=x["re"], date=long_date(when),
                              mail=MAIL[x["n"]], copies=[m for k, m in COPIES if k == x["n"]]))
     rows = csv_rows(selected, filenames)
     with (out / "docupost.csv").open("w", newline="") as f:
@@ -135,7 +139,7 @@ def main(argv=None) -> int:
     only = [int(n) for n in a.only.split(",")] if a.only else None
     r = build(Path(a.out), sender, when, only, sig, a.html_only)
     for m in r["letters"]:
-        print(f"{m['file']:42s} {str(m['pages'] or '-'):>3s} page(s) at {m['font_pt']:>4}pt  {m['title']}")
+        print(f"{m['file']:42s} {str(m['pages'] or '-'):>3s} page(s) at {m['font_pt']:>4}pt{' tight' if m['leading'] != LEADINGS[0] else '      '}  {m['title']}")
     print(f"docupost.csv: {len(r['rows'])} rows ({sum(1 for x in r['rows'] if x['role']=='recipient')} recipients, {sum(1 for x in r['rows'] if x['role']=='copy')} copies)"
           + ("" if sig else "  · no signature yet: a gap is left above the typed name"))
     return 0

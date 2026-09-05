@@ -59,7 +59,8 @@ def test_every_letter_is_one_sheet_front_and_back(tmp_path):
     # and the closing is tied to the last paragraph so the signature never sits alone on a page.
     r = build.build(tmp_path, SENDER, date(2026, 9, 8))
     assert all(m["pages"] <= build.MAX_PAGES for m in r["letters"]), [(m["file"], m["pages"]) for m in r["letters"] if m["pages"] > build.MAX_PAGES]
-    assert all(m["font_pt"] >= build.SIZES[-1] for m in r["letters"])
+    assert all(m["font_pt"] >= build.SIZES[-1] and m["leading"] in build.LEADINGS for m in r["letters"])
+    assert all(m["font_pt"] >= 9.5 for m in r["letters"]), [(m["file"], m["font_pt"]) for m in r["letters"] if m["font_pt"] < 9.5]   # tighter leading before a second size drop
 
 
 def test_signature_png_is_embedded(tmp_path):
