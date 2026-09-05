@@ -414,6 +414,10 @@ def test_timeline_page(client):
     assert "PUD 2025-000064" in html and 'id="r42"' in html
     assert "KEDDO" in html and 'id="r46"' in html and client.get("/static/records/mcalester/council-packet-2025-08-12-black-mountain-request-and-city-letter.pdf").status_code == 200 and client.get("/static/records/occ/occ-pud-2025-000064-final-order-757495-2026-05-11.pdf").status_code == 200
     assert 'href="/timeline"' in client.get("/").text and 'href="/timeline"' in client.get("/faq").text   # home pointer and nav
+    # the Atoka Energy Park rows: a separate project, but the county's first recorded action on data-center power
+    assert 'id="r47"' in html and 'id="r48"' in html and 'id="r49"' in html and "Selman explained the project" in html
+    for f in ("county/bocc-minutes-2025-07-14-atoka-energy-park-extract.pdf", "mcalester/council-packet-2025-03-25-atoka-energy-park-extract.pdf", "mcalester/council-minutes-2025-03-25.pdf"):
+        assert client.get(f"/static/records/{f}").status_code == 200, f
 
 
 def test_source_registers_show_host_and_identifier(client):
